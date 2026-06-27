@@ -1,0 +1,116 @@
+Over:
+  Source composite over destination. The default compositing method.
+  Alpha-blends the source image on top of the destination.
+In:
+  Source-in composite. Keeps only the overlapping area of the source.
+  Destination is replaced; non-overlapping areas become transparent.
+Out:
+  Source-out composite. Keeps only the non-overlapping area of the source.
+  Overlapping areas become transparent.
+Atop:
+  Source-atop composite. Source is composited on top of destination
+  but only where the destination has alpha.
+Xor:
+  Exclusive-or composite. Source and destination show only where they
+  do not overlap. Overlapping areas become transparent.
+Multiply:
+  Multiply blend. Source and destination colors are multiplied together.
+  Produces darker results; useful for shadows and shading.
+Screen:
+  Screen blend. Inverse of multiply — colors are brightened.
+  Produces lighter results; useful for highlights and glows.
+Blend:
+  Blend composite. Average of multiply and screen.
+  Similar to overlay but with equal weighting.
+Overlay:
+  Overlay blend. Combines multiply and screen — dark areas darken,
+  light areas lighten, midtones are preserved.
+Darken:
+  Darken composite. Takes the darker of source and destination per channel.
+  Only pixels that are darker than the destination are shown.
+Lighten:
+  Lighten composite. Takes the lighter of source and destination per channel.
+  Only pixels that are lighter than the destination are shown.
+HardLight:
+  Hard light blend. Like overlay but based on source brightness.
+  Produces a harsh, high-contrast result.
+SoftLight:
+  Soft light blend. A gentler version of hard light.
+  Produces subtle shading without harsh contrast.
+Difference:
+  Difference composite. Absolute difference between source and destination.
+  Useful for comparing images or creating psychedelic effects.
+Exclusion:
+  Exclusion composite. Similar to difference but with lower contrast.
+  Produces a softer inversion effect.
+ColorDodge:
+  Color dodge blend. Brightens destination by source color.
+  Creates intense highlights and bloom effects.
+ColorBurn:
+  Color burn blend. Darkens destination by source color.
+  Creates intense shadows and charring effects.
+LinearDodge:
+  Linear dodge (add) blend. Simply adds source and destination colors.
+  Produces bright, washed-out results.
+LinearBurn:
+  Linear burn blend. Subtracts source from destination.
+  Produces very dark results; similar to multiply but more extreme.
+LinearLight:
+  Linear light blend. Combines linear dodge and linear burn.
+  High-contrast combination of the two.
+VividLight:
+  Vivid light blend. Combines color dodge and color burn.
+  Extremely high contrast; produces vivid color shifts.
+PinLight:
+  Pin light blend. Replaces destination depending on source brightness.
+  Useful for masking and artistic effects.
+HardMix:
+  Hard mix blend. Adds colors and thresholds at 128.
+  Produces posterized, pop-art style results.
+Dst:
+  Destination composite. Only the destination is retained.
+  Source is completely ignored.
+DstIn:
+  Destination-in composite. Keeps destination only where source has alpha.
+  Source acts as a mask for the destination.
+DstOut:
+  Destination-out composite. Keeps destination only where source is transparent.
+  Source alpha punches holes in the destination.
+DstAtop:
+  Destination-atop composite. Destination is composited on top of source
+  but only where the source has alpha.
+Src:
+  Source composite. Only the source is retained.
+  Destination is completely replaced.
+SrcIn:
+  Source-in composite. Keeps source only where destination has alpha.
+  Destination alpha masks the source.
+SrcOut:
+  Source-out composite. Keeps source only where destination is transparent.
+  Non-overlapping source areas are retained.
+SrcAtop:
+  Source-atop composite. Source is placed on top but only where
+  destination has alpha.
+Copy:
+  Copy composite. Source replaces destination entirely.
+  Same as Src but with explicit semantic naming.
+CopyRed:
+  Copy red channel. Copies only the red channel from source to destination.
+  Other channels are left unchanged.
+CopyGreen:
+  Copy green channel. Copies only the green channel from source to destination.
+  Other channels are left unchanged.
+CopyBlue:
+  Copy blue channel. Copies only the blue channel from source to destination.
+  Other channels are left unchanged.
+CopyAlpha:
+  Copy alpha channel. Copies only the alpha channel from source to destination.
+  RGB channels are left unchanged.
+CopyCyan:
+  Copy cyan channel (CMYK). Copies the cyan channel from source.
+CopyMagenta:
+  Copy magenta channel (CMYK). Copies the magenta channel from source.
+CopyYellow:
+  Copy yellow channel (CMYK). Copies the yellow channel from source.
+CopyBlack:
+  Copy black channel (CMYK). Copies the key (black) channel from source.

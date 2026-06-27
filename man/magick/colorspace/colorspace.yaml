@@ -1,0 +1,47 @@
+sRGB:
+  Standard RGB color space. The default colorspace for most images and web graphics.
+  Uses gamma-corrected values optimized for display.
+RGB:
+  Linear RGB color space. Uses linear light values without gamma correction.
+  Used for physically accurate blending and compositing.
+Gray:
+  Grayscale color space. Single-channel luminance.
+  Common for black-and-white images.
+CMYK:
+  Cyan, Magenta, Yellow, Key (black). Used for print color separation.
+  Subtractively mixes ink colors to produce the desired hue.
+CMY:
+  Cyan, Magenta, Yellow. Three-component print model without black separation.
+  Rarely used directly — CMYK is preferred for print.
+Lab:
+  CIE L*a*b* color space. Perceptually uniform color model.
+  L* is lightness, a* is green–red, b* is blue–yellow.
+LCHab:
+  CIE LCH(ab) color space. Polar form of Lab.
+  L is lightness, C is chroma, H is hue angle.
+Luv:
+  CIE L*u*v* color space. Another perceptually uniform model.
+  Designed for uniform chromaticity scaling.
+LCHuv:
+  CIE LCH(uv) color space. Polar form of Luv.
+  L is lightness, C is chroma, H is hue angle.
+OHTA:
+  OHTA color space. Uses principal components of Lab.
+  YI, CI, and QI channels.
+XYZ:
+  CIE XYZ color space. Device-independent tristimulus values.
+  The reference color space from which others are derived.
+Log:
+  Log color space. Logarithmic encoding of luminance.
+  Used for high dynamic range imagery.
+ColorspaceAlpha:
+  Generic alpha channel. Metadata flag — not a standalone colorspace.
+Transparent:
+  Transparent colorspace. All pixels are fully transparent.
+  Used to create transparent image layers.
+Oklab:
+  Oklab color space. Improved perceptually uniform model.
+  Better hue linearity than CIE Lab.
+Oklch:
+  Oklch color space. Polar form of Oklab.
+  L is lightness, C is chroma, H is hue angle.

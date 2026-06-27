@@ -1,0 +1,24 @@
+TopLeft:
+  Top-left orientation. Row 0 is at the top, column 0 is at the left.
+  The standard computer graphics orientation.
+TopRight:
+  Top-right orientation. Row 0 is at the top, column 0 is at the right.
+  Horizontally flipped from the standard.
+BottomRight:
+  Bottom-right orientation. Row 0 is at the bottom, column 0 is at the right.
+  Rotated 180 degrees from the standard.
+BottomLeft:
+  Bottom-left orientation. Row 0 is at the bottom, column 0 is at the left.
+  Vertically flipped from the standard.
+LeftTop:
+  Left-top orientation. Row 0 is at the left, column 0 is at the top.
+  Rotated 90 degrees clockwise from the standard.
+RightTop:
+  Right-top orientation. Row 0 is at the right, column 0 is at the top.
+  Rotated 90 degrees counter-clockwise from the standard.
+RightBottom:
+  Right-bottom orientation. Row 0 is at the right, column 0 is at the bottom.
+  Rotated 270 degrees counter-clockwise from the standard.
+LeftBottom:
+  Left-bottom orientation. Row 0 is at the left, column 0 is at the bottom.
+  Rotated 90 degrees counter-clockwise, then flipped.

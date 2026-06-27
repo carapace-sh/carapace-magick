@@ -1,0 +1,20 @@
+NorthWest:
+  Northwest gravity. Positions content at the top-left corner.
+North:
+  North gravity. Positions content at the top center.
+NorthEast:
+  Northeast gravity. Positions content at the top-right corner.
+West:
+  West gravity. Positions content at the middle-left.
+Center:
+  Center gravity. Positions content at the center of the image.
+  The most commonly used gravity setting.
+East:
+  East gravity. Positions content at the middle-right.
+SouthWest:
+  Southwest gravity. Positions content at the bottom-left corner.
+South:
+  South gravity. Positions content at the bottom center.
+SouthEast:
+  Southeast gravity. Positions content at the bottom-right corner.
+  Common default for text positioning.

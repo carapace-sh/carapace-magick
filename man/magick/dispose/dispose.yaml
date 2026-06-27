@@ -1,0 +1,12 @@
+Undefined:
+  Undefined disposal. No disposal method specified.
+  The viewer decides how to handle the frame.
+None:
+  No disposal. The frame is left in place as-is.
+  Subsequent frames are drawn on top of it.
+Background:
+  Background disposal. The frame area is cleared to the background color
+  before drawing the next frame.
+Previous:
+  Previous disposal. The frame area is restored to the previous frame's
+  contents before drawing the next frame.

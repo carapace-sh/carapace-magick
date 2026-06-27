@@ -1,6 +1,10 @@
 package argstream
 
-import "github.com/carapace-sh/carapace/pkg/style"
+import (
+	"slices"
+
+	"github.com/carapace-sh/carapace/pkg/style"
+)
 
 // ToolProfile defines the option set and behavior for a magick sub-tool.
 type ToolProfile struct {
@@ -93,12 +97,7 @@ var knownToolNames = []string{
 
 // IsKnownToolName checks if a name is a known sub-tool.
 func IsKnownToolName(name string) bool {
-	for _, t := range knownToolNames {
-		if t == name {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(knownToolNames, name)
 }
 
 // ProfileForTool returns the appropriate profile for a given tool name.

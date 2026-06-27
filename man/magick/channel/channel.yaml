@@ -1,0 +1,65 @@
+Red:
+  Red channel only. Selects the red component of the image.
+Green:
+  Green channel only. Selects the green component of the image.
+Blue:
+  Blue channel only. Selects the blue component of the image.
+Alpha:
+  Alpha (transparency) channel. Controls pixel opacity.
+  Also known as the matte channel.
+Cyan:
+  Cyan channel (CMYK). The cyan component in print color models.
+Magenta:
+  Magenta channel (CMYK). The magenta component in print color models.
+Yellow:
+  Yellow channel (CMYK). The yellow component in print color models.
+Black:
+  Black channel (CMYK). The key (black) component in print color models.
+RGB:
+  All RGB channels combined. Red, green, and blue together.
+RGBA:
+  RGB channels plus alpha. All color and transparency information.
+CMYK:
+  All CMYK channels combined. Used for print color separation.
+CMYKA:
+  CMYK channels plus alpha. Full print color with transparency.
+Gray:
+  Gray channel. Single-channel grayscale luminance.
+  Alias for the intensity channel.
+GrayAlpha:
+  Gray channel plus alpha. Grayscale with transparency.
+All:
+  All channels. Operates on every available channel simultaneously.
+Default:
+  Default channel mask. Typically all channels except alpha.
+  The standard channel selection for most operations.
+Sync:
+  Synchronized channels. Operates on all channels in unison.
+  Ensures color balance is maintained during operations.
+TrueAlpha:
+  True alpha channel. The actual alpha values, not premultiplied.
+Composite:
+  Composite channel mask. Used for compositing operations.
+Blend:
+  Blend channel. Used for blend mode calculations.
+Intensity:
+  Intensity channel. The luminance or brightness of the image.
+  Derived from RGB using a standard weighting formula.
+ReadMask:
+  Read mask channel. Controls which pixels are read from an image.
+WriteMask:
+  Write mask channel. Controls which pixels are written to an image.
+Hue:
+  Hue channel. The color angle in HSL/HSB color space.
+Saturation:
+  Saturation channel. The color purity/intensity in HSL/HSB.
+Lightness:
+  Lightness channel. The perceived brightness in HSL color space.
+C0:
+  Channel 0. Generic first channel for multi-channel images.
+C1:
+  Channel 1. Generic second channel for multi-channel images.
+C2:
+  Channel 2. Generic third channel for multi-channel images.
+C3:
+  Channel 3. Generic fourth channel for multi-channel images.

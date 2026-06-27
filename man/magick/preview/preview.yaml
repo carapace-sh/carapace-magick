@@ -1,0 +1,76 @@
+Rotate:
+  Preview rotation. Shows the image at various rotation angles.
+Shear:
+  Preview shearing. Shows the image with different shear angles.
+Roll:
+  Preview rolling. Shows the image with horizontal/vertical shifts.
+Noise:
+  Preview noise addition. Shows the image with various noise levels.
+Segment:
+  Preview segmentation. Shows the image with color segmentation applied.
+Blur:
+  Preview blur. Shows the image at various blur radii.
+Threshold:
+  Preview thresholding. Shows the image with different threshold levels.
+Edge:
+  Preview edge detection. Shows the image with edge detection applied.
+Spread:
+  Preview pixel spreading. Shows the image with pixel displacement.
+Shade:
+  Preview shading. Shows the image with different shading angles.
+Solarize:
+  Preview solarization. Shows the image with solarization applied.
+Implode:
+  Preview implosion. Shows the image with implosion distortion.
+Wave:
+  Preview wave distortion. Shows the image with wave effects applied.
+OilPaint:
+  Preview oil painting effect. Shows the image with oil painting simulation.
+Charcoal:
+  Preview charcoal drawing. Shows the image with charcoal drawing effect.
+JPEG:
+  Preview JPEG compression. Shows the image at various JPEG quality levels.
+Hue:
+  Preview hue rotation. Shows the image with different hue angles.
+Saturation:
+  Preview saturation adjustment. Shows the image with saturation changes.
+Brightness:
+  Preview brightness adjustment. Shows the image with brightness changes.
+Gamma:
+  Preview gamma correction. Shows the image with different gamma values.
+Spiff:
+  Preview Spiff effect. Enhances image vibrancy.
+Dull:
+  Preview Dull effect. Reduces image vibrancy.
+Grayscale:
+  Preview grayscale conversion. Shows the image in grayscale.
+Quantize:
+  Preview quantization. Shows the image with reduced color count.
+Despeckle:
+  Preview despeckling. Shows the image with speckle noise removed.
+ReduceNoise:
+  Preview noise reduction. Shows the image with noise removal applied.
+AddNoise:
+  Preview noise addition. Shows the image with noise added.
+Sharpen:
+  Preview sharpening. Shows the image with sharpening applied.
+Emboss:
+  Preview embossing. Shows the image with emboss effect.
+EdgeDetect:
+  Preview edge detection. Shows the image with edge detection filter.
+Raise:
+  Preview raised edge. Shows the image with a 3D raised border.
+Normalize:
+  Preview normalization. Shows the image with histogram normalization.
+Equalize:
+  Preview equalization. Shows the image with histogram equalization.
+Negate:
+  Preview negation. Shows the image with colors inverted.
+Stereo:
+  Preview stereographic effect. Shows the image in stereo 3D.
+Polaroid:
+  Preview Polaroid effect. Shows the image with a Polaroid frame look.
+Vignette:
+  Preview vignette. Shows the image with corner darkening applied.
+Framed:
+  Preview framed. Shows the image with an ornamental border frame.

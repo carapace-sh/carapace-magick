@@ -1,0 +1,91 @@
+Abs:
+  Absolute value. Takes the absolute value of each pixel channel.
+  Converts negative values to positive.
+Add:
+  Addition. Adds a constant value to each pixel channel.
+  Increases brightness uniformly.
+AddPredictor:
+  Add predictor. Used for PNG prediction.
+And:
+  Bitwise AND. Performs bitwise AND between pixel and value.
+  Used for masking specific bit patterns.
+Cosine:
+  Cosine. Applies cosine function to each pixel channel value.
+Divide:
+  Division. Divides each pixel channel by a constant.
+  Used for scaling pixel values down.
+Exponential:
+  Exponential. Applies exponential function to pixel values.
+  Enhances bright areas dramatically.
+GaussianNoise:
+  Gaussian noise. Adds Gaussian-distributed random noise.
+  Simulates natural sensor noise.
+ImpulseNoise:
+  Impulse noise. Adds salt-and-pepper noise.
+  Simulates transmission errors or dead pixels.
+LaplacianNoise:
+  Laplacian noise. Adds Laplacian-distributed random noise.
+  Heavier tails than Gaussian.
+Log:
+  Logarithm. Applies natural logarithm to pixel values.
+  Compresses dynamic range; useful for HDR.
+Max:
+  Maximum. Sets each pixel channel to the max of current value and constant.
+  Brightens dark pixels up to the threshold.
+Mean:
+  Mean. Replaces each pixel with the average of its neighborhood.
+  Simple blur effect.
+Median:
+  Median. Replaces each pixel with the median of its neighborhood.
+  Effective noise reduction while preserving edges.
+Min:
+  Minimum. Sets each pixel channel to the min of current value and constant.
+  Darkens bright pixels down to the threshold.
+MultiplicativeNoise:
+  Multiplicative noise. Adds noise proportional to pixel value.
+  Signal-dependent noise model.
+Multiply:
+  Multiplication. Multiplies each pixel channel by a constant.
+  Scales pixel values; useful for brightness adjustment.
+Or:
+  Bitwise OR. Performs bitwise OR between pixel and value.
+  Used for setting specific bit patterns.
+PoissonNoise:
+  Poisson noise. Adds Poisson-distributed random noise.
+  Models photon counting noise in imaging sensors.
+Pow:
+  Power. Raises each pixel channel to the given power.
+  Gamma-like adjustment; values > 1 darken, < 1 brighten.
+RootMeanSquare:
+  Root mean square. Computes RMS of pixel neighborhood.
+  Similar to mean but weights higher values more.
+Set:
+  Set. Sets each pixel channel to a constant value.
+  Replaces all pixel values uniformly.
+Shift:
+  Bitwise shift. Left or right shifts pixel channel bits.
+  Used for bit-level manipulation.
+Sine:
+  Sine. Applies sine function to each pixel channel value.
+  Creates periodic modulation patterns.
+Subtract:
+  Subtraction. Subtracts a constant from each pixel channel.
+  Decreases brightness uniformly.
+Sum:
+  Sum. Accumulates pixel channel values.
+  Used for statistical calculations.
+Threshold:
+  Threshold. Sets pixels above value to white, below to black.
+  Creates binary (bilevel) images.
+ThresholdBlack:
+  Threshold black. Sets pixels below value to black (zero).
+  Only darkens; leaves bright pixels unchanged.
+ThresholdWhite:
+  Threshold white. Sets pixels above value to white (max).
+  Only brightens; leaves dark pixels unchanged.
+UniformNoise:
+  Uniform noise. Adds uniformly distributed random noise.
+  Equal probability across the noise range.
+Xor:
+  Bitwise XOR. Performs bitwise exclusive OR between pixel and value.
+  Used for inverting specific bit patterns.

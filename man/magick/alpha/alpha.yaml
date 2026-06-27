@@ -1,0 +1,30 @@
+on:
+  Enable alpha channel. Makes the image have an active alpha/matte channel.
+off:
+  Disable alpha channel. Removes transparency information from the image.
+activate:
+  Activate alpha channel. Enables the alpha channel without modifying pixel values.
+deactivate:
+  Deactivate alpha channel. Disables the alpha channel but preserves the data.
+  The channel data remains but is not used.
+set:
+  Set alpha channel. Activates alpha and sets all pixels to opaque.
+  Useful for ensuring a clean alpha channel exists.
+opaque:
+  Set alpha to fully opaque. All pixels become fully opaque.
+  Transparency is removed but the channel remains active.
+transparent:
+  Set alpha to fully transparent. All pixels become fully transparent.
+  The entire image becomes invisible.
+extract:
+  Extract alpha channel. Copies the alpha to a grayscale image.
+  The alpha channel becomes the sole channel of the output.
+copy:
+  Copy alpha channel. Copies the alpha from another image.
+  Requires a secondary image input.
+background:
+  Set alpha to background. Alpha channel is set based on the background color.
+  Background-colored pixels become transparent.
+shape:
+  Set alpha for shape. Makes the image shaped — fully opaque or fully transparent
+  based on the alpha channel values.

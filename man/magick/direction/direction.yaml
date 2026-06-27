@@ -1,0 +1,6 @@
+right-to-left:
+  Right to left text direction. Text is rendered from right to left.
+  Used for languages like Arabic, Hebrew, and Persian.
+left-to-right:
+  Left to right text direction. Text is rendered from left to right.
+  The default direction for most Western languages.

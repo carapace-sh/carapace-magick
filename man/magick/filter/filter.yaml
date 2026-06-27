@@ -1,0 +1,85 @@
+Point:
+  Point sampling. Fastest method; selects the nearest pixel.
+  Can introduce aliasing artifacts when downscaling.
+Box:
+  Box filter. Simple averaging of surrounding pixels.
+  Produces a soft result; good for moderate downscaling.
+Triangle:
+  Triangle (bilinear) filter. Linear interpolation between pixels.
+  Better quality than box; moderate speed.
+Hermite:
+  Hermite filter. Smooth interpolation based on cubic polynomial.
+  Produces smooth results without ringing artifacts.
+Hanning:
+  Hanning (Hann) windowed sinc filter.
+  Good frequency response with moderate ringing suppression.
+Hamming:
+  Hamming windowed sinc filter.
+  Slightly better side-lobe suppression than Hanning.
+Blackman:
+  Blackman windowed sinc filter.
+  Strong ringing suppression; smooth results.
+Gaussian:
+  Gaussian filter. Uses a Gaussian bell curve for weighting.
+  Very smooth; no ringing but can be blurry.
+Quadratic:
+  Quadratic filter. Approximates Gaussian with lower cost.
+  Smooth but less precise than true Gaussian.
+Cubic:
+  Cubic (B-spline) filter. Smooth cubic interpolation.
+  Good quality for both upscaling and downscaling.
+Catrom:
+  Catmull-Rom filter. Sharp cubic interpolation.
+  Good detail preservation; slight ringing possible.
+Mitchell:
+  Mitchell-Netravali filter. Balanced between sharpness and smoothness.
+  Generally the best compromise for photographic images.
+Lanczos:
+  Lanczos filter. Windowed sinc with 3 lobes.
+  Excellent sharpness and detail; the most commonly recommended filter.
+  May produce ringing near edges.
+Lanczos2:
+  Lanczos2 filter. Two-lobed Lanczos.
+  Less sharp than 3-lobe Lanczos but with less ringing.
+Lanczos2Sharp:
+  Lanczos2Sharp filter. Sharpened variant of Lanczos2.
+LanczosSharp:
+  LanczosSharp filter. Sharpened variant of Lanczos3.
+  Enhances edges but may amplify ringing.
+LanczosRadius:
+  LanczosRadius filter. Lanczos with custom radius support.
+Bessel:
+  Bessel (Kaiser) filter. Used for special-purpose resampling.
+  Not commonly used for general image resizing.
+Sinc:
+  Sinc filter. Ideal low-pass filter with infinite support.
+  The theoretical best but requires windowing in practice.
+  Use windowed variants (Lanczos, Blackman, etc.) instead.
+Jinc:
+  Jinc filter. The radial equivalent of sinc.
+  Used for polar/radial resampling operations.
+Kaiser:
+  Kaiser windowed filter. Configurable side-lobe suppression.
+  Not commonly used directly.
+Welsh:
+  Welsh windowed filter. Another sinc window variant.
+Parzen:
+  Parzen windowed filter. Smooth cubic window.
+Bohman:
+  Bohman windowed filter. Good compromise window function.
+Bartlett:
+  Bartlett (triangular) windowed filter.
+  Simple triangular weighting of sinc.
+Lagrange:
+  Lagrange interpolation filter. Polynomial interpolation.
+  Good for small scale factors.
+Robidoux:
+  Robidoux filter. Designed for downscaling photographic images.
+  Based on cubic B-spline with special parameterization.
+RobidouxSharp:
+  RobidouxSharp filter. Sharpened variant of Robidoux.
+  More detail but potential ringing.
+Cosine:
+  Cosine windowed filter. Simple cosine weighting.
+Spline:
+  Spline filter. Generalized spline interpolation.

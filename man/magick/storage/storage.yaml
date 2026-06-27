@@ -1,0 +1,15 @@
+char:
+  8-bit character storage. Unsigned byte per channel value.
+  Range [0, 255]. Most common for standard images.
+short:
+  16-bit integer storage. Unsigned short per channel value.
+  Range [0, 65535]. Used for higher precision images.
+integer:
+  32-bit integer storage. Unsigned int per channel value.
+  Range [0, 4294967295]. High dynamic range support.
+float:
+  32-bit floating-point storage. IEEE 754 single precision.
+  Supports HDR values beyond [0, 1]. Common for scientific imaging.
+double:
+  64-bit floating-point storage. IEEE 754 double precision.
+  Maximum precision for computational accuracy.

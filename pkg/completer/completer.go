@@ -6,6 +6,7 @@ import (
 	"github.com/carapace-sh/carapace"
 	magick "github.com/carapace-sh/carapace-magick/pkg/actions/tools/magick"
 	"github.com/carapace-sh/carapace-magick/pkg/argstream"
+	"github.com/carapace-sh/carapace-magick/pkg/definevalue"
 	"github.com/carapace-sh/carapace/pkg/uid"
 )
 
@@ -80,7 +81,7 @@ func ActionOptionValue(ctx *argstream.CompletionContext) carapace.Action {
 	case argstream.ValueEvaluate:
 		return magick.ActionEvaluateOps()
 	case argstream.ValueDefine:
-		return magick.ActionFormats() // first part of define is format
+		return ActionDefineValue(ctx.PartialValue)
 	case argstream.ValueBoolean:
 		return magick.ActionBoolean()
 	case argstream.ValueFont:
@@ -150,4 +151,91 @@ func optionUid(_ *argstream.ToolProfile) func(s string, uc uid.Context) (*url.UR
 			Path:   prefix + name,
 		}, nil
 	}
+}
+
+// ActionDefineValue returns completions for a -define argument value.
+// It parses the partial input to determine whether to complete format prefixes,
+// define keys, or define values.
+func ActionDefineValue(partial string) carapace.Action {
+	ctx := definevalue.ParseForCompletion(partial)
+
+	for _, expected := range ctx.ExpectedTokens {
+		switch expected {
+		case definevalue.ExpectedFormatOrKey:
+			return carapace.Batch(
+				ActionDefineFormats(),
+				ActionDefineGlobalKeys(),
+				ActionDefineFormatPrefixes(),
+			).ToA()
+
+		case definevalue.ExpectedFormat:
+			return ActionDefineFormatPrefixes()
+
+		case definevalue.ExpectedKey:
+			if ctx.Format != "" {
+				return ActionDefineKeys(ctx.Format)
+			}
+			return carapace.Batch(
+				ActionDefineGlobalKeys(),
+				ActionDefineFormatPrefixes(),
+			).ToA()
+
+		case definevalue.ExpectedValue:
+			if ctx.Format != "" && ctx.Key != "" {
+				return ActionDefineValues(ctx.Format, ctx.Key)
+			}
+			return carapace.ActionValues()
+		}
+	}
+
+	return carapace.ActionValues()
+}
+
+// ActionDefineFormatPrefixes returns completions for format: prefixes in -define values.
+func ActionDefineFormatPrefixes() carapace.Action {
+	return magick.ActionFormats().Suffix(":")
+}
+
+// ActionDefineFormats returns format names for -define completion (without colon).
+func ActionDefineFormats() carapace.Action {
+	return magick.ActionFormats()
+}
+
+// ActionDefineGlobalKeys returns completions for global define keys.
+func ActionDefineGlobalKeys() carapace.Action {
+	keys := definevalue.LookupGlobalDefines()
+	vals := make([]string, 0, len(keys)*2)
+	for _, k := range keys {
+		vals = append(vals, k.Name, k.Description)
+	}
+	return carapace.ActionValuesDescribed(vals...).Tag("define keys").Uid("magick", "define-keys", "global")
+}
+
+// ActionDefineKeys returns completions for format-specific define keys.
+func ActionDefineKeys(format string) carapace.Action {
+	keys := definevalue.LookupFormatDefines(format)
+	if len(keys) == 0 {
+		return carapace.ActionValues()
+	}
+	vals := make([]string, 0, len(keys)*2)
+	for _, k := range keys {
+		vals = append(vals, k.Name, k.Description)
+	}
+	return carapace.ActionValuesDescribed(vals...).Tag("define keys").Uid("magick", "define-keys", format)
+}
+
+// ActionDefineValues returns completions for a specific define key's values.
+func ActionDefineValues(format, key string) carapace.Action {
+	defKey := definevalue.LookupDefineKey(format, key)
+	if defKey == nil || len(defKey.Values) == 0 {
+		switch defKey.ValueType {
+		case "boolean":
+			return magick.ActionBoolean()
+		case "int", "float":
+			return carapace.ActionValues()
+		default:
+			return carapace.ActionValues()
+		}
+	}
+	return carapace.ActionValues(defKey.Values...).Tag("define values").Uid("magick", "define-values", format, key)
 }

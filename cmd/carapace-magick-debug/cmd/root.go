@@ -7,6 +7,7 @@ import (
 
 	"github.com/carapace-sh/carapace"
 	"github.com/carapace-sh/carapace-magick/pkg/argstream"
+	"github.com/carapace-sh/carapace-magick/pkg/definevalue"
 	spec "github.com/carapace-sh/carapace-spec"
 	"github.com/spf13/cobra"
 )
@@ -80,10 +81,47 @@ var argstreamCompleteCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(argstreamCmd)
 	rootCmd.AddCommand(argstreamCompleteCmd)
+	rootCmd.AddCommand(definevalueCmd)
+	rootCmd.AddCommand(definevalueCompleteCmd)
 
 	argstreamCompleteCmd.Flags().Bool("trailing-space", false, "cursor is at a new position after the last arg")
 	argstreamCompleteCmd.Flags().String("profile", "magick", "tool profile to use (magick, identify, mogrify, compare, composite, montage)")
 
 	carapace.Gen(argstreamCmd)
 	carapace.Gen(argstreamCompleteCmd)
+	carapace.Gen(definevalueCmd)
+	carapace.Gen(definevalueCompleteCmd)
+}
+
+var definevalueCmd = &cobra.Command{
+	Use:   "definevalue <value>",
+	Short: "Parse a -define format:key=value string",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		dv, err := definevalue.Parse(args[0])
+		if err != nil {
+			return err
+		}
+		m, err := json.Marshal(dv)
+		if err != nil {
+			return err
+		}
+		fmt.Println(string(m))
+		return nil
+	},
+}
+
+var definevalueCompleteCmd = &cobra.Command{
+	Use:   "definevalue-complete <value>",
+	Short: "Get completion context for a -define value string",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		ctx := definevalue.ParseForCompletion(args[0])
+		m, err := json.Marshal(ctx)
+		if err != nil {
+			return err
+		}
+		fmt.Println(string(m))
+		return nil
+	},
 }

@@ -32,6 +32,8 @@ Both `gofmt` and `staticcheck` are enforced in CI. Do not skip them.
 go run ./cmd/carapace-magick-debug argstream -- -resize 200x200 input.png output.png  # parse arg stream as JSON
 go run ./cmd/carapace-magick-debug argstream-complete -- -resize                        # argstream completion context as JSON
 go run ./cmd/carapace-magick-debug argstream-complete --profile identify -- -verbose    # identify profile completion context
+go run ./cmd/carapace-magick-debug definevalue 'jpeg:quality=85'                      # parse -define value as JSON
+go run ./cmd/carapace-magick-debug definevalue-complete 'jpeg:'                         # -define completion context
 ```
 
 ### Completer CLIs
@@ -74,11 +76,11 @@ cmd/carapace-magick-debug/      Debug/diagnostic CLI (JSON output)
 pkg/argstream/                  Argument stream parser (options, images, stack ops, parentheses)
 pkg/completer/                  Shared completion dispatch logic
 pkg/actions/tools/magick/       Carapace action functions for magick value types
-pkg/definevalue/                -define format:key=value parser (TODO)
-pkg/probe/                      magick identify wrapper for image-aware completion (TODO)
-man/magick/                     YAML descriptions for completion value types (TODO)
+pkg/definevalue/                -define format:key=value parser
+pkg/probe/                      magick identify wrapper for image-aware completion
+man/magick/                     YAML descriptions for completion value types
 skills/magick/                  AI agent reference documentation (not compiled Go)
-testdata/                       Test images for integration tests (TODO)
+testdata/                       Test images for integration tests (go generate)
 ```
 
 ### Completer CLIs
@@ -105,6 +107,31 @@ Standalone carapace completers for `magick` and its sub-tools. Each uses `Disabl
   - `ActionOptions(ctx, profile)` — option name completions (both `-` and `+` forms).
   - `ActionOptionValue(ctx)` — giant switch on `ValueType` dispatching to the correct magick action.
   - `ActionToolNames()` — sub-tool name completions for the first positional arg.
+  - `ActionDefineValue(partial)` — structured completion for `-define` arguments using definevalue parser.
+  - `ActionDefineKeys(format)` / `ActionDefineValues(format, key)` — format-specific define key/value completions.
+
+### Define Value (`pkg/definevalue/`)
+
+Parser for `-define format:key=value` argument strings.
+
+- **`parser.go`** — Strict parser. `Parse(input)` → `*DefineValue`. Splits at `:` and `=` boundaries.
+- **`completion_parser.go`** — Completion parser. `ParseForCompletion(input)` → `*CompletionContext`.
+- **`completion.go`** — Completion context types (`ExpectedToken`, `CompletionContext`).
+- **`ast.go`** — `DefineValue` AST type with `Format`, `Key`, `Value` fields.
+- **`defines.go`** — Format-specific define key data (`FormatDefines`, `GlobalDefines`). Lists keys for JPEG, PNG, TIFF, WebP, GIF, HEIC, PSD, PDF, RAW formats.
+- **`span.go`** — `Span` type.
+
+### Probe (`pkg/probe/`)
+
+Wraps `magick identify -verbose` for image-aware completion.
+
+- **`probe.go`** — `Probe(inputPath)` → `*ImageInfo` with Width, Height, Format, Colors, Depth, Colorspace. Returns `nil` when magick is unavailable or file doesn't exist.
+
+### Man Pages (`man/magick/`)
+
+YAML descriptions for completion value types. Directory structure: `man/magick/<type>/<type>.yaml`. Each YAML file maps values to multiline descriptions.
+
+Completed value types: colorspace, compose, filter, channel, gravity, type, distort, metric, evaluate, virtual-pixel, boolean, alpha, noise, preview, storage, orientation, dispose, auto-threshold, direction, kernel.
 
 ### Actions (`pkg/actions/tools/magick/`)
 
