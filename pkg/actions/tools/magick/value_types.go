@@ -320,6 +320,38 @@ func ActionDirection() carapace.Action {
 	).Tag("directions").Uid("magick", "direction")
 }
 
+// ActionInlineImages completes inline image generator prefixes (xc:, gradient:, etc.).
+func ActionInlineImages() carapace.Action {
+	return carapace.ActionValuesDescribed(
+		"xc:", "solid color canvas",
+		"canvas:", "solid color canvas",
+		"gradient:", "linear gradient",
+		"radial-gradient:", "radial gradient",
+		"plasma:", "plasma fractal image",
+		"pattern:", "built-in pattern",
+		"tile:", "tiled image",
+		"null:", "transparent null image",
+		"magick:", "read from stdin",
+	).Tag("inline images").Uid("magick", "inline-image")
+}
+
+// ActionFormatPrefixedFiles completes image filenames with optional format: prefix.
+func ActionFormatPrefixedFiles() carapace.Action {
+	return carapace.ActionMultiParts(":", func(c carapace.Context) carapace.Action {
+		switch len(c.Parts) {
+		case 0:
+			return carapace.Batch(
+				ActionFormats().Suffix(":"),
+				carapace.ActionFiles(),
+			).ToA()
+		case 1:
+			return carapace.ActionFiles()
+		default:
+			return carapace.ActionValues()
+		}
+	}).Uid("magick", "format-prefixed-file")
+}
+
 // Tool name completion
 
 func ActionToolNames() carapace.Action {

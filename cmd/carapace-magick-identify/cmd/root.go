@@ -47,8 +47,10 @@ func init() {
 					actions = append(actions, completer.ActionOptions(ctx, profile))
 				case argstream.ExpectedOptionValue, argstream.ExpectedDefineValue:
 					actions = append(actions, completer.ActionOptionValue(ctx))
-				case argstream.ExpectedImage, argstream.ExpectedOutput:
-					actions = append(actions, carapace.ActionFiles())
+				case argstream.ExpectedImage:
+					actions = append(actions, completer.ActionImageInput())
+				case argstream.ExpectedOutput:
+					actions = append(actions, completer.ActionImageOutput())
 				}
 			}
 

@@ -25,6 +25,21 @@ func ContextToArgs(c carapace.Context) (args []string, trailingSpace bool) {
 	return
 }
 
+// ActionImageInput returns completions for image input arguments.
+func ActionImageInput() carapace.Action {
+	return carapace.Batch(
+		magick.ActionFormatPrefixedFiles(),
+		magick.ActionInlineImages(),
+	).ToA()
+}
+
+// ActionImageOutput returns completions for image output arguments.
+func ActionImageOutput() carapace.Action {
+	return carapace.Batch(
+		magick.ActionFormatPrefixedFiles(),
+	).ToA()
+}
+
 // ActionOptions returns completions for option names appropriate to the current context.
 func ActionOptions(ctx *argstream.CompletionContext, profile *argstream.ToolProfile) carapace.Action {
 	var vals []string
