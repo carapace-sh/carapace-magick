@@ -5,7 +5,6 @@ type ExpectedToken int
 const (
 	ExpectedToolName ExpectedToken = iota
 	ExpectedOptionName
-	ExpectedPlusOptionName
 	ExpectedOptionValue
 	ExpectedImage
 	ExpectedOutput
@@ -20,8 +19,6 @@ func (t ExpectedToken) String() string {
 		return "ToolName"
 	case ExpectedOptionName:
 		return "OptionName"
-	case ExpectedPlusOptionName:
-		return "PlusOptionName"
 	case ExpectedOptionValue:
 		return "OptionValue"
 	case ExpectedImage:

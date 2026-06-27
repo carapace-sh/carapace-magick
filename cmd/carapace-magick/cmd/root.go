@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"slices"
 
 	"github.com/carapace-sh/carapace"
 	"github.com/carapace-sh/carapace-magick/pkg/argstream"
@@ -46,7 +47,7 @@ func init() {
 				switch token {
 				case argstream.ExpectedToolName:
 					actions = append(actions, completer.ActionToolNames())
-				case argstream.ExpectedOptionName, argstream.ExpectedPlusOptionName:
+				case argstream.ExpectedOptionName:
 					actions = append(actions, completer.ActionOptions(ctx, profile))
 				case argstream.ExpectedOptionValue, argstream.ExpectedDefineValue:
 					actions = append(actions, completer.ActionOptionValue(ctx))
@@ -68,17 +69,8 @@ func init() {
 }
 
 func actionOptionValueIfExpected(ctx *argstream.CompletionContext) carapace.Action {
-	if ctx.CurrentOption != nil && slicesContains(ctx.ExpectedTokens, argstream.ExpectedOptionValue) {
+	if ctx.CurrentOption != nil && slices.Contains(ctx.ExpectedTokens, argstream.ExpectedOptionValue) {
 		return completer.ActionOptionValue(ctx)
 	}
 	return carapace.ActionValues()
-}
-
-func slicesContains[T comparable](s []T, v T) bool {
-	for _, x := range s {
-		if x == v {
-			return true
-		}
-	}
-	return false
 }

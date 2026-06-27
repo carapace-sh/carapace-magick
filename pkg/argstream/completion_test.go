@@ -73,7 +73,7 @@ func TestCompletionPartialOption(t *testing.T) {
 
 func TestCompletionPlusOption(t *testing.T) {
 	ctx := ParseForCompletion([]string{"+verb"}, false)
-	assertHasExpected(t, ctx, ExpectedPlusOptionName)
+	assertHasExpected(t, ctx, ExpectedOptionName)
 }
 
 func TestCompletionToolName(t *testing.T) {

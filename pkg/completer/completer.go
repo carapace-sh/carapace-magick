@@ -130,12 +130,16 @@ func plusFormDescription(def *argstream.OptionDef) string {
 	return def.Description
 }
 
-func styleForPlusForm(def *argstream.OptionDef) string {
+func styleForPlusForm(_ *argstream.OptionDef) string {
 	return "dim" // dim style for plus forms
 }
 
-func optionUid(profile *argstream.ToolProfile) func(s string, uc uid.Context) (*url.URL, error) {
+func optionUid(_ *argstream.ToolProfile) func(s string, uc uid.Context) (*url.URL, error) {
 	return func(s string, uc uid.Context) (*url.URL, error) {
+		prefix := ""
+		if len(s) > 1 && s[0] == '+' {
+			prefix = "+"
+		}
 		name := s
 		if len(name) > 1 && (name[0] == '-' || name[0] == '+') {
 			name = name[1:]
@@ -143,7 +147,7 @@ func optionUid(profile *argstream.ToolProfile) func(s string, uc uid.Context) (*
 		return &url.URL{
 			Scheme: "magick",
 			Host:   "option",
-			Path:   name,
+			Path:   prefix + name,
 		}, nil
 	}
 }

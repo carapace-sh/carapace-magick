@@ -89,11 +89,6 @@ var knownToolNames = []string{
 	"compare",
 	"composite",
 	"montage",
-	"conjure",
-	"stream",
-	"animate",
-	"display",
-	"import",
 }
 
 // IsKnownToolName checks if a name is a known sub-tool.

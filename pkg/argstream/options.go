@@ -93,8 +93,6 @@ const (
 	ValueCount         ValueType = "count"
 	ValueMethod        ValueType = "method"
 	ValueAutoThreshold ValueType = "auto_threshold"
-	ValueGrayscale     ValueType = "grayscale"
-	ValueIntensity     ValueType = "intensity"
 	ValueBlend         ValueType = "blend"
 	ValueDirection     ValueType = "direction"
 )
@@ -336,7 +334,6 @@ func buildOptionIndex() map[string]*OptionDef {
 		{Name: "moments", Description: "report image moments", Category: CategorySetting, Type: TypeBoolean},
 		{Name: "unique", Description: "display number of unique colors", Category: CategorySetting, Type: TypeBoolean},
 		{Name: "borderwidth", Description: "border width", Category: CategorySetting, Type: TypeValue, ValueType: ValueInt},
-		{Name: "gravity", Description: "text placement direction", Category: CategorySetting, Type: TypeValue, ValueType: ValueGravity, HasPlusForm: true, PlusBehavior: PlusReset},
 	}
 
 	return buildIndexFromOptions(options)

@@ -329,7 +329,5 @@ func ActionToolNames() carapace.Action {
 		"compare", "Assess difference between images",
 		"composite", "Composite images together",
 		"montage", "Create a composite image montage",
-		"conjure", "Execute MSL scripts",
-		"stream", "Stream raw pixel data",
 	).Tag("tools").Uid("magick", "tool")
 }

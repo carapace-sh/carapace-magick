@@ -31,7 +31,7 @@ func init() {
 var argstreamCmd = &cobra.Command{
 	Use:   "argstream <args...>",
 	Short: "Parse magick argument stream",
-	Args:  cobra.MinimumNArgs(1),
+	Args:  cobra.MinimumNArgs(0),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		prog, err := argstream.Parse(args)
 		if err != nil {
@@ -75,7 +75,6 @@ var argstreamCompleteCmd = &cobra.Command{
 		fmt.Println(string(m))
 		return nil
 	},
-	DisableFlagParsing: true,
 }
 
 func init() {

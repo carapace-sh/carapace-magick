@@ -82,11 +82,7 @@ func ParseForCompletionWithProfile(args []string, trailingSpace bool, profile *T
 					ctx.ExpectedTokens = append(ctx.ExpectedTokens, ExpectedOptionName)
 					ctx.ExpectedTokens = append(ctx.ExpectedTokens, ExpectedOptionValue)
 				} else {
-					if form == FormPlus {
-						ctx.ExpectedTokens = append(ctx.ExpectedTokens, ExpectedPlusOptionName)
-					} else {
-						ctx.ExpectedTokens = append(ctx.ExpectedTokens, ExpectedOptionName)
-					}
+					ctx.ExpectedTokens = append(ctx.ExpectedTokens, ExpectedOptionName)
 				}
 
 				if profile.HasParentheses {
@@ -136,7 +132,6 @@ func ParseForCompletionWithProfile(args []string, trailingSpace bool, profile *T
 	}
 
 	ctx.ExpectedTokens = append(ctx.ExpectedTokens, ExpectedOptionName)
-	ctx.ExpectedTokens = append(ctx.ExpectedTokens, ExpectedPlusOptionName)
 	ctx.ExpectedTokens = append(ctx.ExpectedTokens, ExpectedImage)
 
 	if profile.HasOutputArg && len(ctx.ImageURLs) > 0 {

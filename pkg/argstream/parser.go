@@ -82,14 +82,16 @@ func (p *parser) parseProgram() (*Program, error) {
 			if optDef != nil && !p.profileOptionAllowed(optDef) {
 				// Option exists but not in this profile's tool
 				p.advance()
+				spanEnd := p.pos
 				if optDef.Type == TypeValue && needsValue(optDef, form) && !p.atEnd() && !isOption(p.peek()) && p.peek() != "(" && p.peek() != ")" {
 					p.advance()
+					spanEnd = p.pos
 				}
 				prog.Tokens = append(prog.Tokens, &Token{
 					Kind:       KindOption,
 					OptionName: optName,
 					OptionForm: form,
-					Span:       Span{Start: p.pos - 2, End: p.pos},
+					Span:       Span{Start: spanEnd - 1, End: spanEnd},
 				})
 				continue
 			}

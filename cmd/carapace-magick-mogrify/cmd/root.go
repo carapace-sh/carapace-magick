@@ -43,7 +43,7 @@ func init() {
 			var actions []carapace.Action
 			for _, token := range ctx.ExpectedTokens {
 				switch token {
-				case argstream.ExpectedOptionName, argstream.ExpectedPlusOptionName:
+				case argstream.ExpectedOptionName:
 					actions = append(actions, completer.ActionOptions(ctx, profile))
 				case argstream.ExpectedOptionValue, argstream.ExpectedDefineValue:
 					actions = append(actions, completer.ActionOptionValue(ctx))
