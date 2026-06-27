@@ -19,14 +19,14 @@ magick [ {option} | {image} ... ] -script {filename} [ {script_args} ...]
 
 Every argument token falls into one of these categories:
 
-|| Category | Prefix | Effect | Example |
-||----------|--------|--------|---------|
-|| **Image input** | none (filename) or `-` for stdin | Adds image(s) to the sequence | `input.png`, `xc:red` |
-|| **Image output** | none (last non-option token) | Writes final image sequence | `output.png` |
-|| **Setting** | `-word value` / `+word` | Configures future operators (does not modify images) | `-background blue`, `-quality 85` |
-|| **Operator** | `-word [args]` | Transforms the current image(s) immediately | `-resize 200x200`, `-blur 0x5` |
-|| **Stack operator** | `-word [args]` | Manipulates the image sequence (clone, delete, swap) | `-clone 0`, `-delete 1`, `-swap 0,1` |
-|| **Parenthesis** | `\(` ... `\)` | Creates a scoped sub-pipeline | `\(` `-clone 0` `-negate` `\)` |
+| Category | Prefix | Effect | Example |
+|----------|--------|--------|---------|
+| **Image input** | none (filename) or `-` for stdin | Adds image(s) to the sequence | `input.png`, `xc:red` |
+| **Image output** | none (last non-option token) | Writes final image sequence | `output.png` |
+| **Setting** | `-word value` / `+word` | Configures future operators (does not modify images) | `-background blue`, `-quality 85` |
+| **Operator** | `-word [args]` | Transforms the current image(s) immediately | `-resize 200x200`, `-blur 0x5` |
+| **Stack operator** | `-word [args]` | Manipulates the image sequence (clone, delete, swap) | `-clone 0`, `-delete 1`, `-swap 0,1` |
+| **Parenthesis** | `\(` ... `\)` | Creates a scoped sub-pipeline | `\(` `-clone 0` `-negate` `\)` |
 
 The lexer cannot determine whether a `-word` token is a setting or operator from syntax alone — it must consult a static option definition table.
 
@@ -55,13 +55,13 @@ Arguments are processed strictly left-to-right:
 
 An image input can be:
 
-|| Form | Example | Description |
-||------|---------|-------------|
-|| Filename | `photo.jpg` | Read from file (format auto-detected) |
-|| Format prefix | `png:photo.dat` | Explicit format override |
-|| STDIN | `-` | Read from standard input |
-|| Built-in generator | `xc:red`, `gradient:`, `plasma:`, `pattern:checkerboard` | Generate an image without a file |
-|| `-read filename` | `-read input.png` | Explicit read (same as bare filename but unambiguous) |
+| Form | Example | Description |
+|------|---------|-------------|
+| Filename | `photo.jpg` | Read from file (format auto-detected) |
+| Format prefix | `png:photo.dat` | Explicit format override |
+| STDIN | `-` | Read from standard input |
+| Built-in generator | `xc:red`, `gradient:`, `plasma:`, `pattern:checkerboard` | Generate an image without a file |
+| `-read filename` | `-read input.png` | Explicit read (same as bare filename but unambiguous) |
 
 The format prefix syntax is `format:filename` — the colon separates the coder name from the filename. This disambiguates when the file extension doesn't match the format or when reading from stdin: `png:-`.
 
@@ -121,6 +121,6 @@ With `-script filename`, `magick` reads commands from a file. This is used for c
 
 - **Filenames starting with `-`**: ambiguous with options. Use `./-photo.jpg` or explicit `-read`.
 - **`-` as output**: writes to stdout; the format is determined by the output filename prefix or `-format` setting.
-- **No output**: an error — magick requires an output filename (unless using `-identify`/`-print` which don't produce output files).
+- **No output**: always an error — magick requires an output filename. Use `null:` as a dummy output when only side effects matter (e.g., `magick input.png -identify null:`).
 - **Inline images**: `xc:red` is an image input, not an option — the lexer must recognize built-in coders as image sources.
 - **Plus-form reset**: `+setting` (e.g., `+background`) resets the setting to its default. The lexer must handle `+` prefix as a distinct token form.

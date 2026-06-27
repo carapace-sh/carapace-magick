@@ -28,25 +28,34 @@ Settings configure the environment for subsequent operations. They **do not modi
 - **Scoped by parentheses**: with `-respect-parentheses`, settings revert when a `)` closes
 - **`+form` resets to default**: `+background` resets to the built-in default
 
+### Dual-Nature Options
+
+Some options appear in multiple `-help` sections because they act as both settings and operators depending on their argument value:
+
+| Option | Setting Behavior | Operator Behavior |
+|--------|-----------------|-------------------|
+| `-alpha` | Configures alpha channel mode | `on`, `off`, `activate`, `deactivate` immediately change the alpha channel |
+| `-channel` | Sets the active channel mask for subsequent operators | `set`, `on`, `off` immediately modify the channel mask |
+
 ### Common Settings
 
-|| Setting | Value Type | Description |
-||---------|-----------|-------------|
-|| `-background` | color | Background color |
-|| `-colorspace` | type | Alternate colorspace |
-|| `-compress` | type | Pixel compression type |
-|| `-density` | geometry | Horizontal/vertical resolution |
-|| `-depth` | value | Image depth |
-|| `-fill` | color | Fill color for drawing |
-|| `-font` | name | Font for text rendering |
-|| `-format` | string | Output format string |
-|| `-gravity` | type | Text placement direction |
-|| `-interlace` | type | Interlacing scheme |
-|| `-quality` | value | Compression level |
-|| `-stroke` | color | Stroke color for drawing |
-|| `-type` | type | Image type |
-|| `-verbose` | (boolean) | Print detailed information |
-|| `-define` | format:key=value | Format-specific option (see [define-syntax.md](define-syntax.md)) |
+| Setting | Value Type | Description |
+|---------|-----------|-------------|
+| `-background` | color | Background color |
+| `-colorspace` | type | Alternate colorspace |
+| `-compress` | type | Pixel compression type |
+| `-density` | geometry | Horizontal/vertical resolution |
+| `-depth` | value | Image depth |
+| `-fill` | color | Fill color for drawing |
+| `-font` | name | Font for text rendering |
+| `-format` | string | Output format string (percent-escape sequence, e.g. `%w %h`) |
+| `-gravity` | type | Text placement direction |
+| `-interlace` | type | Interlacing scheme |
+| `-quality` | value | Compression level |
+| `-stroke` | color | Stroke color for drawing |
+| `-type` | type | Image type |
+| `-verbose` | (boolean) | Print detailed information |
+| `-define` | format:key=value | Format-specific option (see [define-syntax.md](define-syntax.md)) |
 
 ## Image Operators
 
@@ -61,25 +70,26 @@ Operators **immediately transform** the current image(s) in the sequence. They c
 
 ### Operator Sub-Categories by Value Type
 
-|| Value Pattern | Examples |
-||---------------|---------|
-|| No value (boolean) | `-strip`, `-flip`, `-flop`, `-negate`, `-normalize`, `-trim`, `-despeckle` |
-|| Geometry | `-resize`, `-scale`, `-sample`, `-thumbnail`, `-extent`, `-crop`, `-shave`, `-border`, `-chop` |
-|| Radius/sigma | `-blur`, `-gaussian-blur`, `-sharpen`, `-unsharp`, `-adaptive-blur`, `-adaptive-sharpen` |
-|| Degrees | `-rotate`, `-swirl`, `-motion-blur`, `-polaroid` |
-|| Color | `-opaque`, `-transparent`, `-floodfill`, `-tint` |
-|| Method + args | `-distort`, `-morphology`, `-function`, `-sparse-color` |
-|| Expression | `-evaluate`, `-fx`, `-channel-fx` |
-|| Value | `-level`, `-gamma`, `-threshold`, `-posterize`, `-solarize`, `-modulate` |
+| Value Pattern | Examples |
+|---------------|---------|
+| No value (boolean) | `-strip`, `-flip`, `-flop`, `-negate`, `-normalize`, `-trim`, `-despeckle` |
+| Geometry | `-resize`, `-scale`, `-sample`, `-thumbnail`, `-extent`, `-crop`, `-shave`, `-border`, `-chop` |
+| Radius/sigma | `-blur`, `-gaussian-blur`, `-sharpen`, `-unsharp`, `-adaptive-blur`, `-adaptive-sharpen`, `-motion-blur` |
+| Degrees | `-rotate`, `-swirl`, `-motion-blur`, `-polaroid` |
+| Color | `-opaque`, `-transparent`, `-floodfill`, `-tint` |
+| Method + args | `-distort`, `-morphology`, `-function`, `-sparse-color` |
+| Expression | `-evaluate`, `-fx`, `-channel-fx` |
+| Value | `-level`, `-gamma`, `-threshold`, `-posterize`, `-solarize`, `-modulate` |
 
 ## Image Channel Operators
 
-Channel operators work on specific channels of the image, selected by the `-channel` setting.
+Channel operators work on specific channels of the image. The `-channel` option (listed under "Image Operators" in `-help`) sets the active channel mask, controlling which channels subsequent operators affect.
 
-|| Operator | Value | Description |
-||----------|-------|-------------|
-|| `-channel-fx` | expression | Exchange, extract, or transfer channels |
-|| `-separate` | (none) | Separate channels into grayscale images |
+| Operator | Value | Description |
+|----------|-------|-------------|
+| `-channel` | mask | Set the active channel mask (dual-nature: acts as both setting and operator) |
+| `-channel-fx` | expression | Exchange, extract, or transfer channels |
+| `-separate` | (none) | Separate channels into grayscale images |
 
 The `-channel` setting controls which channels these operators affect:
 
@@ -91,46 +101,46 @@ magick input.png -channel RGB -separate channel_%d.png
 
 Sequence operators work on the **entire image sequence** (or multiple images within it), not just the current image.
 
-|| Operator | Value | Description |
-||----------|-------|-------------|
-|| `-append` / `+append` | (none) | Append vertically/horizontally |
-|| `-flatten` | (none) | Flatten sequence into single image |
-|| `-mosaic` | (none) | Create mosaic from sequence |
-|| `-coalesce` | (none) | Merge sequence |
-|| `-combine` | (none) | Combine into color channels |
-|| `-compare` | (none) | Compare images |
-|| `-composite` | (none) | Composite images |
-|| `-layers` | method | Layer method (optimize, merge, etc.) |
-|| `-morph` | value | Morph between images |
-|| `-fx` | expression | Apply math expression |
-|| `-write` | filename | Write current sequence to file |
+| Operator | Value | Description |
+|----------|-------|-------------|
+| `-append` / `+append` | (none) | Append vertically/horizontally |
+| `-flatten` | (none) | Flatten sequence into single image |
+| `-mosaic` | (none) | Create mosaic from sequence |
+| `-coalesce` | (none) | Merge sequence |
+| `-combine` | (none) | Combine into color channels |
+| `-compare` | (none) | Compare images |
+| `-composite` | (none) | Composite images |
+| `-layers` | method | Layer method (optimize, merge, etc.) |
+| `-morph` | value | Morph between images |
+| `-fx` | expression | Apply math expression |
+| `-write` | filename | Write current sequence to file |
 
 ## Image Stack Operators
 
 Stack operators rearrange the image sequence without transforming pixel data. They are critical for complex pipelines.
 
-|| Operator | Value | Description |
-||----------|-------|-------------|
-|| `-clone` | indexes | Clone image(s) by index |
-|| `-delete` | indexes | Delete image(s) by index |
-|| `-duplicate` | count,indexes | Duplicate image(s) |
-|| `-insert` | index | Insert last image at position |
-|| `-reverse` | (none) | Reverse image sequence |
-|| `-swap` | indexes | Swap two images |
+| Operator | Value | Description |
+|----------|-------|-------------|
+| `-clone` | indexes | Clone image(s) by index |
+| `-delete` | indexes | Delete image(s) by index |
+| `-duplicate` | count,indexes | Duplicate image(s) |
+| `-insert` | index | Insert last image at position |
+| `-reverse` | (none) | Reverse image sequence |
+| `-swap` | indexes | Swap two images |
 
 ### Index Syntax
 
 Stack operators use **index expressions** to refer to images in the sequence:
 
-|| Syntax | Meaning |
-||--------|---------|
-|| `0` | First image |
-|| `1` | Second image |
-|| `0-3` | Images 0 through 3 (range) |
-|| `0,2,4` | Images 0, 2, and 4 (list) |
-|| `-1` | Last image |
-|| `-2` | Second-to-last image |
-|| `0--1` | All images (first through last) |
+| Syntax | Meaning |
+|--------|---------|
+| `0` | First image |
+| `1` | Second image |
+| `0-3` | Images 0 through 3 (range) |
+| `0,2,4` | Images 0, 2, and 4 (list) |
+| `-1` | Last image |
+| `-2` | Second-to-last image |
+| `0--1` | All images (first through last) |
 
 ### Clone Pattern
 

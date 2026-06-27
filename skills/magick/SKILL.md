@@ -30,14 +30,14 @@ Arguments are processed left-to-right. Settings configure how subsequent operato
 
 Load the reference that matches your task. When in doubt, load multiple references.
 
-|| Keywords | Reference |
-||----------|----------|
-|| argstream, command structure, image pipeline, image sequence, input, output, positional, lexing model, token classification, image stack | [references/argstream.md](references/argstream.md) |
-|| option syntax, flag, dash, plus prefix, boolean flag, +/- forms, setting, operator, value-taking option, quoting, escaping | [references/option-syntax.md](references/option-syntax.md) |
-|| option scope, settings, operators, channel operators, sequence operators, stack operators, option categories, when options apply, positional scope | [references/option-scopes.md](references/option-scopes.md) |
-|| value types, geometry, color, percent, threshold, integer, float, string, expression, point, degrees, list types, -list | [references/value-types.md](references/value-types.md) |
-|| identify, mogrify, compare, composite, montage, conjure, stream, animate, convert, sub-tool, tool, legacy command, magick subcommand | [references/subtools.md](references/subtools.md) |
-|| define, -define, format:option, coder option, delegate option, key:value, define syntax, format-specific option | [references/define-syntax.md](references/define-syntax.md) |
+| Keywords | Reference |
+|----------|----------|
+| argstream, command structure, image pipeline, image sequence, input, output, positional, lexing model, token classification, image stack | [references/argstream.md](references/argstream.md) |
+| option syntax, flag, dash, plus prefix, boolean flag, +/- forms, setting, operator, value-taking option, quoting, escaping | [references/option-syntax.md](references/option-syntax.md) |
+| option scope, settings, operators, channel operators, sequence operators, stack operators, option categories, when options apply, positional scope | [references/option-scopes.md](references/option-scopes.md) |
+| value types, geometry, color, percent, threshold, integer, float, string, expression, point, degrees, list types, -list | [references/value-types.md](references/value-types.md) |
+| identify, mogrify, compare, composite, montage, conjure, stream, animate, convert, sub-tool, tool, legacy command, magick subcommand | [references/subtools.md](references/subtools.md) |
+| define, -define, format:option, coder option, delegate option, key:value, define syntax, format-specific option | [references/define-syntax.md](references/define-syntax.md) |
 
 ## Quick Guide
 

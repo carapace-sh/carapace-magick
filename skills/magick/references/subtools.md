@@ -14,19 +14,19 @@ magick tool [options ...] [arguments ...]
 
 Legacy standalone commands (`convert`, `identify`, etc.) still work but print a deprecation warning. The `magick` command without a tool name defaults to the `convert` behavior (image pipeline processing).
 
-|| Tool | Purpose | Usage Line |
-||------|---------|------------|
-|| (default/convert) | Image pipeline processing | `magick [options \| image ...] output_image` |
-|| `identify` | Describe image format and attributes | `magick identify [options ...] file [...]` |
-|| `mogrify` | In-place image transformation | `magick mogrify [options ...] file [...]` |
-|| `compare` | Assess difference between images | `magick compare [options ...] image reconstruct difference` |
-|| `composite` | Composite images together | `magick composite [options ...] image composite [mask] composite` |
-|| `montage` | Create a composite image montage | `magick montage [options ...] file [...] file` |
-|| `conjure` | Execute MSL scripts | `magick conjure [options ...] file [...]` |
-|| `stream` | Stream raw pixel data | `magick stream [options ...] input-image raw-image` |
-|| `animate` | Display image animation | (X11 display) |
-|| `display` | Interactive image viewer | (X11 display) |
-|| `import` | Screen capture | (X11 display) |
+| Tool | Purpose | Usage Line |
+|------|---------|------------|
+| (default/convert) | Image pipeline processing | `magick [options \| image ...] output_image` |
+| `identify` | Describe image format and attributes | `magick identify [options ...] file [...]` |
+| `mogrify` | In-place image transformation | `magick mogrify [options ...] file [...]` |
+| `compare` | Assess difference between images | `magick compare [options ...] image reconstruct difference` |
+| `composite` | Composite images together | `magick composite [options ...] image composite [mask] composite` |
+| `montage` | Create a composite image montage | `magick montage [options ...] file [...] file` |
+| `conjure` | Execute MSL scripts | `magick conjure [options ...] file [...]` |
+| `stream` | Stream raw pixel data | `magick stream [options ...] input-image raw-image` |
+| `animate` | Display image animation | (X11 display) |
+| `display` | Interactive image viewer | (X11 display) |
+| `import` | Screen capture | (X11 display) |
 
 ## Common vs. Tool-Specific Options
 
@@ -34,19 +34,19 @@ All tools share a **common subset** of options (settings like `-verbose`, `-debu
 
 ### Shared Options (all tools)
 
-|| Option | Description |
-||--------|-------------|
-|| `-debug events` | Debug output |
-|| `-help` | Print options |
-|| `-list type` | Print supported values |
-|| `-log format` | Debug log format |
-|| `-usage` | Print usage |
-|| `-version` | Print version |
-|| `-verbose` | Detailed output |
-|| `-quiet` | Suppress warnings |
-|| `-regard-warnings` | Pay attention to warnings |
-|| `-seed value` | Random seed |
-|| `-monitor` | Progress monitoring |
+| Option | Description |
+|--------|-------------|
+| `-debug events` | Debug output |
+| `-help` | Print options |
+| `-list type` | Print supported values |
+| `-log format` | Debug log format |
+| `-usage` | Print usage |
+| `-version` | Print version |
+| `-verbose` | Detailed output |
+| `-quiet` | Suppress warnings |
+| `-regard-warnings` | Pay attention to warnings |
+| `-seed value` | Random seed |
+| `-monitor` | Progress monitoring |
 
 ## `magick` (Default / Convert)
 
@@ -80,12 +80,12 @@ Key differences from `magick`:
 
 ### identify-specific options
 
-|| Option | Description |
-||--------|-------------|
-|| `-ping` | Efficiently determine attributes (don't read full image) |
-|| `-unique` | Display number of unique colors |
-|| `-moments` | Report image moments |
-|| `-features distance` | Analyze image features |
+| Option | Description |
+|--------|-------------|
+| `-ping` | Efficiently determine attributes (don't read full image) |
+| `-unique` | Display number of unique colors |
+| `-moments` | Report image moments |
+| `-features distance` | Analyze image features |
 
 ## `magick mogrify`
 
@@ -106,10 +106,10 @@ Key differences from `magick`:
 
 ### mogrify-specific options
 
-|| Option | Description |
-||--------|-------------|
-|| `-format type` | Write output in this format |
-|| `-path directory` | Write output files to this directory |
+| Option | Description |
+|--------|-------------|
+| `-format type` | Write output in this format |
+| `-path directory` | Write output files to this directory |
 
 ## `magick compare`
 
@@ -127,24 +127,26 @@ Key differences from `magick`:
 
 ### compare-specific options
 
-|| Option | Description |
-||--------|-------------|
-|| `-metric type` | Comparison metric (AE, MAE, MSE, PAE, PSNR, RMSE, SSIM, DSSIM, FUZZ) |
-|| `-dissimilarity-threshold` | Maximum dissimilarity for match |
-|| `-similarity-threshold` | Minimum similarity for match |
-|| `-highlight-color` | Color for differing pixels in visual diff |
-|| `-lowlight-color` | Color for similar pixels in visual diff |
+| Option | Description |
+|--------|-------------|
+| `-metric type` | Comparison metric (AE, MAE, MSE, PAE, PSNR, RMSE, SSIM, DSSIM, FUZZ) |
+| `-dissimilarity-threshold` | Maximum dissimilarity for match |
+| `-similarity-threshold` | Minimum similarity for match |
+| `-highlight-color` | Color for differing pixels in visual diff |
+| `-lowlight-color` | Color for similar pixels in visual diff |
 
 ## `magick composite`
 
 Composites images together (overlay, blend, etc.).
 
 ```
-magick composite [options ...] image composite [ [options ...] mask ] [options ...] composite
+magick composite [options ...] image overlay [ [options ...] mask ] [options ...] output
 ```
 
+The positional arguments are: base `image`, `overlay` image to composite on top, optional `mask`, and `output` file. The official usage line uses "composite" for both the overlay and output arguments, which is confusing — here we use distinct names for clarity.
+
 Key differences from `magick`:
-- **Positional image arguments**: image, composite, optional mask, output
+- **Positional image arguments**: base image, overlay image, optional mask, output file
 - **No image stack**: no parentheses or stack operators
 - **No general operators**: only composite-related settings
 - **`-compose` operator**: sets the compositing method (Over, Multiply, etc.)
@@ -153,13 +155,13 @@ Key differences from `magick`:
 
 ### composite-specific options
 
-|| Option | Description |
-||--------|-------------|
-|| `-blend geometry` | Blend percentages |
-|| `-displace geometry` | Shift image according to displacement map |
-|| `-dissolve value` | Dissolve percentage |
-|| `-stegano offset` | Hide watermark at offset |
-|| `-watermark geometry` | Watermark with given brightness/saturation |
+| Option | Description |
+|--------|-------------|
+| `-blend geometry` | Blend percentages |
+| `-displace geometry` | Shift image according to displacement map |
+| `-dissolve value` | Dissolve percentage |
+| `-stegano offset` | Hide watermark at offset |
+| `-watermark geometry` | Watermark with given brightness/saturation |
 
 ## `magick montage`
 
@@ -176,14 +178,14 @@ Key differences from `magick`:
 
 ### montage-specific options
 
-|| Option | Description |
-||--------|-------------|
-|| `-tile geometry` | Number of tiles per row/column (e.g., `4x3`) |
-|| `-geometry geometry` | Tile size and border |
-|| `-frame geometry` | Decorative frame around each tile |
-|| `-borderwidth value` | Border width between tiles |
-|| `-shadow` | Add drop shadow to tiles |
-|| `-texture filename` | Background texture |
+| Option | Description |
+|--------|-------------|
+| `-tile geometry` | Number of tiles per row/column (e.g., `4x3`) |
+| `-geometry geometry` | Tile size and border |
+| `-frame geometry` | Decorative frame around each tile |
+| `-borderwidth value` | Border width between tiles |
+| `-shadow` | Add drop shadow to tiles |
+| `-texture filename` | Background texture |
 
 ## `magick conjure`
 
@@ -194,7 +196,8 @@ magick conjure [options ...] file [ [options ...] file ...]
 ```
 
 Key differences:
-- **Minimal options**: only `-debug`, `-help`, `-list`, `-log`, `-verbose`, `-monitor`, `-quiet`, `-seed`
+- **Minimal fixed options**: only `-debug`, `-help`, `-list`, `-log`, `-verbose`, `-monitor`, `-quiet`, `-regard-warnings`, `-seed`
+- **Arbitrary key-value pairs**: conjure accepts any `-key value` pair as script parameters (e.g., `-size 100x100 -color blue`)
 - **Script files are the main argument**: each file is an MSL script
 - **No image pipeline**: all processing is defined in the script
 

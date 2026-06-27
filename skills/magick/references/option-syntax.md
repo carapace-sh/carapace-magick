@@ -10,25 +10,25 @@ How `magick` option names are structured: the `-`/`+` prefix convention, boolean
 
 ### Core Patterns
 
-|| Pattern | Example | Description |
-||---------|---------|-------------|
-|| `-word` | `-verbose`, `-strip` | Boolean flag (enable) |
-|| `-word value` | `-resize 200x200`, `-quality 85` | Option with value |
-|| `+word` | `+verbose`, `+append` | Reset/inverse form |
-|| `+word` | `+background` | Reset to default (no value) |
-|| `+word value` | `+clone 0` | Inverse operation (rare, most +forms take no value) |
+| Pattern | Example | Description |
+|---------|---------|-------------|
+| `-word` | `-verbose`, `-strip` | Boolean flag (enable) |
+| `-word value` | `-resize 200x200`, `-quality 85` | Option with value |
+| `+word` | `+verbose`, `+append` | Reset/inverse form |
+| `+word` | `+background` | Reset to default (no value) |
+| `+word value` | `+clone 0` | Inverse operation (rare, most +forms take no value) |
 
 ### The `-` vs `+` Convention
 
 This is a **core pattern** unique to ImageMagick. The `+` prefix is not just "disable" — its meaning depends on the option type:
 
-|| Option Type | `-form` | `+form` | Example |
-||------------|---------|---------|---------|
-|| **Setting** (boolean) | Enable | Disable | `-verbose` / `+verbose` |
-|| **Setting** (value) | Set value | Reset to default | `-background blue` / `+background` |
-|| **Operator** (directional) | One direction | Other direction | `-append` (top-to-bottom) / `+append` (left-to-right) |
-|| **Operator** (on/off) | Apply | Remove/undo | `-clip` / `+clip` |
-|| **Stack operator** | Normal | Inverse | `-clone 0` / `+clone 0` (rarely different) |
+| Option Type | `-form` | `+form` | Example |
+|------------|---------|---------|---------|
+| **Setting** (boolean) | Enable | Disable | `-verbose` / `+verbose` |
+| **Setting** (value) | Set value | Reset to default | `-background blue` / `+background` |
+| **Operator** (directional) | One direction | Other direction | `-append` (top-to-bottom) / `+append` (left-to-right) |
+| **Operator** (on/off) | Apply | Remove/undo | `-clip` / `+clip` |
+| **Stack operator** | Normal | Inverse | `-clone 0` / `+clone 0` (rarely different) |
 
 ### Lexing Implication
 
@@ -41,16 +41,16 @@ The lexer must:
 
 Options are classified by whether they consume a following token:
 
-|| Class | Prefix | Takes Value? | Example |
-||-------|--------|-------------|---------|
-|| Boolean setting | `-` | No | `-verbose`, `-antialias`, `-monitor` |
-|| Boolean setting | `+` | No | `+verbose`, `+antialias` |
-|| Value setting | `-` | Yes | `-background color`, `-quality value` |
-|| Value setting (reset) | `+` | No | `+background`, `+quality` |
-|| Value operator | `-` | Yes | `-resize geometry`, `-blur geometry` |
-|| No-value operator | `-` | No | `-strip`, `-flip`, `-negate` |
-|| Directional operator | `-`/`+` | No or Yes | `-append` / `+append` (no value) |
-|| Stack operator | `-`/`+` | Yes | `-clone indexes`, `-delete indexes` |
+| Class | Prefix | Takes Value? | Example |
+|-------|--------|-------------|---------|
+| Boolean setting | `-` | No | `-verbose`, `-antialias`, `-monitor` |
+| Boolean setting | `+` | No | `+verbose`, `+antialias` |
+| Value setting | `-` | Yes | `-background color`, `-quality value` |
+| Value setting (reset) | `+` | No | `+background`, `+quality` |
+| Value operator | `-` | Yes | `-resize geometry`, `-blur geometry` |
+| No-value operator | `-` | No | `-strip`, `-flip`, `-negate` |
+| Directional operator | `-`/`+` | No or Yes | `-append` / `+append` (no value) |
+| Stack operator | `-`/`+` | Yes | `-clone indexes`, `-delete indexes` |
 
 The classification must be known from a **static option definition table** — it cannot be inferred from syntax alone.
 
@@ -89,14 +89,14 @@ magick input.jpg -annotate 0x0 "My text" output.jpg
 
 ### Special Characters in Values
 
-|| Context | Special Characters | Escape |
-||---------|-------------------|--------|
-|| General option values | `\`, `%`, `@` | `\` prefix |
-|| Geometry values | `x`, `%`, `^`, `!`, `>`, `<`, `@` | Contextual (not escaped, parsed as geometry) |
-|| Color values | `#`, `rgb()`, `hsl()` | Not escaped (parsed as color) |
-|| `-format` strings | `%[...]`, `%w`, `%h`, `%m` | `\\%` for literal `%` |
-|| `-draw` primitives | `"`, `'`, `,`, `(`, `)` | `\` or quoting |
-|| `-define` keys | `:` | `\: ` (rarely needed) |
+| Context | Special Characters | Escape |
+|---------|-------------------|--------|
+| General option values | `\`, `%`, `@` | `\` prefix |
+| Geometry values | `x`, `%`, `^`, `!`, `>`, `<`, `@` | Contextual (not escaped, parsed as geometry) |
+| Color values | `#`, `rgb()`, `hsl()` | Not escaped (parsed as color) |
+| `-format` strings | `%[...]`, `%w`, `%h`, `%m` | `%%` for literal `%` (e.g. `-format "%%w"`) |
+| `-draw` primitives | `"`, `'`, `,`, `(`, `)` | `\` or quoting |
+| `-define` keys | `:` | `\:` (rarely needed) |
 
 ### Parentheses in Shell
 
