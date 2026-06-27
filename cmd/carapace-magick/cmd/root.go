@@ -1,0 +1,84 @@
+package cmd
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/carapace-sh/carapace"
+	"github.com/carapace-sh/carapace-magick/pkg/argstream"
+	"github.com/carapace-sh/carapace-magick/pkg/completer"
+	"github.com/spf13/cobra"
+)
+
+var rootCmd = &cobra.Command{
+	Use:                "magick",
+	Short:              "ImageMagick image pipeline processor",
+	Run:                func(cmd *cobra.Command, args []string) {},
+	DisableFlagParsing: true,
+}
+
+func Execute() {
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}
+
+func init() {
+	profile := argstream.DefaultMagickProfile
+
+	carapace.Gen(rootCmd).Standalone()
+
+	carapace.Gen(rootCmd).PositionalAnyCompletion(
+		carapace.ActionCallback(func(c carapace.Context) carapace.Action {
+			args, trailingSpace := completer.ContextToArgs(c)
+			ctx := argstream.ParseForCompletionWithProfile(args, trailingSpace, profile)
+
+			if ctx.PartialOption != "" && !trailingSpace {
+				return carapace.Batch(
+					completer.ActionOptions(ctx, profile),
+					actionOptionValueIfExpected(ctx),
+				).ToA()
+			}
+
+			var actions []carapace.Action
+			for _, token := range ctx.ExpectedTokens {
+				switch token {
+				case argstream.ExpectedToolName:
+					actions = append(actions, completer.ActionToolNames())
+				case argstream.ExpectedOptionName, argstream.ExpectedPlusOptionName:
+					actions = append(actions, completer.ActionOptions(ctx, profile))
+				case argstream.ExpectedOptionValue, argstream.ExpectedDefineValue:
+					actions = append(actions, completer.ActionOptionValue(ctx))
+				case argstream.ExpectedImage, argstream.ExpectedOutput:
+					actions = append(actions, carapace.ActionFiles())
+				case argstream.ExpectedLParen:
+					actions = append(actions, carapace.ActionValues("("))
+				case argstream.ExpectedRParen:
+					actions = append(actions, carapace.ActionValues(")"))
+				}
+			}
+
+			if len(actions) == 0 {
+				return carapace.ActionValues()
+			}
+			return carapace.Batch(actions...).ToA()
+		}),
+	)
+}
+
+func actionOptionValueIfExpected(ctx *argstream.CompletionContext) carapace.Action {
+	if ctx.CurrentOption != nil && slicesContains(ctx.ExpectedTokens, argstream.ExpectedOptionValue) {
+		return completer.ActionOptionValue(ctx)
+	}
+	return carapace.ActionValues()
+}
+
+func slicesContains[T comparable](s []T, v T) bool {
+	for _, x := range s {
+		if x == v {
+			return true
+		}
+	}
+	return false
+}

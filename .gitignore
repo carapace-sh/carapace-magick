@@ -1,0 +1,17 @@
+.crush/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+/bin/
+/carapace-magick
+/carapace-magick-identify
+/carapace-magick-mogrify
+/carapace-magick-compare
+/carapace-magick-composite
+/carapace-magick-montage
+dist
+profile.cov

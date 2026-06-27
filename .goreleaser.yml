@@ -1,0 +1,88 @@
+version: 2
+
+builds:
+  - id: carapace-magick
+    main: ./cmd/carapace-magick
+    binary: carapace-magick
+  - id: carapace-magick-debug
+    main: ./cmd/carapace-magick-debug
+    binary: carapace-magick-debug
+  - id: carapace-magick-identify
+    main: ./cmd/carapace-magick-identify
+    binary: carapace-magick-identify
+  - id: carapace-magick-mogrify
+    main: ./cmd/carapace-magick-mogrify
+    binary: carapace-magick-mogrify
+  - id: carapace-magick-compare
+    main: ./cmd/carapace-magick-compare
+    binary: carapace-magick-compare
+  - id: carapace-magick-composite
+    main: ./cmd/carapace-magick-composite
+    binary: carapace-magick-composite
+  - id: carapace-magick-montage
+    main: ./cmd/carapace-magick-montage
+    binary: carapace-magick-montage
+
+archives:
+  - id: carapace-magick
+    builds:
+      - carapace-magick
+      - carapace-magick-identify
+      - carapace-magick-mogrify
+      - carapace-magick-compare
+      - carapace-magick-composite
+      - carapace-magick-montage
+    format_overrides:
+      - goos: windows
+        format: zip
+
+brews:
+  -
+    name: carapace-magick
+    description: "An ImageMagick magick argstream lexer and completer."
+    homepage: "https://github.com/carapace-sh/carapace-magick"
+    license: "MIT"
+    repository:
+      owner: rsteube
+      name: homebrew-tap
+      token: "{{ .Env.GORELEASER_GITHUB_TOKEN }}"
+    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+
+scoops:
+  -
+    description: "An ImageMagick magick argstream lexer and completer."
+    homepage: "https://github.com/carapace-sh/carapace-magick"
+    license: "MIT"
+    repository:
+      owner: rsteube
+      name: scoop-bucket
+      token: "{{ .Env.GORELEASER_GITHUB_TOKEN }}"
+    commit_msg_template: "Scoop update for {{ .ProjectName }} version {{ .Tag }}"
+
+aurs:
+  -
+    description: "An ImageMagick magick argstream lexer and completer."
+    homepage: "https://github.com/carapace-sh/carapace-magick"
+    license: "MIT"
+    maintainers:
+      - rsteube <rsteube@users.noreply.github.com>
+    private_key: '{{ .Env.AUR_KEY }}'
+    git_url: 'ssh://aur@aur.archlinux.org/carapace-magick-bin.git'
+
+nfpms:
+  -
+    description: "An ImageMagick magick argstream lexer and completer."
+    homepage: "https://github.com/carapace-sh/carapace-magick"
+    license: "MIT"
+    maintainer: rsteube <rsteube@users.noreply.github.com>
+    formats:
+      - apk
+      - deb
+      - rpm
+      - termux.deb
+
+publishers:
+  - name: fury
+    cmd: "bash -c \"[[ {{.ArtifactPath}} =~ ^.*.(deb|rpm)$ ]] && curl -F package=@{{abs .ArtifactPath}} https://$FURY_TOKEN@push.fury.io/rsteube/ || true\""
+    env:
+      - FURY_TOKEN={{ .Env.FURY_TOKEN }}
