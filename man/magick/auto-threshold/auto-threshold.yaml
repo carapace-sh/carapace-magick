@@ -1,11 +1,13 @@
 Kapur:
-  Kapur threshold method. Entropy-based automatic thresholding.
-  Maximizes the entropy of the foreground and background distributions.
+  Maximum entropy thresholding. Maximizes the entropy of the foreground
+  and background distributions.
 OTSU:
-  OTSU threshold method. Variance-based automatic thresholding.
-  Minimizes within-class variance between foreground and background.
-  The most widely used automatic thresholding algorithm.
+  Cluster-based image thresholding. Minimizes within-class variance
+  between foreground and background. The most widely used automatic
+  thresholding algorithm.
 Triangle:
-  Triangle threshold method. Geometric thresholding.
-  Constructs a line between the histogram peak and the far end,
-  then finds the maximum distance point. Works well for skewed histograms.
+  Geometric thresholding. Constructs a line between the histogram peak
+  and the far end, then finds the maximum distance point. Works well
+  for skewed histograms.
+Undefined:
+  No method specified. Equivalent to OTSU.

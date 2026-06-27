@@ -45,3 +45,55 @@ Oklab:
 Oklch:
   Oklch color space. Polar form of Oklab.
   L is lightness, C is chroma, H is hue angle.
+Adobe98:
+  Adobe RGB 1998 color space. Wide gamut RGB for print.
+CAT02LMS:
+  CAT02 LMS color space. Cone response values for chromatic adaptation.
+CIELab:
+  CIE L*a*b* color space. Same as Lab.
+DisplayP3:
+  Display P3 color space. Wide gamut RGB for modern displays.
+HCL:
+  HCL color space. Hue, Chroma, Luminance.
+HCLp:
+  HCLp color space. Polar form of HCL with improved hue uniformity.
+HSB:
+  HSB color space. Hue, Saturation, Brightness (like a cone peak downward).
+HSI:
+  HSI color space. Hue, Saturation, Intensity.
+HSL:
+  HSL color space. Hue, Saturation, Lightness (double cone, peaks top and bottom).
+HSV:
+  HSV color space. Hue, Saturation, Value.
+HWB:
+  HWB color space. Hue, Whiteness, Blackness.
+Jzazbz:
+  Jzazbz color space. Perceptually uniform color model for HDR.
+LCH:
+  LCH color space. Lightness, Chroma, Hue (same as LCHab).
+LinearGray:
+  Linear Gray color space. Grayscale with linear light values.
+LMS:
+  LMS color space. Long, Medium, Short cone response values.
+ProPhoto:
+  ProPhoto RGB color space. Extremely wide gamut for photography.
+Rec601YCbCr:
+  Rec. 601 Y'CbCr color space. Standard definition video luma and chroma.
+Rec709YCbCr:
+  Rec. 709 Y'CbCr color space. High definition video luma and chroma.
+scRGB:
+  scRGB color space. Extended gamut RGB. Requires HDRI support.
+xyY:
+  CIE xyY color space. Chromaticity coordinates and luminance.
+YCbCr:
+  Y'CbCr color space. Luma and blue/red chroma difference.
+YDbDr:
+  YDbDr color space. SECAM analog video color space.
+YCC:
+  YCC color space. Kodak PhotoCD YCC encoding.
+YIQ:
+  YIQ color space. NTSC analog video color space.
+YPbPr:
+  Y'PbPr color space. Component analog video color space.
+YUV:
+  YUV color space. PAL analog video color space.

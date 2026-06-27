@@ -1,6 +1,9 @@
 Over:
-  Source composite over destination. The default compositing method.
+  Source composited over the destination. The default alpha blending compose method.
   Alpha-blends the source image on top of the destination.
+Clear:
+  Both the color and the alpha of the destination are cleared.
+  Neither the source nor the destination are used (except for destination size and meta-data).
 In:
   Source-in composite. Keeps only the overlapping area of the source.
   Destination is replaced; non-overlapping areas become transparent.
@@ -68,32 +71,28 @@ HardMix:
   Hard mix blend. Adds colors and thresholds at 128.
   Produces posterized, pop-art style results.
 Dst:
-  Destination composite. Only the destination is retained.
-  Source is completely ignored.
+  The destination is left untouched. The source image is completely ignored.
+DstOver:
+  The destination is composited over the source and the result replaces the destination.
 DstIn:
-  Destination-in composite. Keeps destination only where source has alpha.
-  Source acts as a mask for the destination.
+  The part of the destination lying inside of the source replaces the destination.
+  Areas not overlaid are cleared.
 DstOut:
-  Destination-out composite. Keeps destination only where source is transparent.
-  Source alpha punches holes in the destination.
+  The part of the destination lying outside of the source replaces the destination.
 DstAtop:
-  Destination-atop composite. Destination is composited on top of source
-  but only where the source has alpha.
+  The part of the destination lying inside of the source is composited over the source
+  and replaces the destination. Areas not overlaid are cleared.
 Src:
-  Source composite. Only the source is retained.
-  Destination is completely replaced.
+  The source is copied to the destination. The destination is not used as input, though it is cleared.
 SrcIn:
-  Source-in composite. Keeps source only where destination has alpha.
-  Destination alpha masks the source.
+  The part of the source lying inside of the destination replaces the destination.
 SrcOut:
-  Source-out composite. Keeps source only where destination is transparent.
-  Non-overlapping source areas are retained.
+  The part of the source lying outside of the destination replaces the destination.
 SrcAtop:
-  Source-atop composite. Source is placed on top but only where
-  destination has alpha.
+  The part of the source lying inside of the destination is composited onto the destination.
 Copy:
-  Copy composite. Source replaces destination entirely.
-  Same as Src but with explicit semantic naming.
+  Copy composite. Equivalent to Src but without clearing the parts of the destination
+  image that are not overlaid.
 CopyRed:
   Copy red channel. Copies only the red channel from source to destination.
   Other channels are left unchanged.
@@ -114,3 +113,93 @@ CopyYellow:
   Copy yellow channel (CMYK). Copies the yellow channel from source.
 CopyBlack:
   Copy black channel (CMYK). Copies the key (black) channel from source.
+Xor:
+  The part of the source that lies outside of the destination is combined with the part
+  of the destination that lies outside of the source. Source or Destination, but not both.
+Plus:
+  The source is added to the destination and replaces the destination.
+  Useful for averaging or a controlled merger of two images, rather than a direct overlay.
+MinusDst:
+  Subtract the colors in the source image from the destination image.
+  When transparency is involved, opaque areas are subtracted from any destination opaque areas.
+MinusSrc:
+  Subtract the colors in the destination image from the source image.
+ModulusAdd:
+  Add source and destination with modulus arithmetic.
+ModulusSubtract:
+  Subtract source from destination with modulus arithmetic.
+DivideDst:
+  Divide destination by source.
+DivideSrc:
+  Divide source by destination.
+Multiply:
+  Source is multiplied by destination and replaces the destination. The resultant color
+  is always at least as dark as either of the two constituent colors. Multiplying any
+  color with black produces black. Multiplying any color with white leaves the original unchanged.
+Screen:
+  Source and destination are complemented and then multiplied and then replace the destination.
+  The resultant color is always at least as light as either of the two constituent colors.
+Bumpmap:
+  Bumpmap composite. Uses the source as a bump map to shade the destination.
+Dissolve:
+  Dissolve the source image by the given percentage before overlaying over the destination.
+Displace:
+  Use the overlay image as a relative displacement map to displace the destination.
+Distort:
+  Like Displace but using absolute coordinates relative to the center of the overlay.
+Blur:
+  Variable Blur Mapping. Each pixel in the overlaid region is replaced with an
+  Elliptical Weighted Average, scaled according to the overlay grayscale mapping.
+SeamlessBlend:
+  Seamlessly insert the overlay image onto the background image. Requires a mask.
+SaliencyBlend:
+  Merge overlay and background such that the most salient (most detail) image shows at each pixel.
+ChangeMask:
+  Replace any destination pixel that is similar to the source (per `-fuzz`) with transparency.
+None:
+  No composition operator is applied.
+Replace:
+  Replace the destination with the source (alias for Copy).
+Mathematics:
+  Merge source and destination according to the formula `A*Sc*Dc + B*Sc + C*Dc + D`.
+  Arguments are set with `-define compose:args=A,B,C,D`.
+Modulate:
+  Modify the destination image's brightness and saturation according to a grayscale watermark.
+Hue:
+  Hue composite. Copy the hue of the source to the destination.
+Saturate:
+  Saturate composite. Copy the saturation of the source to the destination.
+Colorize:
+  Colorize composite. Copy the hue and saturation of the source to the destination.
+Luminize:
+  Luminize composite. Copy the luminosity of the source to the destination.
+Intensity:
+  Intensity composite. Copy the intensity of the source to the destination.
+DarkenIntensity:
+  Darken by intensity. Selects the darker of the destination and source by intensity.
+LightenIntensity:
+  Lighten by intensity. Selects the lighter of the destination and source by intensity.
+Freeze:
+  A variation of reflect mode (base and blend color inverted, the result inverted again).
+Reflect:
+  Useful when adding shining objects or light zones. The formula is similar to color dodge
+  but the result is not as bright. Looks a bit like soft light.
+Stamp:
+  Similar to average mode. Helpful when applying relief or bump textures.
+Interpolate:
+  Combines multiply and screen mode. Looks similar for very dark or bright colors.
+Negate:
+  The "opposite" of difference mode. Colors between black and white become brighter.
+PegtopLight:
+  Almost equivalent to Soft-Light, but using a continuous mathematical formula
+  rather than two conditionally selected formulae.
+SoftDodge:
+  Combination of color dodge and inverse color burn, but smoother.
+  The base image is darkened a bit, but very bright blend colors are dodged in.
+SoftBurn:
+  Combination of color burn and inverse color dodge, but smoother.
+  The base image is lightened a bit, but very dark blend colors are burned in.
+Stereo:
+  Create a stereo anaglyph from the source and destination.
+RMSE:
+  Root Mean Square Error composition.

@@ -1,0 +1,35 @@
+align: Text alignment types.
+alpha: Alpha channel types.
+channel: Channel types.
+color: Named color values.
+colorspace: Colorspace types.
+compose: Composition operators.
+compress: Compression types.
+configure: Build configuration options.
+delegate: Delegate format handlers.
+density: Density options.
+depth: Bit depth options.
+dispose: GIF disposal methods.
+distort: Distortion methods.
+evaluate: Pixel evaluation operators.
+filter: Resampling filter types.
+font: Available font names.
+format: Image format types.
+gravity: Gravity direction types.
+interlace: Interlace scheme types.
+kernel: Morphology kernel shapes.
+layers: Layer composition methods.
+line: Line join and cap types.
+list: List of list types.
+log: Log event categories.
+metric: Image comparison metrics.
+method: Paint method types.
+morphology: Morphology operation methods.
+orientation: EXIF orientation types.
+policy: Security policy settings.
+resource: Resource limit types.
+sparse-color: Sparse color interpolation methods.
+storage: Pixel storage types.
+threshold: Threshold method types.
+type: Image type classifications.
+virtual-pixel: Virtual pixel method types.

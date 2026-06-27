@@ -1,0 +1,7 @@
+Line: Line interlace. Scanlines are progressive (top to bottom).
+None: No interlacing. Image is written top to bottom.
+Plane: Plane interlace. Each color channel is written as a separate plane.
+Partition: Partition interlace. Like plane interlace but each channel is written to a separate file.
+GIF: GIF-style interlace.
+JPEG: JPEG-style interlace.
+PNG: PNG-style interlace (Adam7).

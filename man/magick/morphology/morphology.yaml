@@ -1,0 +1,27 @@
+Correlate: Correlate the image with the kernel.
+Convolve: Convolve the image with the kernel.
+Dilate: Dilate the image using the kernel.
+Erode: Erode the image using the kernel.
+Close: Close (dilate then erode) the image using the kernel.
+Open: Open (erode then dilate) the image using the kernel.
+DilateIntensity: Dilate by intensity (brightest pixel in neighborhood).
+ErodeIntensity: Erode by intensity (darkest pixel in neighborhood).
+CloseIntensity: Close by intensity.
+OpenIntensity: Open by intensity.
+DilateI: Alias for DilateIntensity.
+ErodeI: Alias for ErodeIntensity.
+CloseI: Alias for CloseIntensity.
+OpenI: Alias for OpenIntensity.
+Smooth: Smooth the image (average of dilate and erode).
+EdgeOut: Outer edge detection (dilate minus original).
+EdgeIn: Inner edge detection (original minus erode).
+Edge: Edge detection (dilate minus erode).
+TopHat: Top-hat transform (original minus open).
+BottomHat: Bottom-hat transform (close minus original).
+Hmt: Hit-miss transform.
+HitNMiss: Hit-and-miss transform (alias for Hmt).
+HitAndMiss: Hit-and-miss transform.
+Thinning: Thinning using hit-and-miss.
+Thicken: Thickening using hit-and-miss.
+Distance: Distance transform from the edge.
+IterativeDistance: Iterative distance transform from the edge.

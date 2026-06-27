@@ -16,6 +16,9 @@ NCC:
 PAE:
   Peak absolute error. Largest single-pixel difference between images.
   Reports the worst-case pixel error.
+PHASE:
+  Phase correlation. Frequency-domain method for image alignment.
+  Robust to noise and illumination changes.
 PHASH:
   Perceptual hash. Measures perceptual similarity between images.
   Lower values indicate more similar visual appearance.
@@ -32,6 +35,9 @@ SSIM:
   Structural similarity index. Perceptual quality metric.
   Range [-1, 1] where 1 indicates identical images. Better models
   human visual perception than MSE-based metrics.
+DPC:
+  Discrete phase correlation. Measures phase correlation between images.
+  Useful for image registration and alignment.
 DSSIM:
   Dissimilarity based on SSIM. 1 - SSIM normalized.
   Range [0, ∞) where 0 indicates identical images.

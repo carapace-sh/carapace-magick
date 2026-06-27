@@ -1,0 +1,29 @@
+B44A: B44A compression (OpenEXR).
+B44: B44 compression (OpenEXR).
+BZip: BZip2 block compression.
+DWAA: DWAA compression (OpenEXR 3).
+DWAB: DWAB compression (OpenEXR 3).
+DXT1: DXT1 compression (DDS).
+DXT3: DXT3 compression (DDS).
+DXT5: DXT5 compression (DDS).
+BC7: BC7 compression (DDS).
+Fax: CCITT Group 3 Fax compression.
+Group4: CCITT Group 4 Fax compression.
+JBIG1: JBIG1 compression.
+JBIG2: JBIG2 compression.
+JPEG2000: JPEG 2000 compression.
+JPEG: JPEG compression.
+LERC: Limited Error Raster Compression.
+LosslessJPEG: Lossless JPEG compression (requires patched JPEG library).
+Lossless: Lossless compression.
+LZMA: LZMA compression.
+LZW: LZW compression.
+None: No compression.
+Piz: Piz compression (OpenEXR).
+Pxr24: Pxr24 compression (OpenEXR).
+RLE: Run-Length Encoding compression.
+RunlengthEncoded: Run-Length Encoding compression (alias for RLE).
+WebP: WebP compression.
+ZipS: Zip compression (OpenEXR).
+Zip: Zip/Deflate compression.
+Zstd: Zstandard compression.

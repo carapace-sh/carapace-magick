@@ -13,3 +13,8 @@ float:
 double:
   64-bit floating-point storage. IEEE 754 double precision.
   Maximum precision for computational accuracy.
+long:
+  Long integer storage. Platform-dependent size.
+quantum:
+  Native pixel depth of the ImageMagick build.
+  Depends on the compile-time `MAGICKCORE_QUANTUM_DEPTH` setting.

@@ -1,0 +1,4 @@
+global: |
+  A global define key that applies to any image format.
+  Global defines control general ImageMagick behavior,
+  such as `exif:ignore` or `jpeg:preserve-settings`.

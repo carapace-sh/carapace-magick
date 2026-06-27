@@ -1,0 +1,26 @@
+identify: |
+  Describe the format and characteristics of one or more image files.
+  Reports if an image is incomplete or corrupt. The information returned
+  includes the image number, file name, width and height, whether the
+  image is colormapped, the number of colors, the number of bytes, the
+  format (JPEG, PNM, etc.), and the processing time. Many more attributes
+  are available with `-verbose`.
+mogrify: |
+  Resize an image, blur, crop, despeckle, dither, draw on, flip, join,
+  re-sample, and much more. Similar to `magick` except that the original
+  image file is overwritten (unless you change the file suffix with the
+  `-format` option) with any changes you request.
+compare: |
+  Mathematically and visually annotate the difference between an image
+  and its reconstruction. Reports a mathematical measure of the
+  difference and produces a visual difference image where affected pixels
+  are highlighted.
+composite: |
+  Overlap one image over another. Supports various composition operators
+  including `atop`, `over`, and `seamless-blend`. Use `-geometry` to
+  position the overlay and `-compose` to select the composition method.
+montage: |
+  Create a composite image by combining several separate images. The
+  images are tiled on the composite image optionally adorned with a
+  border, frame, image name, and more. Use the Ashlar pseudo-image
+  format to lay out an image sequence in continuous irregular courses.

@@ -1,0 +1,4 @@
+true: |
+  A define value. The valid values depend on the format and key.
+  Use `-list define` or consult the ImageMagick documentation for
+  format-specific define keys and their accepted values.

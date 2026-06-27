@@ -1,0 +1,7 @@
+aliceblue: |
+  A named color from the SVG, X11, or XPM color standards.
+  Named colors can be used wherever a color value is expected.
+  Use `magick -list color` to see all available named colors.
+
+  Colors are specified by name (e.g. `red`, `AliceBlue`) or by
+  value (e.g. `#FF0000`, `srgb(255,0,0)`, `rgb(100%,0%,0%)`).

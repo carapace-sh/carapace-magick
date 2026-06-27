@@ -3,6 +3,8 @@ Undefined:
 Background:
   Background color. Pixels outside the image bounds are filled
   with the current background color.
+Black:
+  Black. Out-of-bounds areas are filled with black.
 Constant:
   Constant color. Pixels outside bounds use a fixed color.
   Similar to Background but explicitly set.
@@ -12,6 +14,8 @@ Dither:
 Edge:
   Edge extend. Repeats the nearest edge pixel outward.
   Extends the border infinitely; common default method.
+Gray:
+  Gray. Out-of-bounds areas are filled with gray.
 Mirror:
   Mirror reflection. Reflects the image at its boundaries.
   Creates seamless tiling by mirroring adjacent pixels.
@@ -42,3 +46,5 @@ VerticalTileEdge:
 CheckerTile:
   Checker tile. Alternates between the image and background
   in a checkerboard pattern for out-of-bounds areas.
+White:
+  White. Out-of-bounds areas are filled with white.

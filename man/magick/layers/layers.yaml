@@ -1,0 +1,16 @@
+Coalesce: Merge image sequence. Each image is replaced with a copy of the canvas the size of the first image.
+CompareAny: Layer comparison — any pixel changed.
+CompareClear: Layer comparison — pixels that became transparent.
+CompareOverlay: Layer comparison — pixels that were overlaid.
+Dispose: Dispose layer method.
+Optimize: Optimize layers by removing duplicate or transparent pixels.
+OptimizeFrame: Optimize each frame by removing pixels that are unchanged from the previous frame.
+OptimizePlus: Like OptimizeFrame but also tries to crop frames.
+OptimizeTransparency: Remove transparent pixels that are the same as the background.
+RemoveDups: Remove duplicate images from the sequence.
+RemoveZero: Remove images with zero delay.
+Composite: Composite layers using the current `-compose` method.
+Merge: Merge all images in the sequence into a single image.
+Flatten: Flatten the image sequence into a single image with a white background.
+Mosaic: Mosaic the image sequence into a single image.
+TrimBounds: Trim the layers to the bounding box of all images.

@@ -1,0 +1,1736 @@
+adaptive-blur: |-
+  Adaptively blur pixels, with decreasing effect near edges.
+
+  A Gaussian operator of the given radius and standard deviation (`sigma`) is used. If `sigma` is not given it defaults to 1.
+
+  The `sigma` value is the important argument, and determines the actual amount of blurring that will take place.
+
+  The `radius` is only used to determine the size of the array which holds the calculated Gaussian distribution. It should be an integer. If not given, or set to zero, IM will calculate the largest possible radius that will provide meaningful results for the Gaussian distribution.
+adaptive-resize: |-
+  Resize the image using data-dependent triangulation.
+
+  See Image Geometry for complete details about the *geometry* argument. The `-adaptive-resize` option defaults to data-dependent triangulation. Use the `-filter` to choose a different resampling algorithm. Offsets, if present in the geometry string, are ignored, and the `-gravity` option has no effect.
+adaptive-sharpen: |-
+  Adaptively sharpen pixels, with increasing effect near edges.
+
+  A Gaussian operator of the given radius and standard deviation (`sigma`) is used. If `sigma` is not given it defaults to 1.
+
+  The `sigma` value is the important argument, and determines the actual amount of blurring that will take place.
+
+  The `radius` is only used to determine the size of the array which holds the calculated Gaussian distribution. It should be an integer. If not given, or set to zero, IM will calculate the largest possible radius that will provide meaningful results for the Gaussian distribution.
+adjoin: |-
+  Join images into a single multi-image file.
+
+  This option is enabled by default. An attempt is made to save all images of an image sequence into the given output file. However, some formats, such as JPEG and PNG, do not support more than one image per file, and in that case ImageMagick is forced to write each image as a separate file. As such, if more than one image needs to be written, the filename given is modified by adding a `-scene` number before the suffix, in order to make distinct names for each image.
+
+  Use `+adjoin` to force each image to be written to separate files, whether or not the file format allows multiple images per file (for example, GIF, MIFF, and TIFF).
+
+  Including a C-style integer format string in the output filename will automagically enable `+adjoin` and are used to specify where the `-scene` number is placed in the filenames. These strings, such as '`%d`' or '`%03d`', are familiar to those who have used the standard `printf()`' C-library function. As an example, the command
+
+  will create a sequence of 17 images (the two given plus 15 more created by `-morph`), named: my00morph.jpg, my01morph.jpg, my02morph.jpg, ..., my16morph.jpg.
+alpha: |-
+  Gives control of the alpha/matte channel of an image.
+
+  Used to set a flag on an image indicating whether or not to use existing alpha channel data, to create an alpha channel, or to perform other operations on the alpha channel. Choose the argument `type` from the list below.
+
+  Note that while the obsolete `+matte` operation was the same as "``-alpha``` Off`", the ` >-matte` operation was the same as "``-alpha``` Set`" and not "``-alpha``` On`".
+annotate: |-
+  Annotate an image with text
+
+  This is a convenience for annotating an image with text. For more precise control over text annotations, use `-draw`.
+
+  The values `Xdegrees` and `Ydegrees` control the shears applied to the text, while `t`~`x`~ and `t`~`y`~ are offsets that give the location of the text relative any `-gravity` setting and defaults to the upper left corner of the image.
+
+  Using `-annotate` `degrees` or `-annotate` `degrees`x`degrees` produces an unsheared rotation of the text. The direction of the rotation is positive, which means a clockwise rotation if `degrees` is positive. (This conforms to the usual mathematical convention once it is realized that the positive `y`--direction is conventionally considered to be `downward` for images.)
+
+  The new (transformed) coordinates (`x'`, `y'`) of a pixel at position (`x`, `y`) in the image are calculated using the following matrix equation.
+
+  If `t`~`x`~ and `t`~`y`~ are omitted, they default to 0. This makes the bottom-left of the text becomes the upper-left corner of the image, which is probably undesirable. Adding a `-gravity` option in this case leads to nice results.
+
+  Text is any UTF-8 encoded character sequence. If `text` is of the form '@mytext.txt', the text is read from the file `mytext.txt`. Text
+antialias: |-
+  Enable/Disable of the rendering of anti-aliasing pixels when drawing fonts and lines.
+
+  By default, objects (e.g. text, lines, polygons, etc.) are antialiased when drawn. Use `+antialias` to disable the addition of antialiasing edge pixels. This will then reduce the number of colors added to an image to just the colors being directly drawn. That is, no mixed colors are added when drawing such objects.
+append: |-
+  Join current images vertically or horizontally.
+
+  This option creates a single longer image, by joining all the current images in sequence top-to-bottom. Use `+append` to stack images left-to-right.
+
+  If they are not of the same width, narrower images are padded with the current `-background` color setting, and their position relative to each other can be controlled by the current `-gravity` setting.
+
+  For more flexible options, including the ability to add space between images, use `-smush`.
+attenuate: |-
+  Lessen (or intensify) when adding noise to an image.
+
+  If unset the value is equivalent to 1.0, or a maximum noise addition
+authenticate: |-
+  Decrypt a PDF with a password.
+
+  Use this option to supply a `password` for decrypting a PDF that has been encrypted using Microsoft Crypto API (MSC API). The encrypting using the MSC API is not supported.
+
+  For a different encryption method, see `-encipher` and `-decipher`.
+auto-gamma: |-
+  Automagically adjust gamma level of image.
+
+  This calculates the mean values of an image, then applies a calculated `-gamma` adjustment so that the mean color in the image will get a value of 50%.
+
+  This means that any solid 'gray' image becomes 50% gray.
+
+  This works well for real-life images with little or no extreme dark and light areas, but tend to fail for images with large amounts of bright sky or dark shadows. It also does not work well for diagrams or cartoon like images.
+
+  It uses the `-channel` setting, (including the '`sync`' flag for channel synchronization), to determine which color values is used and modified. As the default `-channel` setting is '`RGB,sync`', channels are modified together by the same gamma value, preserving colors.
+auto-level: |-
+  Automagically adjust color levels of image.
+
+  This is a 'perfect' image normalization operator. It finds the exact minimum and maximum color values in the image and then applies a `-level` operator to stretch the values to the full range of values.
+
+  The operator is not typically used for real-life images, image scans, or JPEG format images, as a single 'out-rider' pixel can set a bad min/max values for the `-level` operation. On the other hand it is the right operator to use for color stretching gradient images being used to generate Color lookup tables, distortion maps, or other 'mathematically' defined images.
+
+  The operator is very similar to the `-normalize`, `-contrast-stretch`, and `-linear-stretch` operators, but without 'histogram binning' or 'clipping' problems that these operators may have. That is `-auto-level` is the perfect or ideal version these operators.
+
+  It uses the `-channel` setting, (including the special '`sync`' flag for channel synchronization), to determine which color values are used and modified. As the default `+channel` setting is '`RGB,sync`', the '`sync`' ensures that the color channels will are modified together by the same gamma value, preserving colors, and ignoring transparency.
+auto-orient: |-
+  Adjusts an image so that its orientation is suitable for viewing (i.e. top-left orientation).
+
+  This operator reads and resets the EXIF image profile setting 'Orientation' and then performs the appropriate 90 degree rotation on the image to orient the image, for correct viewing.
+
+  This EXIF profile setting is usually set using a gravity sensor in digital camera, however photos taken directly downward or upward may not have an appropriate value. Also images that have been orientation 'corrected' without reseting this setting, may be 'corrected' again resulting in a incorrect result. If the EXIF profile was previously stripped, the `-auto-orient` operator will do nothing.
+auto-threshold: |-
+  Automatically perform image thresholding.
+
+  Here are the valid methods:
+
+  The computed threshold is returned as the `auto-threshold:verbose` image property. To instead print to your device, use `-define auto-threshold:verbose=true`.
+background: |-
+  Set the background color.
+
+  The color is specified using the format described under the `-fill` option. The default background color (if none is specified or found in the image) is white.
+bench: |-
+  Measure performance.
+
+  Repeat the entire command for the given number of `iterations` and report the user-time and elapsed time. For instance, consider the following command and its output. Modify the benchmark with the -duration to run the benchmark for a fixed number of seconds and -concurrent to run the benchmark in parallel (requires the OpenMP feature).
+
+  In this example, 5 iterations were completed at 2.174 iterations per second, using 3 threads and 3.190 seconds of the user allotted time, for a total elapsed time of 2.300 seconds.
+bias: |-
+  Add bias when convolving an image.
+
+  This option shifts the output of -convolve so that positive and negative results are relative to the specified bias value.
+
+  This is important for non-HDRI compilations of ImageMagick when dealing with convolutions that contain negative as well as positive values. This is especially the case with convolutions involving high pass filters or edge detection. Without an output bias, the negative values are clipped at zero.
+
+  When using an ImageMagick with the HDRI compile-time setting, -bias is not needed, as ImageMagick is able to store/handle any negative results without clipping to the color value range (0..QuantumRange).
+
+  See the discussion on HDRI implementations of ImageMagick on the page [High Dynamic-Range Images](../www/high-dynamic-range.html). For more about HDRI go the ImageMagick Usage pages or this Wikipedia entry.
+bilateral-blur: |-
+  A non-linear, edge-preserving, and noise-reducing smoothing filter for images. It replaces the intensity of each pixel with a weighted average of intensity values from nearby pixels. This weight is based on a Gaussian distribution. The weights depend not only on Euclidean distance of pixels, but also on the radiometric differences (e.g., range differences, such as color intensity, depth distance, etc.). This preserves sharp edges.
+
+  The intensity sigma is in the intensity space. A larger value means that farther colors within the pixel neighborhood (see spatial-sigma) will be mixed together, resulting in larger areas of semi-equal color.
+
+  The spatial sigma is in the coordinate space. A larger value means that farther pixels influence each other as long as their colors are close enough (see intensity-sigma ). When the neighborhood diameter is greater than zero, it specifies the neighborhood size regardless of spatial-sigma. Otherwise, the neighborhood diameter is proportional to spatial-sigma.
+
+  The default value for the intensity and spatial sigmas are `0.75*diameter` and `0.25*diameter` respectively.
+black-point-compensation: Use black point compensation.
+black-threshold: |-
+  Force to black all pixels below the threshold while leaving all pixels at or above the threshold unchanged.
+
+  The threshold value can be given as a percentage or as an absolute integer value within [0, `QuantumRange`] corresponding to the desired -channel value. See -threshold for more details on thresholds and resulting values.
+blend: |-
+  Blend an image into another by the given absolute value or percent.
+
+  Blend will average the images together ('plus') according to the percentages given and each pixels transparency. If only a single percentage value is given it sets the weight of the composite or 'source' image, while the background image is weighted by the exact opposite amount. That is a `-blend 30%` merges 30% of the 'source' image with 70% of the 'destination' image. Thus it is equivalent to `-blend 30x70%`.
+blue-primary: Set the blue chromaticity primary point.
+blue-shift: |-
+  Simulate a scene at nighttime in the moonlight. Start with a factor of 1.5
+
+  ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: {style="margin: auto;"}
+blur: |-
+  Reduce image noise and reduce detail levels.
+
+  Convolve the image with a Gaussian or normal distribution using the given `Sigma` value. The formula is:
+
+  The `sigma` value is the important argument, and determines the actual amount of blurring that will take place.
+
+  The `radius` is only used to determine the size of the array which holds the calculated Gaussian distribution. It should be an integer. If not given, or set to zero, IM will calculate the largest possible radius that will provide meaningful results for the Gaussian distribution.
+
+  The larger the `Radius` the slower the operation is. However too small a `Radius`, and severe aliasing effects may result. As a guideline, `Radius` should be at least twice the `Sigma` value, though three times will produce a more accurate result.
+
+  This option differs from `-gaussian-blur` simply by taking advantage of the separability properties of the distribution. Here we apply a single-dimensional Gaussian matrix in the horizontal direction, then repeat the process in the vertical direction.
+
+  The `-virtual-pixel` setting will determine how pixels which are outside the image proper are blurred into the final result.
+border: |-
+  Surround the image with a border of color.
+
+  Set the width and height using the `size` portion of the `geometry` argument. See Image Geometry for complete details about the *geometry* argument. Offsets are ignored.
+
+  As of IM 6.7.8-8, the `geometry` arguments behave as follows:
+
+  Set the border color by preceding with the `-bordercolor` setting.
+
+  The `-border` operation is affected by the current `-compose` setting and assumes that this is using the default '`Over`' composition method. It generates an image of the appropriate size colors by the current `-bordercolor` before overlaying the original image in the center of this net image. This means that with the default compose method of '`Over`' any transparent parts may be replaced by the current `-bordercolor` setting.
+
+  See also the `-frame` option, which has more functionality.
+bordercolor: |-
+  Set the border color.
+
+  The color is specified using the format described under the `-fill` option.
+
+  The default border color is `#DFDFDF`, [this shade of gray]{style="background-color: #dfdfdf;"}.
+brightness-contrast: |-
+  Adjust the brightness and/or contrast of the image.
+
+  Brightness and Contrast values apply changes to the input image. They are not absolute settings. A brightness or contrast value of zero means no change. The range of values is -100 to +100 on each. Positive values increase the brightness or contrast and negative values decrease the brightness or contrast. To control only contrast, set the brightness=0. To control only brightness, set contrast=0 or just leave it off.
+
+  You may also use `-channel` to control which channels to apply the brightness and/or contrast change. The default is to apply the same transformation to all channels.
+
+  Brightness and Contrast arguments are converted to offset and slope of a linear transform and applied using `-function polynomial "slope,offset"`.
+
+  The slope varies from 0 at contrast=-100 to almost vertical at contrast=+100. For brightness=0 and contrast=-100, the result are totally midgray. For brightness=0 and contrast=+100, the result will approach but not quite reach a threshold at midgray; that is the linear transformation is a very steep vertical line at mid gray.
+
+  Negative slopes, i.e. negating the image, are not possible with this function. All achievable slopes are zero or positive.
+
+  The offset varies from -0.5 at brightness=-100
+cache: (This option has been replaced by the `-limit` option).
+canny: |-
+  Canny edge detector uses a multi-stage algorithm to detect a wide range of edges in the image.
+
+  The thresholds range from 0 to 100% (e.g. -canny 0x1+10%+30%) with {`+lower-percent`} < {`+upper-percent`}. If {`+upper-percent`} is increased but {`+lower-percent`} remains the same, lesser edge components will be detected, but their lengths will be the same. If {`+lower-percent`} is increased but {`+upper-percent`} is the same, the same number of edge components will be detected but their lengths will be shorter. The default thresholds are shown.
+
+  The `radius`{x`sigma`} controls a gaussian blur applied to the input image to reduce noise and smooth the edges.
+
+  The `sigma` value is the important argument, and determines the actual amount of blurring that will take place.
+
+  The `radius` is only used to determine the size of the array which holds the calculated Gaussian distribution. It should be an integer. If not given, or set to zero, IM will calculate the largest possible radius that will provide meaningful results for the Gaussian distribution.
+caption: |-
+  Assign a caption to an image.
+
+  This option sets the caption meta-data of an image read in after this option has been given. To modify a caption of images already in memory use "``-set``` caption`".
+
+  The caption can contain special format characters listed in the [Format and Print Image Properties](../www/escape.html). These attributes are expanded when the caption is finally assigned to the individual images.
+
+  If the first character of `string` is `@`, the image caption is read from a file titled by the remaining characters in the string. Comments read in from a file are literal; no embedded formatting characters are recognized.
+
+  Caption meta-data is not visible on the image itself. To do that use the `-annotate` or `-draw` options instead.
+
+  For example,
+
+  produces an image caption of `MIFF:bird.miff 512x480` (assuming that the image `bird.miff` has a width of 512 and a height of 480.
+cdl: |-
+  Color correct with a color decision list.
+
+  Here is an example color correction collection:
+channel: |-
+  Specify those image color channels to which subsequent operators are limited.
+
+  The channels above can also be specified as a comma-separated list or can be abbreviated as a concatenation of the letters '`R`', '`G`', '`B`', '`A`', '`O`', '`C`', '`M`', '`Y`', '`K`'.
+
+  The numerals 0 to 31 may also be used to specify channels, where 0 to 5 are:
+
+  '`0`' equals `Red` or `Cyan`
+  '`1`' equals `Green` or `Magenta`
+  '`2`' equals `Blue` or `Yellow`
+  '`3`' equals `Black`
+  '`4`' equals `Alpha` or `Opacity`
+  '`5`' equals `Index`
+
+  For example, to only select the `Red` and `Blue` channels you can use any of the following:
+
+  All the channels that are present in an image can be specified using the special channel type `All`. Not all operators are 'channel capable', but generally any operators that are generally 'grey-scale' image operators, will understand this setting. See individual operator documentation.
+
+  On top of the normal channel selection an extra flag can be specified, '`Sync`'. This is turned on by default and if set means that operators that understand this flag should perform: cross-channel synchronization of the channels.
+channel-fx: |-
+  Exchange, extract, or copy one or more image channels.
+
+  The expression consists of one or more channels, either mnemonic or numeric (e.g. red or 0, green or 1, etc.), separated by certain operation symbols as follows:
+
+  For example, to create 3 grayscale images from the red, green, and blue channels of an image, use:
+
+  A channel without an operation symbol implies separate (i.e, semicolon).
+
+  Here we take an sRGB image and a grayscale image and inject the grayscale image into the alpha channel:
+
+  Use a similar command to define a read mask:
+
+  In this example, we compute the mean RGB value for all opaque pixels of an image:
+
+  Let's create two meta channels and populate them with a copy of the gray pixels:
+
+  Notice we save the results into a TIFF image file. Not all formats support multipectral images. TIFF, MIFF, MPC, and FTXT do.
+
+  Add `-debug pixel` prior to the `-channel-fx` option to track the channel morphology.
+charcoal: Simulate a charcoal drawing.
+chop: |-
+  Remove pixels from the interior of an image.
+
+  See Image Geometry for complete details about the *geometry* argument. The `width` and `height` given in the of the `size` portion of the `geometry` argument give the number of columns and rows to remove. The `offset` portion of the `geometry` argument is influenced by a `-gravity` setting, if present.
+
+  The `-chop` option removes entire rows and columns, and moves the remaining corner blocks leftward and upward to close the gaps.
+
+  While it can remove internal rows and columns of pixels, it is more typically used with as `-gravity` setting and zero offsets so as to remove a single edge from an image. Compare this to `-shave` which removes equal numbers of pixels from opposite sides of the image.
+
+  Using `-chop` effectively undoes the results of a `-splice` that was given the same `geometry` and `-gravity` settings.
+clahe: |-
+  Contrast limited adaptive histogram equalization.
+
+  The image is divided into tiles of `width` and `height` pixels. Append `%` to define the width and height as percentages of the image's dimensions. The tile size should be larger than the size of features to be preserved and respects the aspect ratio of the image. Add `!` to force an exact tile width and height. `number-bins` is the number of histogram bins per tile (min 2, max 65536). The number of histogram bins should be smaller than the number of pixels in a single tile. `clip-limit` is the contrast limit for localized changes in contrast. A clip-limit of 2 to 3 is a good starting place (e.g. -clahe 50x50%+128+3). Very large values will let the histogram equalization do whatever it wants to do, that is result in maximal local contrast. The value 1 will result in the original image. Note, if the number of bins and the clip-limit are omitted, they default to 128 and no clipping respectively.
+clamp: Set each pixel whose value is below zero to zero and any the pixel whose value
+  is above the quantum range to the quantum range (e.g. 65535) otherwise the pixel
+  value remains unchanged.
+clip: |-
+  Apply the clipping path if one is present.
+
+  If a clipping path is present, it is applied to subsequent operations.
+
+  For example, in the command
+
+  only the pixels within the clipping path are negated.
+
+  The `-clip` feature requires SVG support. If the SVG delegate library is not present, the option is ignored.
+
+  Use `+clip` to disable clipping for subsequent operations.
+clip-mask: |-
+  Clip the image as defined by this mask.
+
+  Use the alpha channel of the current image as a mask. Any areas that is white is not modified by any of the 'image processing operators' that follow, until the mask is removed. Pixels in the black areas of the clip mask are modified per the requirements of the operator.
+
+  In some ways this is similar to (though not the same) as defining a rectangular `-region`, or using the negative of the mask (third) image in a three image `-composite`, operation.
+
+  Use `+clip-mask` to disable clipping for subsequent operations.
+clip-path: |-
+  Clip along a named path from the 8BIM profile.
+
+  This is identical to `-clip` except choose a specific clip path in the event the image has more than one path available. ImageMagick supports UTF-8 encoding. If your named path is in a different encoding, use `iconv` to convert the clip path name to that encoding otherwise the path name will not match.
+
+  Use `+clip-path` to disable clipping for subsequent operations.
+clone: |-
+  Make a clone of an image (or images).
+
+  Inside parenthesis (where the operator is normally used) it will make a clone of the images from the last 'pushed' image sequence, and adds them to the end of the current image sequence. If used outside parentheses, an error is raised.
+
+  Specify the image by its index in the sequence. The first image is index 0. Negative indexes are relative to the end of the sequence; for example, `−1` represents the last image of the sequence. Specify a range of images with a dash (e.g. `0−4`). Separate multiple indexes with commas but no spaces (e.g. `0,2,5`). A value of '`0−−1` will effectively clone all the images.
+
+  The `+clone` will simply make a copy of the last image in the image sequence, and is thus equivalent to using an argument of '`−1`'.
+clut: |-
+  Replace the channel values in the first image using each corresponding channel in the second image as a **c**olor **l**ook**u**p **t**able.
+
+  The second (LUT) image is ordinarily a gradient image containing the histogram mapping of how each channel should be modified. Typically it is a either a single row or column image of replacement color values. If larger than a single row or column, values are taken from a diagonal line from top-left to bottom-right corners.
+
+  The lookup is further controlled by the `-interpolate` setting, which is especially handy for an LUT which is not the full length needed by the ImageMagick installed Quality (Q) level. Good settings for this are '`bilinear`' and '`catrom`'. Catom can return a useful second-order continuity.
+
+  This operator is especially suited to replacing a grayscale image with a specific color gradient from the CLUT image.
+
+  Only the channel values defined by the `-channel` setting will have their values replaced. In particular, since the default `-channel` setting is `RGBA`, this means that transparency (alpha/matte channel) is affected, unless the `-channel` setting is modified, e.g., `RGB`. When the alpha channel is not set, it is ignored by the `-clut` operator.
+coalesce: |-
+  Fully define the look of each frame of a GIF animation sequence, to form a 'film strip' animation.
+
+  Overlay each image in an image sequence according to its `-dispose` meta-data, to reproduce the look of an animation at each point in the animation sequence. All images should be the same size, and are assigned appropriate GIF disposal settings for the animation to continue working as expected as a GIF animation. Such frames are more easily viewed and processed than the highly optimized GIF overlay images.
+
+  The animation can be re-optimized after processing using the `-layers` method '`optimize`', although there is no guarantee that the restored GIF animation optimization is better than the original.
+colorize: |-
+  Colorize the image by an amount specified by `value` using the color specified by the most recent `-fill` setting.
+
+  Specify the amount of colorization as a percentage. Separate colorization values can be applied to the red, green, and blue channels of the image with a comma-delimited list of colorization values (e.g., `-colorize 0,0,50`).
+colormap: |-
+  Define the colormap type.
+
+  The `type` can be `shared` or `private`.
+
+  This option only applies when the default X server visual is `PseudoColor` or `GrayScale`. Refer to `-visual` for more details. By default, a shared colormap is allocated. The image shares colors with other X clients. Some image colors could be approximated, therefore your image may look very different than intended. If `private` is chosen, the image colors appear exactly as they are defined. However, other clients may go `technicolor` when the image colormap is installed.
+color-matrix: |-
+  Apply color correction to the image.
+
+  This option permits saturation changes, hue rotation, luminance to alpha, and various other effects. Although variable-sized transformation matrices can be used, typically one uses a 5x5 matrix for an RGBA image and a 6x6 for CMYKA (or RGBA with offsets). The matrix is similar to those used by Adobe Flash except offsets are in column 6 rather than 5 (in support of CMYKA images) and offsets are normalized (divide Flash offset by 255).
+
+  As an example, to add contrast to an image with offsets, try this command:
+colors: |-
+  Set the preferred number of colors in the image.
+
+  The actual number of colors in the image may be less than your request, but never more. Note that this a color reduction option. Images with fewer unique colors than specified by `value` will have any duplicate or unused colors removed. The ordering of an existing color palette may be altered. When converting an image from color to grayscale, it is more efficient to convert the image to the gray colorspace before reducing the number of colors. Refer to the [color reduction algorithm](../www/quantize.html) for more details.
+colorspace: |-
+  Set the image colorspace.
+
+  To print a complete list of colorspaces, use `-list colorspace`.
+
+  For a more accurate color conversion to or from the linear RGB, CMYK, or grayscale colorspaces, use the `-profile` option. Note, ImageMagick assumes the sRGB colorspace if the image format does not indicate otherwise. For colorspace conversion, the gamma function is first removed to produce linear RGB.
+
+  ::: pre-scrollable CMY ------------------------------------------------------------------------------------------------------------ C=`QuantumRange`−R M=`QuantumRange`−G Y=`QuantumRange`−B CMYK --- starts with CMY from above K=min(C,Y,M) C=`QuantumRange`*(C−K)/(`QuantumRange`−K) M=`QuantumRange`*(M−K)/(`QuantumRange`−K) Y=`QuantumRange`*(Y−K)/(`QuantumRange`−K) Gray Gray = 0.212656*R+0.715158*G+0.072186*B HSB --- Hue, Saturation, Brightness; like a cone peak downward H=angle around perimeter (0 to 360 deg); H=0 is red; increasing angles toward green S=distance from axis outward B=distance along axis from bottom upward; B=max(R,G,B); `intensity-like` HSL --- Hue, Saturation, Lightness; like a double cone end-to-end with peaks at very top and bottom H=angle around perimeter (0 to 360 deg); H=0 is red; increasing angles toward green S=distance from axis outward L=distance along axis from bottom upward; L=0.5*max(R,G,B) + 0.5*min(R,G,B); `intensity-like` HWB --- Hue, Whiteness, Blackness Hue (complicated equation) Whiteness (complicated equation) Blackness (complicated equation) LAB L (complicated equation relating X,Y,Z) A (complicated equation relating X,Y,Z) B (complicated equation relating X,Y,Z) LinearGray LinearGray = 0.298839*R+0.586811*G+0.114350*B LOG I1
+color-threshold: Return a binary image where all colors within the specified range
+  are changed to white. All other colors are changed to black.
+combine: |-
+  Combine one or more images into a single image.
+
+  The channels (previously set by `-channel`) of the combined image are taken from the grayscale values of each image in the sequence, in order. For the default -channel setting of `RGB`, this means the first image is assigned to the `Red` channel, the second to the `Green` channel, the third to the `Blue`.
+
+  This option can be thought of as the inverse to `-separate`, so long as the channel settings are the same. Thus, in the following example, the final image should be a copy of the original.
+comment: |-
+  Embed a comment in an image.
+
+  This option sets the comment meta-data of an image read in after this option has been given. To modify a comment of images already in memory use "``-set``` comment`".
+
+  The comment can contain special format characters listed in the [Format and Print Image Properties](../www/escape.html). These attributes are expanded when the comment is finally assigned to the individual images.
+
+  If the first character of `string` is `@`, the image comment is read from a file titled by the remaining characters in the string. Comments read in from a file are literal; no embedded formatting characters are recognized.
+
+  Comment meta-data are not visible on the image itself. To do that use the `-annotate` or `-draw` options instead.
+
+  For example,
+
+  produces an image comment of `MIFF:bird.miff 512x480` (assuming that the image `bird.miff` has a width of 512 and a height of 480.
+compare: |-
+  Mathematically and visually annotate the difference between an image and its reconstruction
+
+  This is a convert version of "`compare`" for two same sized images. The syntax is as follows, but other metrics are allowed.
+
+  To get the metric value use the string format "%[distortion]".
+complex: |-
+  Perform complex mathematics on an image sequence
+
+  Choose from these operators:
+
+  Optionally specify the `divide` operator SNR with ``-define``` complex:snr=float`.
+compose: |-
+  Set the type of image composition.
+
+  See [Alpha Compositing](../www/compose.html) for a detailed discussion of alpha compositing.
+
+  This setting affects image processing operators that merge two (or more) images together in some way. This includes the operators, `-compare`, `-composite`, `-layers` composite, `-flatten`, `-mosaic`, `-layers` merge, `-border`, `-frame`, and `-extent`.
+
+  It is also one of the primary options for the "`composite`" command.
+compress: |-
+  Use pixel compression specified by `type` when writing the image.
+
+  To print a complete list of compression types, use `-list compress`.
+
+  Specify `+compress` to store the binary image in an uncompressed format. The default is the compression type of the specified image file.
+
+  If `LZW` compression is specified but LZW compression has not been enabled, the image data is written in an uncompressed LZW format that can be read by LZW decoders. This may result in larger-than-expected GIF files.
+
+  `Lossless` refers to lossless JPEG, which is only available if the JPEG library has been patched to support it. Use of lossless JPEG is generally not recommended.
+
+  When writing an ICO file, you may request that the images be encoded in PNG format, by specifying `Zip` compression.
+
+  When writing a JNG file, specify `Zip` compression to request that the alpha channel be encoded in PNG "IDAT" format, or `JPEG` to request that it be encoded in JPG "JDAA" format.
+
+  Use the `-quality` option to set the compression level to be used by JPEG, PNG, MIFF, and MPEG encoders. Use the `-sampling-factor` option to set the sampling factor to be used by JPEG, MPEG, and YUV encoders for down-sampling the chroma channels.
+connected-components: |-
+  [connected-components](../www/connected-components.html) labeling detects connected regions in an image, choose from 4 or 8 way connectivity.
+
+  Use ``-define``` connected-components:verbose=true` to output statistics associated with each unique label.
+contrast: |-
+  Enhance or reduce the image contrast.
+
+  This option enhances the intensity differences between the lighter and darker elements of the image. Use `-contrast` to enhance the image or `+contrast` to reduce the image contrast.
+
+  For a more pronounced effect you can repeat the option:
+contrast-stretch: |-
+  Increase the contrast in an image by `stretching` the range of intensity values.
+
+  While performing the stretch, black-out at most `black-point` pixels and white-out at most `white-point` pixels. Or, if percent is used, black-out at most `black-point %` pixels and white-out at most `white-point %` pixels.
+
+  Prior to ImageMagick 6.4.7-0, `-contrast-stretch` will black-out at most `black-point` pixels and white-out at most `total pixels minus white-point` pixels. Or, if percent is used, black-out at most `black-point %` pixels and white-out at most `100% minus white-point %` pixels.
+
+  Note that `-contrast-stretch 0` will modify the image such that the image's min and max values are stretched to 0 and `QuantumRange`, respectively, without any loss of data due to burn-out or clipping at either end. This is not the same as `-normalize`, which is equivalent to `-contrast-stretch 0.15x0.05%` (or prior to ImageMagick 6.4.7-0, `-contrast-stretch 2%x99%`).
+
+  Internally operator works by creating a histogram bin, and then uses that bin to modify the image. As such some colors may be merged together when they originally fell into the same 'bin'.
+
+  All the channels are normalized in concert by the same amount so as to preserve color integrity, when the default `+channel` setting is in use.
+convolve: |-
+  Convolve an image with a user-supplied convolution kernel.
+
+  The `kernel` is a matrix specified as a comma-separated list of integers (with no spaces), ordered left-to right, starting with the top row. Presently, only odd-dimensioned kernels are supported, and therefore the number of entries in the specified `kernel` must be 3^2^=9, 5^2^=25, 7^2^=49, etc.
+
+  Note that the -convolve operator supports the -bias setting. This option shifts the convolution so that positive and negative results are relative to a user-specified bias value. This is important for non-HDRI compilations of ImageMagick when dealing with convolutions that contain negative as well as positive values. This is especially the case with convolutions involving high pass filters or edge detection. Without an output bias, the negative values is clipped at zero.
+
+  When using an ImageMagick with the HDRI compile-time setting, -bias is not needed, as ImageMagick is able to store/handle any negative results without clipping to the color value range (0..QuantumRange). See the discussion on HDRI implementations of ImageMagick on the page [High Dynamic-Range Images](../www/high-dynamic-range.html). For more about HDRI go the ImageMagick Usage pages or this Wikipedia entry.
+crop: |-
+  Cut out one or more rectangular regions of the image.
+
+  See Image Geometry for complete details about the *geometry* argument.
+
+  The `width` and `height` of the `geometry` argument give the size of the image that remains after cropping, and `x` and `y` in the `offset` (if present) gives the location of the top left corner of the cropped image with respect to the original image. To specify the amount to be removed, use `-shave` instead.
+
+  If the `x` and `y` offsets are present, a single image is generated, consisting of the pixels from the cropping region. The offsets specify the location of the upper left corner of the cropping region measured downward and rightward with respect to the upper left corner of the image. If the `-gravity` option is present with `NorthEast`, `East`, or `SouthEast` gravity, it gives the distance leftward from the right edge of the image to the right edge of the cropping region. Similarly, if the `-gravity` option is present with `SouthWest`, `South`, or `SouthEast` gravity, the distance is measured upward between the bottom edges.
+cycle: |-
+  Displace image colormap by amount.
+
+  `Amount` defines the number of positions each colormap entry is shifted.
+debug: |-
+  Enable debug printout.
+
+  The `events` parameter specifies which events are to be logged. It can be either `None`, `All`, `Trace`, or a comma-separated list consisting of one or more of the following domains: `Accelerate`, `Annotate`, `Blob`, `Cache`, `Coder`, `Configure`, `Deprecate`, `Exception`, `Locale`, `Render`, `Resource`, `Security`, `TemporaryFile`, `Transform`, `X11`, or `User`.
+
+  For example, to log cache and blob events, use.
+
+  The `User` domain is normally empty, but developers can log user events in their private copy of ImageMagick.
+
+  To print the complete list of debug methods, use `-list debug`.
+
+  Use the `-log` option to specify the format for debugging output.
+
+  Use `+debug` to turn off all logging.
+
+  Debugging may also be set using the `MAGICK_DEBUG` [environment variable](../www/resources.html#environment#environment). The allowed values for the `MAGICK_DEBUG` environment variable are the same as for the `-debug` option.
+decipher: |-
+  Decipher and restore pixels that were previously transformed by `-encipher`.
+
+  Get the passphrase from the file specified by `filename`.
+
+  For more information, see the webpage, [ImageMagick: Encipher or Decipher an Image](../www/cipher.html).
+deconstruct: |-
+  Find areas that has changed between images
+
+  Given a sequence of images all the same size, such as produced by `-coalesce`, replace the second and later images, with a smaller image of just the area that changed relative to the previous image.
+
+  The resulting sequence of images can be used to optimize an animation sequence, though will not work correctly for GIF animations when parts of the animation can go from opaque to transparent.
+
+  This option is actually equivalent to the `-layers` method '`compare-any`'.
+define: |-
+  Add specific global settings generally used to control coders and image processing operations.
+
+  This option creates one or more definitions for coders and decoders to use while reading and writing image data. Definitions are generally used to control image file format coder modules, and image processing operations, beyond what is provided by normal means. Defined settings are listed in `-verbose` information ("`info:`" output format) as "Artifacts".
+
+  If `value` is missing for a definition, an empty-valued definition of a flag is created with that name. This used to control on/off options. Use `+define key` to remove definitions previously created. Use `+define "*"` to remove all existing definitions.
+
+  The same 'artifact' settings can also be defined using the `-set "option:`key`" "`value`"` option, which also allows the use of [Format and Print Image Properties](../www/escape.html) in the defined value.
+
+  The `option` and `key` are case-independent (they are converted to lowercase for use within the decoders) while the `value` is case-dependent.
+
+  Such settings are global in scope, and affect all images and operations.
+
+  See [ImageMagick Defines](../www/defines.html) for a list of recognized defines. For example:
+
+  Set attributes of the image registry by prefixing the value with `registry:`. For example, to set a temporary path to put
+delay: |-
+  Display the next image after pausing.
+
+  This option is useful for regulating the animation of image sequences `ticks/ticks-per-second` seconds must expire before the display of the next image. The default is no delay between each showing of the image sequence. The default ticks-per-second is 100.
+
+  Use `>` to change the image delay `only` if its current value exceeds the given delay. `<` changes the image delay `only` if current value is less than the given delay. For example, if you specify `30>` and the image delay is 20, the image delay does not change. However, if the image delay is 40 or 50, the delay it is changed to 30. Enclose the given delay in quotation marks to prevent the `<` or `>` from being interpreted by your shell as a file redirection.
+delete: |-
+  Delete the images specified by index, from the image sequence.
+
+  Specify the image by its index in the sequence. The first image is index 0. Negative indexes are relative to the end of the sequence, for example, -1 represents the last image of the sequence. Specify a range of images with a dash (e.g. 0-4). Separate indexes with a comma (e.g. 0,2). Use `+delete` to delete the last image in the current image sequence. Use `-delete 0--1` to delete the entire image sequence.
+
+  You can also delete images from the persistent registry, e.g., `-delete registry:checkers`
+density: |-
+  Set the horizontal and vertical resolution of an image for rendering to devices.
+
+  This option specifies the image resolution to store while encoding a raster image or the canvas resolution while rendering (reading) vector formats such as Postscript, PDF, WMF, and SVG into a raster image. Image resolution provides the unit of measure to apply when rendering to an output device or raster image. The default unit of measure is in dots per inch (DPI). The `-units` option may be used to select dots per centimeter instead.
+
+  The default resolution is 72 dots per inch, which is equivalent to one point per pixel (Macintosh and Postscript standard). Computer screens are normally 72 or 96 dots per inch, while printers typically support 150, 300, 600, or 1200 dots per inch.
+
+  If the file format supports it, this option may be used to update the stored image resolution. Note that Photoshop stores and obtains image resolution from a proprietary embedded profile. If this profile is not stripped from the image, then Photoshop will continue to treat the image using its former resolution, ignoring the image resolution specified in the standard file header.
+
+  The `-density` option sets an `attribute` and does not alter
+depth: |-
+  Depth of the image.
+
+  Color depth is the number of bits per channel for each pixel. For example, for a depth of 16 using RGB, each channel of Red, Green, and Blue can range from 0 to 2^16-1 (65535). Use this option to specify the depth of raw images formats whose depth is unknown such as GRAY, RGB, or CMYK, or to change the depth of any image after it has been read. By default, when reducing the pixel depth, higher order bits are lopped. Use `-dither FloydSteinberg` to instead distribute the quantization error to neighboring pixels.
+
+  Use `+depth` to return depth to its default value.
+descend: Obtain image by descending window hierarchy.
+deskew: |-
+  Straighten an image. A threshold of 40% works for most images.
+
+  Use `-set` `option:deskew:auto-crop ``true | false` to auto crop the image.
+despeckle: Reduce the speckles within an image.
+direction: Render text right-to-left or left-to-right. Requires the RAQM delegate
+  library and complex text layout.
+displace: |-
+  Shift image pixels as defined by a displacement map.
+
+  With this option, the 'overlay' image, and optionally the 'mask' image, is used as a displacement map, which is used to displace the lookup of what part of the 'background' image is seen at each point of the overlaid area. Much like the displacement map is a 'lens' that redirects light shining through it so as to present a distorted view the original 'background' image behind it.
+
+  Any perfect grey areas of the displacement map produce a zero displacement of the image. Black areas produce the given maximum negative displacement of the lookup point, while white produce a maximum positive displacement of the lookup.
+
+  Note that it is the lookup of the 'background' that is displaced, not a displacement of the image itself. As such an area of the displacement map containing 'white' will have the lookup point 'shifted' by a positive amount, and thus generating a copy of the destination image to the right/downward from the correct position. That is the image will look like it may have been 'shifted' in a negative left/upward direction. Understanding this is a very important in understanding how displacement maps work.
+display: |-
+  Specifies the X server to contact.
+
+  This option is used with convert for obtaining image or font from this X server. See `X(1)`.
+dispose: |-
+  Define the GIF disposal image setting for images that are being created or read in.
+
+  The layer disposal method defines the way each the displayed image is to be modified after the current 'frame' of an animation has finished being displayed (after its 'delay' period), but before the next frame on an animation is to be overlaid onto the display.
+
+  Here are the valid methods:
+
+  You can also use the numbers given above, which is what the GIF format uses internally to represent the above settings.
+
+  To print a complete list of dispose methods, use `-list dispose`.
+
+  Use `+dispose`, turn off the setting and prevent resetting the layer disposal methods of images being read in.
+
+  Use `-set` '`dispose`' method to set the image disposal method for images already in memory.
+dissimilarity-threshold: Maximum RMSE for subimage match (default 0.2).
+dissolve: |-
+  Dissolve an image into another by the given percent.
+
+  The opacity of the composite image is multiplied by the given percent, then it is composited 'over' the main image. If `src_percent` is greater than 100, start dissolving the main image so it becomes transparent at a value of '`200`'. If both percentages are given, each image are dissolved to the percentages given.
+
+  Note that dissolve percentages do not add, two opaque images dissolved '50,50', produce a 75% transparency. For a 50% + 50% blending of the two images, you would need to use dissolve values of '50,100'.
+distort: |-
+  Distort an image, using the given `method` and its required `arguments`.
+
+  The `arguments` is a single string containing a list of floating point numbers separated by commas or spaces. The number of and meaning of the floating point values depends on the distortion `method` being used.
+
+  Choose from these distortion types:
+
+  +-----------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+ | Method | Description | +===================================+=================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================+ | ScaleRotateTranslate | Distort image by first scaling and rotating about a given 'center', before translating that 'center' to the new location, in that order. It is an alternative method of specifying a 'Affine' type of distortion, but without shearing effects. It also provides a good way of rotating and displacing a smaller image for tiling onto a larger background (IE 2-dimensional animations). | | SRT | The number of arguments determine the specific meaning of each argument for the scales, rotation, and translation operations. | | | | | | 2: | | | : `Scale Angle` | | | | | | 3: | | | : `X,Y Angle` | | | | | | 4: | | | : `X,Y Scale Angle` | | | | | | 5: | | | : `X,Y ScaleX,ScaleY Angle` | | |
+distribute-cache: Launch a distributed pixel cache server.
+dither: |-
+  Apply a Riemersma or Floyd-Steinberg error diffusion dither to images when general color reduction is applied via an option, or automagically when saving to specific formats. This enabled by default.
+
+  Dithering places two or more colors in neighboring pixels so that to the eye a closer approximation of the images original color is reproduced. This reduces the number of colors needed to reproduce the image but at the cost of a lower level pattern of colors. Error diffusion dithers can use any set of colors (generated or user defined) to an image.
+
+  Dithering is turned on by default, to turn it off use the plus form of the setting, `+dither`. This will also render PostScript without text or graphic aliasing. Disabling dithering often (but not always) leads to faster process, a smaller number of colors, but more cartoon like image coloring. Generally resulting in 'color banding' effects in areas with color gradients.
+
+  The color reduction operators `-colors`, `-monochrome`, `-remap`, and `-posterize`, apply dithering to images using the reduced color set they created. These operators are also used as part of automatic color reduction when saving images to formats with limited color support, such as `GIF:`, `XBM:`, and others, so dithering
+draw: |-
+  Annotate an image with one or more graphic primitives.
+
+  Use this option to annotate or decorate an image with one or more graphic primitives. The primitives include shapes, text, transformations, and pixel operations.
+
+  The shape primitives:
+
+  The text primitive:
+
+  The text gravity primitive:
+
+  The text gravity primitive only affects the placement of text and does not interact with the other primitives. It is equivalent to using the `-gravity` command-line option, except that it is limited in scope to the `-draw` option in which it appears.
+
+  The transformation primitives:
+
+  The pixel operation primitives:
+
+  The shape primitives are drawn in the color specified by the preceding `-fill` setting. For unfilled shapes, use `-fill none`. You can optionally control the stroke (the "outline" of a shape) with the `-stroke` and `-strokewidth` settings.
+
+  A `point` primitive is specified by a single `point` in the pixel plane, that is, by an ordered pair of integer coordinates, `x`,`y`. (As it involves only a single pixel, a `point` primitive is not affected by `-stroke` or `-strokewidth`.)
+
+  A `line` primitive requires a start point and end point.
+
+  A `rectangle` primitive is specified by the pair of points at the upper left and lower right corners.
+duplicate: |-
+  Duplicate an image one or more times.
+
+  Specify the count and the image to duplicate by its index in the sequence. The first image is index 0. Negative indexes are relative to the end of the sequence, for example, -1 represents the last image of the sequence. Specify a range of images with a dash (e.g. 0-4). Separate indexes with a comma (e.g. 0,2). Use `+duplicate` to duplicate the last image in the current image sequence.
+edge: Detect edges within an image.
+emboss: Emboss an image.
+encipher: |-
+  Encipher pixels for later deciphering by `-decipher`.
+
+  Get the passphrase from the file specified by `filename`.
+
+  For more information, see the webpage, [ImageMagick: Encipher or Decipher an Image](../www/cipher.html).
+encoding: Specify the text encoding.
+endian: |-
+  Specify endianness (`MSB` or `LSB`) of the image.
+
+  To print a complete list of endian types, use the `-list endian` option.
+
+  Use `+endian` to revert to unspecified endianness.
+enhance: Apply a digital filter to enhance a noisy image.
+equalize: |-
+  Perform histogram equalization on the image channel-by-channel.
+
+  To perform histogram equalization on all channels in concert, transform the image into some other color space, such as HSL, OHTA, YIQ or YUV, then equalize the appropriate intensity-like channel, then convert back to RGB.
+
+  For example using HSL, we have: ... `-colorspace HSL -channel lightness -equalize -colorspace sRGB` ...
+
+  For YIQ, YUV and OHTA use the red channel. For example, OHTA is a principal components transformation that puts most of the information in the first channel. Here we have ... `-colorspace OHTA -channel red -equalize -colorspace sRGB` ...
+evaluate: |-
+  Alter channel pixels by evaluating an arithmetic, relational, or logical expression.
+
+  (See the `-function` operator for some multi-parameter functions. See the `-fx` operator if more elaborate calculations are needed.)
+
+  The behaviors of each `operator` are summarized in the following list. For brevity, the numerical value of a "pixel" referred to below is the value of the corresponding channel of that pixel, while a "normalized pixel" is that number divided by the maximum (installation-dependent) value `QuantumRange`. (If normalized pixels are used, they are restored, following the other calculations, to the full range by multiplying by `QuantumRange`.)
+
+  Add                    Add `value` to pixels.
+
+  AddModulus             Add `value` to pixels modulo `QuantumRange`.
+
+  And                    Binary AND of pixels with `value`.
+
+  Cos, Cosine            Apply cosine to pixels with frequency `value` with 50% bias added.
+
+  Divide                 Divide pixels by `value`.
+
+  Exp                    base-e exponential function
+
+  Exponential            base-e exponential function
+
+  Gaussian-noise
+
+  Impulse-noise
+
+  InverseLog             Apply inverse scaled logarithm to normalized pixels.
+
+  Laplacian-noise
+
+  LeftShift              Shift the pixel values left by `value` bits (i.e., multiply pixels by 2^`value`^).
+
+  Log                    Apply scaled logarithm to normalized pixels.
+
+  Max                    Set pixels to maximum of `value` and current pixel `value` (i.e. set any pixels currently less than `value` to `value`).
+evaluate-sequence: |-
+  Alter channel pixels by evaluating an arithmetic, relational, or logical expression over a sequence of images. Ensure all the images in the sequence are in the same colorspace, otherwise you may get unexpected results, e.g. add `-colorspace sRGB` to your command-line.
+
+  To print a complete list of `-evaluate-sequence` operators, use `-list evaluate`.
+exit: |-
+  Stop processing at this point.
+
+  No further options are processed after this option. Useful in a script to force the `magick` command to exit without actually closing the pipeline that it is processing options from. You can also use the option as a *final* option on the `magick` command line instead of an implicit output image, to completely prevent any image write. Note, even the `NULL:` coder requires at least one image, for it to 'not write'! This option does not require any images at all.
+extent: |-
+  Set the image size and offset.
+
+  If the image is enlarged, unfilled areas are set to the background color. To position the image, use offsets in the `geometry` specification or precede with a `-gravity` setting. To specify how to compose the image with the background, use `-compose`.
+
+  The following command reduces or expands a JPEG image to fit on an 800x600 display. If the aspect ratio of the input image isn't exactly 4:3, then the image is centered on an 800x600 black canvas:
+
+  The command can also be used with a ratio. If the image is not already at that ratio, it will be cropped to fit it. The `-gravity` setting has the expected effects.
+
+  The following command crops a JPEG image so that it has a 4:3 ratio:
+
+  Append `<` to pad only if the image is smaller than the specified size *and* not crop if the image is larger (i.e. no-op). Append `>` to crop only if the image is larger than the specified size *and* not extend if the image is smaller. (i.e. no-op).
+
+  See Image Geometry for complete details about the *geometry* argument.
+extract: |-
+  Extract the specified area from image.
+
+  This option is most useful for extracting a subregion of a very large raw image. Note that these two commands are equivalent:
+
+  If you omit the offsets, as in
+
+  the image is `resized` to the specified dimensions instead, equivalent to:
+
+  See Image Geometry for complete details about the *geometry* argument.
+family: |-
+  Set a font family for text.
+
+  This setting suggests a font family that ImageMagick should try to use for rendering text. If the family can be found it is used; if not, a default font (e.g., "Arial") or a family known to be similar is substituted (e.g., "Courier" might be used if "System" is requested but not found). Note, the family can be a CSS-style font list.
+
+  For other settings that affect fonts, see the options -font, -pointsize, -stretch, -style, and -weight.
+features: Display (co-occurrence matrix) texture measure features for each channel
+  in the image in each of four directions (horizontal, vertical, left and right diagonals)
+  for the specified distance.
+fft: |-
+  Implements the forward discrete Fourier transform (DFT).
+
+  This option is new as of ImageMagick 6.5.4-3 (and now working for Windows users in ImageMagick 6.6.0-9). It transforms an image from the normal (spatial) domain to the frequency domain. In the frequency domain, an image is represented as a superposition of complex sinusoidal waves of varying amplitudes. The image x and y coordinates are the possible frequencies along the x and y directions, respectively, and the pixel intensity values are complex numbers that correspond to the sinusoidal wave amplitudes. See for example, Fourier Transform, Discrete Fourier Transform and Fast Fourier Transform.
+
+  A single image name is provided as output for this option. However, the output result will have two components. It is either a two-frame image or two separate images, depending upon whether the image format specified supports multi-frame images. The reason that we get a dual output result is because the frequency domain represents an image using complex numbers, which cannot be visualized directly. Therefore, the complex values are automagically separated into a two-component image representation. The first component is the magnitude of the complex number and the second is the phase of the complex number. See for example, Complex Numbers.
+fill: |-
+  Color to use when filling a graphic primitive.
+
+  This option accepts a color name, a hex color, or a numerical RGB, RGBA, HSL, HSLA, CMYK, or CMYKA specification. See [Color Names](../www/color.html) for a description of how to properly specify the color argument.
+
+  Enclose the color specification in quotation marks to prevent the "#" or the parentheses from being interpreted by your shell.
+
+  For example,
+
+  See `-draw` for further details.
+
+  To print a complete list of color names, use the `-list color` option.
+filter: |-
+  Use this `type` of filter when resizing or distorting an image.
+
+  Use this option to affect the resizing operation of an image during operations such as `-resize` and `-distort`. For example you can use a simple resize filter such as:
+
+  Use `-define filter:lobes={2,3,4}` to specify the support size for filtering for the `CubicSpline` filter.
+
+  The `Bessel` and `Sinc` filter is also provided (as well as a faster `SincFast` equivalent form). However these filters are generally useless on their own as they are infinite filters that are being clipped to the filters support size. Their direct use is not recommended except via expert settings (see below).
+
+  Instead these special filter functions are typically windowed by a windowing function that the `-filter` setting defines. That is using these functions will define a 'Windowed' filter, appropriate to the operator involved. Windowed filters include:
+
+  Also one special self-windowing filter is also provided `Lagrange`, which will automagically re-adjust its function depending on the current 'support' or 'lobes' expert settings (see below).
+
+  If you do not select a filter with this option, the filter defaults to `Mitchell` for a colormapped image, an image with a matte channel, or if the image is enlarged. Otherwise the filter
+flatten: This is a simple alias for the `-layers` method "flatten".
+flip: |-
+  Create a `mirror image`
+
+  reflect the scanlines in the vertical direction. The image will be mirrored upside-down.
+floodfill: |-
+  Floodfill the image with color at the specified offset.
+
+  Flood fill starts from the given 'seed point' which is not gravity affected. Any color that matches within `-fuzz` color distance of the given `color` argument, connected to that 'seed point' will be replaced with the current `-fill` color.
+
+  Note that if the pixel at the 'seed point' does not itself match the given `color` (according to `-fuzz`), then no action will be taken.
+
+  This operator works more like the `-opaque` option, than a more general flood fill that reads the matching color directly at the 'seed point'. For this form of flood fill, look at `-draw` and its 'color floodfill' drawing method.
+flop: |-
+  Create a `mirror image`.
+
+  Reflect the scanlines in the horizontal direction, just like the image in a vertical mirror.
+font: |-
+  Set the font to use when annotating images with text, or creating labels.
+
+  To print a complete list of fonts, use the `-list font` option (for versions prior to 6.3.6, use 'type' instead of 'font').
+
+  In addition to the fonts specified by the above pre-defined list, you can also specify a font from a specific source. For example `Arial.ttf` is a TrueType font file, `ps:helvetica` is PostScript font, and `x:fixed` is X11 font.
+
+  For other settings that affect fonts, see the options `-family`, `-stretch`, `-style`, and `-weight`.
+
+  To specify an explicit font filename or collection, specify the font path preceded with a `@`, e.g., `@arial.ttf`. You can specify the font face index for font collections, e.g., `@msgothic.ttc[1]`.
+foreground: |-
+  Define the foreground color for menus.", "display
+
+  The color is specified using the format described under the `-fill` option.
+
+  The default foreground color is black.
+format: |-
+  Output formatted image characteristics.
+
+  See [Format and Print Image Properties](../www/escape.html) for an explanation on how to specify the argument to this option.
+frame: Include the X window frame in the imported image.
+function: |-
+  Apply a function to channel values.
+
+  This operator performs calculations based on the given arguments to modify each of the color values for each previously set `-channel` in the image. See `-evaluate` for details concerning how the results of the calculations are handled.
+
+  This is can be considered a multi-argument version of the `-evaluate` operator. (Added in ImageMagick 6.4.8−8.)
+
+  Here, `parameters` is a comma-separated list of numerical values. The number of values varies depending on which `function` is selected. Choose the `function` from:
+
+  To print a complete list of `-function` operators, use `-list function`. Descriptions follow.
+
+  Polynomial
+
+  will invoke a polynomial function given by
+
+  where **`u`** is pixel's original normalized channel value.
+
+  The `Polynomial` function can be used in place of `Set` (the `constant` polynomial) and `Add`, `Divide`, `Multiply`, and `Subtract` (some `linear` polynomials) of the `-evaluate` operator. The `-level` operator also affects channels linearly. Some correspondences follow.
+
+  ::: {.pre-scrollable .p-3 .mb-2 .text-body-secondary .bg-body-tertiary} --------------------------------------- -------------------------------------------- ------------------------------------------------------------------------------- -evaluate Set `value` -function Polynomial `value` (Constant functions; set `value`×100% gray when channels are RGB.) -evaluate Add `value` -function Polynomial 1,`value` -evaluate Subtract `value` -function Polynomial 1,−`value` -evaluate Multiply `value` -function Polynomial `value`,0 +level black% x white% -function Polynomial A,B (Reduce contrast. Here,
+fuzz: |-
+  Colors within this `distance` are considered equal.
+
+  A number of algorithms search for a target color. By default the color must be exact. Use this option to match colors that are close to the target color in RGB space. For example, if you want to automagically trim the edges of an image with `-trim` but the image was scanned and the target background color may differ by a small amount. This option can account for these differences.
+
+  The `distance` can be in absolute intensity units or, by appending `%` as a percentage of the maximum possible intensity (255, 65535, or 4294967295).
+
+  Use `+fuzz` to reset the fuzz value to 0.
+fx: |-
+  Apply a mathematical expression to an image or image channels.
+
+  If the first character of `expression` is `@`, the expression is read from a file titled by the remaining characters in the string.
+
+  See [FX, The Special Effects Image Operator](../www/fx.html) for a detailed discussion of this option.
+gamma: |-
+  Level of gamma correction.
+
+  The same color image displayed on two different workstations may look different due to differences in the display monitor. Use gamma correction to adjust for this color difference. Reasonable values extend from `0.8` to `2.3`. Gamma less than 1.0 darkens the image and gamma greater than 1.0 lightens it. Large adjustments to image gamma may result in the loss of some image information if the pixel quantum size is only eight bits (quantum range 0 to 255).
+
+  Gamma adjusts the image's channel values pixel-by-pixel according to a power law, namely, pow(pixel,1/gamma) or pixel^(1/gamma), where pixel is the normalized or 0 to 1 color value. For example, using a value of gamma=2 is the same as taking the square root of the image.
+
+  Use `+gamma `value`` to set the image gamma level without actually adjusting the image pixels. This option is useful if the image is of a known gamma but not set as an image attribute (e.g. PNG images). Write the "file gamma" which is the reciprocal of the display gamma; e.g., if your image is sRGB and you want to write a PNG gAMA chunk, use
+
+  (0.45455 is 1/2.
+gaussian-blur: |-
+  Blur the image with a Gaussian operator.
+
+  Convolve the image with a Gaussian or normal distribution using the given `Sigma` value. The formula is:
+
+  The `sigma` value is the important argument, and determines the actual amount of blurring that will take place.
+
+  The `radius` is only used to determine the size of the array which will hold the calculated Gaussian distribution. It should be an integer. If not given, or set to zero, IM will calculate the largest possible radius that will provide meaningful results for the Gaussian distribution.
+
+  The larger the `Radius` the radius the slower the operation is. However too small a `Radius`, and severe aliasing effects may result. As a guideline, `Radius` should be at least twice the `Sigma` value, though three times will produce a more accurate result.
+
+  This differs from the faster `-blur` operator in that a full 2-dimensional convolution is used to generate the weighted average of the neighboring pixels.
+
+  The `-virtual-pixel` setting will determine how pixels which are outside the image proper are blurred into the final result.
+geometry: |-
+  Set the preferred size and location of the image.
+
+  See Image Geometry for complete details about the *geometry* argument.
+gravity: |-
+  Sets the current gravity suggestion for various other settings and options.
+
+  Choices include: `NorthWest`, `North`, `NorthEast`, `West`, `Center`, `East`, `SouthWest`, `South`, `SouthEast`. Use `-list gravity` to get a complete list of `-gravity` settings available in your ImageMagick installation.
+
+  The direction you choose specifies where to position text or subimages. For example, a gravity of `Center` forces the text to be centered within the image. By default, the image gravity is `undefined`. See `-draw` for more details about graphic primitives. Only the text primitive of `-draw` is affected by the `-gravity` option.
+
+  The `-gravity` option is also used in concert with the `-geometry` setting and other settings or options that take `geometry` as an argument, such as the `-crop` option.
+
+  If a `-gravity` setting occurs before another option or setting having a `geometry` argument that specifies an offset, the offset is usually applied to the point within the image suggested by the `-gravity` argument. Thus, in the following command, for example, suppose the file `image.png` has dimensions 200x100. The offset specified by the argument to `-region` is (−40,+20). The argument to `-gravity` is `Center`, which suggests the midpoint of the image, at the point (100,50).
+grayscale: |-
+  Convert image to grayscale.
+
+  This will use one of the `-intensity` methods to convert the given image into a grayscale image.
+
+  For example, to convert an image to (linear) Rec709Luminance grayscale, type:
+
+  which is equivalent to:
+
+  Similarly, to convert an image to (non-linear) Rec709Luma grayscale, type:
+
+  which is equivalent to:
+
+  Note that a 'colorspace' intensity method will produce the same result regardless of the current colorpsace of the image. But a 'mathematical' intensity method depends on the current colorspace the image is currently using.
+
+  While this operation uses an `-intensity` method, it does not use or set the `-intensity` setting, so will not affect other operations that may use that setting.
+green-primary: Green chromaticity primary point.
+hald-clut: |-
+  Apply a Hald color lookup table to the image.
+
+  A Hald color lookup table is a 3-dimensional color cube mapped to 2 dimensions. Create it with the `HALD:` prefix (e.g. HALD:8). You can apply any color transformation to the Hald image and then use this option to apply the transform to the image.
+
+  This option provides a convenient method for you to use Gimp or Photoshop to make color corrections to the Hald CLUT image and subsequently apply them to multiple images using an ImageMagick script.
+
+  Note that the representation is only of the normal RGB color space and that the whole color value triplet is used for the interpolated lookup of the represented Hald color cube image. Because of this the operation is not `-channel` setting affected, nor can it adjust or modify an images transparency or alpha/matte channel.
+
+  See also `-clut` which provides color value replacement of the individual color channels, usually involving a simpler grayscale image. E.g: grayscale to color replacement, or modification by a histogram mapping.
+help: Print usage instructions.
+highlight-color: When comparing images, emphasize pixel differences with this color.
+hough-lines: |-
+  Identify straight lines in the image (e.g. -hough-lines 9x9+195).
+
+  Use the Hough line detector with any binary edge extracted image to locate and draw any straight lines that it finds.
+
+  The process accumulates counts for every white pixel in the binary edge image for every possible orientation (for angles from 0 to 179 in 1 deg increments) and distance from the center of the image to the corners (in 1 px increments). It stores the counts in an accumulator matrix of angle vs distance. The size of the accumulator will be 180x(diagonal/2). Next it searches the accumulator for peaks in counts and converts the locations of the peaks to slope and intercept in the normal x,y input image space. The algorithm uses slope/intercepts to find the endpoints clipped to the bounds of the image. The lines are drawn from the given endpoints. The counts are a measure of the length of the lines.
+
+  .
+
+  The WxH arguments specify the filter size for locating the peaks in the Hough accumulator. The threshold excludes lines whose counts are less than the threshold value.
+
+  Use ``-background`` to specify the color of the background onto which the lines will be drawn.
+identify: |-
+  Identify the format and characteristics of the image.
+
+  This information is printed by default:
+
+  -   image scene number (if its not zero)
+  -   image name
+  -   image format
+  -   image size
+  -   virtual page offset
+  -   color depth
+  -   colorspace
+  -   file size in bytes
+  -   consumed user time identifying the image
+  -   elapsed time identifying the image
+
+  To customize the attributes you want to identify, use `-format`.
+
+  If `-colors` is also specified, the total unique colors in the image and color reduction error values are printed. Refer to [color reduction algorithm](../www/quantize.html) for a description of these values.
+
+  If `-verbose` precedes this option, copious amounts of image properties are displayed including image statistics, profiles, image histogram, and others.
+ift: |-
+  Implements the inverse discrete Fourier transform (DFT).
+
+  This option is new as of ImageMagick 6.5.4-3 (and now working for Windows users in ImageMagick 6.6.0-9). It transforms a pair of magnitude and phase images from the frequency domain to a single image in the normal or spatial domain. See for example, Fourier Transform, Discrete Fourier Transform and Fast Fourier Transform.
+
+  For example, depending upon the image format used to store the result of the `-fft`, one would use either
+
+  or
+
+  The resulting image may need to be cropped due to padding introduced when the original image, prior to the `-fft` or `+fft`, was not square or even dimensioned. Any padding is at the right and/or bottom sides of the image.
+
+  The [FFTW](../index.html) delegate library is required to use `-ift`.
+
+  Use `+ift` (with HDRI enabled) to transform a pair of real and imaginary images from the frequency domain to a single image in the normal (spatial) domain.
+
+  By default the IFT is not normalized (and the FFT is). Use "``-define``` fourier:normalize=inverse` to explicitly normalize the IFT and unnormalize the FFT.
+illuminant: reference illuminant. Choose from `A`, `B`, `C`, `D50`, `D55`, `D65`,
+  `E`, `F2`, `F7`, or `F11`.
+immutable: Make image immutable.
+implode: Implode image pixels about the center.
+insert: |-
+  Insert the last image into the image sequence.
+
+  This option takes last image in the current image sequence and inserts it at the given index. If a negative index is used, the insert position is calculated before the last image is removed from the sequence. As such `-insert -1` will result in no change to the image sequence.
+
+  The `+insert` option is equivalent to `-insert -1`. In other words, insert the last image, at the end of the current image sequence. Consequently this has no effect on the image sequence order.
+intensity: |-
+  Method to generate intensity value from pixel.
+
+  ImageMagick provides a number of methods used in situations where an operator needs to determine a single grayscale value for some purpose, from an image with red, green, and blue pixel components. Typically the `Rec709Luma` formula is used, which is the same formula used when converting images to `-colorspace gray`.
+
+  The following formulas are currently provided, and will first convert the pixel values to linear-RGB or non-linear sRGB colorspace before being applied to calculate the final greyscale value.
+
+  Note that the above R,G,B values is the image's linear-RGB values, while R',G',B' are sRGB non-linear values.
+
+  These intensity methods are mathematical in nature and will use the current value in the images respective R,G,B channel regardless of what that is, or what colorspace the image is currently using.
+
+  These methods are often used for other purposes, such as generating a grayscale difference image between two color images (using `-compose` '`Difference`' composition.
+
+  For example The 'MS' (Mean Squared) setting is good for minimizing color error comparisons. While... The method 'RMS' (Root Mean Squared) for example is appropriate for calculating color vector distance, from a color difference image. This is equivalent to the color only component
+intent: |-
+  Use this type of rendering intent when managing the image color.
+
+  Use this option to affect the color management operation of an image (see `-profile`). Choose from these intents: `Absolute, Perceptual, Relative, Saturation`.
+
+  The default intent is Perceptual for the sRGB colorspace and undefined for the RGB and gray colorspaces.
+
+  To print a complete list of rendering intents, use `-list intent`.
+interlace: |-
+  The type of interlacing scheme.
+
+  This option is used to specify the type of interlacing scheme for raw image formats such as `RGB` or `YUV`.
+
+  `None` means do not interlace (RGBRGBRGBRGBRGBRGB...),
+
+  `Line` uses scanline interlacing (RRR...GGG...BBB...RRR...GGG...BBB...), and.
+
+  `Plane` uses plane interlacing (RRRRRR...GGGGGG...BBBBBB...).
+
+  `Partition` is like plane except the different planes are saved to individual files (e.g. image.R, image.G, and image.B).
+
+  Use `Line` or `Plane` to create an `interlaced PNG` or `GIF` or `progressive JPEG` image.
+
+  To print a complete list of interlacing schemes, use `-list interlace`.
+interline-spacing: The space between two text lines.
+interpolate: |-
+  Set the pixel color interpolation method to use when looking up a color based on a floating point or real value.
+
+  When looking up the color of a pixel using a non-integer floating point value, you typically fall in between the pixel colors defined by the source image. This setting determines how the color is determined from the colors of the pixels surrounding that point. That is how to determine the color of a point that falls between two, or even four different colored pixels.
+
+  background
+
+  blend
+
+  This most important for distortion operators such as `-distort`, `-implode`, `-transform` and `-fx`.
+
+  To print a complete list of interpolation methods, use `-list interpolate`.
+
+  See also `-virtual-pixel`, for control of the lookup for positions outside the boundaries of the image.
+interpolative-resize: Resize with interpolation. See the `-interpolate` setting.
+interword-spacing: The space between two words.
+integral: Calculate the sum of values (pixel values) in the image.
+kerning: The space between two letters.
+kmeans: Kmeans (iterative) color reduction (e.g. `-kmeans 5x300+0.0001`). Colors is
+  the desired number of colors. Initial colors are found using color quantization.
+  Iterations is the stopping number of iterations (default=300). Convergence is the
+  stopping threshold on the color change between iterations (default=0.0001). Processing
+  finishes, if either iterations or tolerance are reached. Use `-define kmeans:seed-colors=``color-list`
+  to initialize the colors, where color-list is a semicolon delimited list of seed
+  colors (e.g. `-define kmeans:seed-colors="red;sRGB(19,167,254);#00ffff`). A color
+  list overrides the color quantization. A non-empty list of colors overrides the
+  number of colors. Any unassigned initial colors are assigned random colors from
+  the image.
+kuwahara: |-
+  Edge preserving noise reduction filter.
+
+  The `radius` is more important than the `sigma`. If `sigma` is left off, it will be computed automatically from the `radius` as `sigma`=`radius`-0.5. The `sigma` provides a bit of additional smoothing control.
+label: |-
+  Assign a label to an image.
+
+  Use this option to assign a specific label to the image, as it is read in or created. You can use the `-set` operation to re-assign a the labels of images already read in. Image formats such as TIFF, PNG, MIFF, supports saving the label information with the image.
+
+  When saving an image to a `PostScript` file, any label assigned to an image is used as a header string to print above the postscript image.
+
+  You can include the image filename, type, width, height, or other image attribute by embedding special format character. See [Format and Print Image Properties](../www/escape.html) for details of the percent escape codes.
+
+  For example,
+
+  assigns an image label of `MIFF:bird.miff 512x480` to the "`bird.miff`" image and whose width is 512 and height is 480, as it is read in. If a `+label` option was used instead, any existing label present in the image would be used. You can remove all labels from an image by assigning the empty string.
+
+  A label is not drawn on the image, but is embedded in the image datastream via `Label` tag or similar mechanism.
+lat: |-
+  Perform local adaptive threshold.
+
+  Adaptively threshold each pixel based on the value of pixels in a surrounding window. If the current pixel is lighter than this average plus the optional `offset`, then it is made white, otherwise it is made black. Small variations in pixel values such as found in scanned documents can be ignored if offset is positive. A negative offset will make it more sensitive to those small variations.
+
+  This is commonly used to threshold images with an uneven background. It is based on the assumption that average color of the small window is the the local background color, from which to separate the foreground color.
+layers: |-
+  Handle multiple images forming a set of image layers or animation frames.
+
+  Perform various image operation methods to a ordered sequence of images which may represent either a set of overlaid 'image layers', a GIF disposal animation, or a fully-'coalesced' animation sequence.
+
+  To print a complete list of layer types, use `-list layers`.
+
+  The operators `-coalesce`, `-deconstruct`, `-flatten`, and `-mosaic` are only aliases for the above methods and may be deprecated in the future. Also see `-page`, `-repage` operators, the `-compose` setting, and the GIF `-dispose` and `-delay` settings.
+level: |-
+  Adjust the level of image channels.
+
+  Given one, two or three values delimited with commas: black-point, white-point, gamma (for example: 10,250,1.0 or 2%,98%,0.5). The black and white points range from 0 to `QuantumRange`, or from 0 to 100%; if the white point is omitted it is set to (`QuantumRange` - black_point), so as to center contrast changes. If a `%` sign is present anywhere in the string, both black and white points are percentages of the full color range. Gamma will do a `-gamma` adjustment of the values. If it is omitted, the default of 1.0 (no gamma correction) is assumed.
+
+  In normal usage (`-level`) the image values are stretched so that the given '`black_point`' value in the original image is set to zero (or black), while the given '`white_point`' value is set to `QuantumRange` (or white). This provides you with direct contrast adjustments to the image. The '`gamma`' of the resulting image will then be adjusted.
+
+  From ImageMagick v6.4.1-9 using the plus form of the operator (`+level`) or adding the special '!' flag anywhere in the argument list, will cause the operator to do the reverse of the level adjustment.
+level-colors: |-
+  Adjust the level of an image using the provided dash separated colors.
+
+  This function is exactly like `-level`, except that the value for each color channel is determined by the '`black_color`' and '`white_color`' colors given (as described under the `-fill` option).
+
+  This effectively means the colors provided to `-level-colors` is mapped to become 'black' and 'white' respectively, with all the other colors linearly adjusted (or clipped) to match that change. Each channel is adjusted separately using the channel values of the colors specified.
+
+  On the other hand the plus form of the operator (`+level-colors`) will map the image color 'black' and 'white' to the given colors respectively, resulting in a gradient (de-contrasting) tint of the image to those colors. This can also be used to convert a plain grayscale image into a one using the gradient of colors specified.
+
+  By supplying a single color with a comma separator either before or after that color, will just replace the respective 'black' or 'white' point respectively. But if no comma separator is provided, the given color is used for both the black and white color points, making the operator either threshold the images around that color (- form) or set all colors
+limit: |-
+  Set the pixel cache resource limit.
+
+  The value for `file` is in number of files. The other limits are in bytes. Define arguments for the memory, map, area, and disk resource limits with SI prefixes (.e.g 100MB).
+
+  By default the limits are 768 files, 3GB of image area, 1.5GiB memory, 3GiB memory map, and 18.45EB of disk. These limits are adjusted relative to the available resources on your computer if this information is available. When any limit is reached, ImageMagick fails in some fashion but attempts to take compensating actions, if possible. For example, the following limits memory:
+
+  Use `-list resource` to list the current limits. For example, our system shows these limits:
+
+  Requests for pixel storage to keep intermediate images are satisfied by one of three resource categories: in-memory pool, memory-mapped files pool, and disk pool (in that order) depending on the -limit settings and whether the system honors a resource request. If the total size of allocated pixel storage in the given pool reaches the corresponding limit, the request is passed to the next pool. Additionally, requests that exceed the `area` limit automagically are allocated on disk.
+
+  To illustrate how ImageMagick utilizes resource limits, consider a typical image
+linear-stretch: |-
+  Linear with saturation stretch.
+
+  This is very similar to `-contrast-stretch`, and uses a 'histogram bin' to determine the range of color values that needs to be stretched. However it then stretches those colors using the `-level` operator.
+
+  As such while the initial determination may have 'binning' round off effects, the image colors are stretched mathematically, rather than using the histogram bins. This makes the operator more accurate.
+
+  note however that a `-linear-stretch` of '`0`' does nothing, while a value of '`1`' does a near perfect stretch of the color range.
+
+  See also `-auto-level` for a 'perfect' normalization of mathematical images.
+
+  This operator is under review for re-development.
+linewidth: The line width for subsequent draw operations.
+liquid-rescale: |-
+  Rescale image with seam-carving.
+
+  See Image Geometry for complete details about the *geometry* argument.
+list: |-
+  Print a list of supported arguments for various options or settings. Choose from these list types:
+
+  These lists vary depending on your version of ImageMagick. Use "`-list list`" to get a complete listing of all the "`-list`" arguments available:
+log: |-
+  Specify format for debug log.
+
+  This option specifies the format for the log printed when the `-debug` option is active.
+
+  You can display the following components by embedding special format characters:
+
+  For example:
+
+  The default behavior is to print all of the components.
+loop: |-
+  Add Netscape loop extension to your GIF animation.
+
+  Set iterations to zero to repeat the animation an infinite number of times, otherwise the animation repeats itself up to `iterations` times.
+lowlight-color: When comparing images, de-emphasize pixel differences with this color.
+magnify: 'Double or triple the size of the image with pixel art scaling. Specify an
+  alternative scaling method with `-define magnify:method=``method` Choose from these
+  methods: `eagle2X, eagle3X, eagle3XB, epb2X, fish2X, hq2X, scale2X, scale3X, xbr2X`.
+  The default is scale2X.'
+map: |-
+  Pixel map.
+
+  Here are the valid components of a map:
+
+  You can specify as many of these components as needed in any order (e.g. bgr). The components can repeat as well (e.g. rgbr).
+mattecolor: |-
+  Specify the color to be used with the `-frame` option.
+
+  The color is specified using the format described under the `-fill` option.
+
+  The default matte color is `#BDBDBD`, [this shade of gray]{style="background-color: #bdbdbd;"}.
+median: |-
+  Apply a median filter to the image.
+
+  Select the 'middle' value from all the surrounding pixels.
+
+  This is legacy option from the `method` of the same name.
+mean-shift: |-
+  Image noise removal and color reduction/segmentation (e.g. -mean-shift 7x7+10%).
+
+  `width`x`height` is the window size and `distance` is the color distance measured in the range 0 to 1 or 0 to 100%
+
+  The mean shift algorithm is iterative and thus slower the larger the window size. For each pixel, it gets all the pixels in the window centered at the pixel and excludes those that are outside the `radius=sqrt((width-1)(height-1)/4)` surrounding the pixel. From those pixels, it finds which of them are within the specified squared color distance from the current mean. It then computes a new x,y centroid from those coordinates and a new mean. This new x,y centroid is used as the center for a new window. This process is iterated until it converges and the final mean is then used to replace the original pixel value. It repeats this process for the next pixel, etc, until it processes all pixels in the image. Results are better when using other colorspaces rather than RGB. Recommend YIQ, YUV or YCbCr, which seem to give equivalent results.
+metric: |-
+  Output to STDERR a measure of the differences between images according to the `type` given metric.
+
+  Control the '`AE`', or absolute count of pixels that are different, with the `-fuzz` factor (ignore pixels which only changed by a small amount). Use '`PAE`' to find the size of the `-fuzz` factor needed to make all pixels 'similar', while '`MAE`' determines the factor needed for about half the pixels to be similar.
+
+  The `MEPP` metric returns three different metrics ('`MAE`', '`MAE`' normalized, and '`PAE`' normalized) from a single comparison run.
+
+  The `SSIM` and `DSSIM` metrics respect these defines: `-define compare:ssim-radius`, `-define compare:ssim-sigma`, `-define compare:ssim-k1`, and `-define compare:ssim-k2`.
+
+  To print a complete list of metrics, use the `-list metric` option.
+mode: |-
+  Make each pixel the 'predominant color' of the neighborhood.'
+
+  Mode of operation.
+
+  Choose the `value` from these styles: `Frame, Unframe, or Concatenate`
+
+  Use the `-list` option with a '`Mode`' argument for a list of `-mode` arguments available in your ImageMagick installation.
+modulate: |-
+  Vary the `brightness`, `saturation`, and `hue` of an image.
+
+  The arguments are given as a percentages of variation. A value of 100 means no change, and any missing values are taken to mean 100.
+
+  The `brightness` is a multiplier of the overall brightness of the image, so 0 means pure black, 50 is half as bright, 200 is twice as bright. To invert its meaning `-negate` the image before and after.
+
+  The `saturation` controls the amount of color in an image. For example, 0 produce a grayscale image, while a large value such as 200 produce a very colorful, 'cartoonish' color.
+
+  The `hue` argument causes a "rotation" of the colors within the image by the amount specified. For example, 50 results in a counter-clockwise rotation of 90, mapping red shades to purple, and so on. A value of either 0 or 200 results in a complete 180 degree rotation of the image. Using a value of 300 is a 360 degree rotation resulting in no change to the original image.
+
+  For example, to increase the color brightness by 20% and decrease the color saturation by 10% and leave the hue unchanged, use `-modulate 120,90`.
+
+  Use `-set` attribute of '`option:modulate:
+moments: Report image moments and perceptual hash.
+monitor: Monitor progress.
+monochrome: Transform the image to black and white.
+morph: |-
+  Morphs an image sequence.
+
+  Both the image pixels and size are linearly interpolated to give the appearance of a metamorphosis from one image to the next, over all the images in the current image list. The added images are the equivalent of a `-blend` composition. The `frames` argument determine how many images to interpolate between each image.
+morphology: |-
+  Apply a morphology method to the image.
+
+  See IM Usage Examples, Morphology.
+mosaic: A simple alias for the `-layers` method "mosaic"
+motion-blur: |-
+  Simulate motion blur.
+
+  Blur with the given radius, standard deviation (sigma), and angle. The angle given is the angle toward which the image is blurred. That is the direction people would consider the object is coming from.
+
+  Note that the blur is not uniform distribution, giving the motion a definite sense of direction of movement.
+
+  The `-virtual-pixel` setting will determine how pixels which are outside the image proper are blurred into the final result.
+name: Name an image.
+negate: |-
+  Replace each pixel with its complementary color.
+
+  The red, green, and blue intensities of an image are negated. White becomes black, yellow becomes blue, etc. Use `+negate` to only negate the grayscale pixels of the image.
+noise: |-
+  Add or reduce noise in an image.
+
+  The principal function of noise peak elimination filter is to smooth the objects within an image without losing edge information and without creating undesired structures. The central idea of the algorithm is to replace a pixel with its next neighbor in value within a pixel window, if this pixel has been found to be noise. A pixel is defined as noise if and only if this pixel is a maximum or minimum within the pixel window.
+
+  Use ``-noise``` ``radius` to specify the width of the neighborhood when reducing noise. This is equivalent to using a ``-statistic``` NonPeak` operation, which should be used in preference.
+
+  Use `+noise` followed by a noise `type` to add noise to an image. Choose from these noise types:
+
+  The amount of noise added can be controlled by the ``-attenuate`` setting. If unset the value is equivalent to 1.0, or a maximum noise addition.
+
+  Note that Random will replace the image with noise rather than add noise to the image. Use Uniform, if you wish to add random noise to the image.
+
+  To print a complete list of noises, use the `-list noise` option.
+
+  Also see the `-evaluate` noise functions
+opaque: |-
+  Change this color to the fill color within the image.
+
+  The `color` argument is defined using the format described under the `-fill` option. The `-fuzz` setting can be used to match and replace colors similar to the one given.
+
+  Use `+opaque` to paint any pixel that does not match the target color.
+
+  The `-transparent` operator is exactly the same as `-opaque` but replaces the matching color with transparency rather than the current `-fill` color setting. To ensure that it can do this it also ensures that the image has an alpha channel enabled, as per "``-alpha``` set`", for the new transparent colors, and does not require you to modify the `-channel` to enable alpha channel handling.
+orient: |-
+  Specify orientation of a digital camera image.
+
+  Note, this is a setting. This merely sets the orientation metadata, and does not change the image.
+
+  Here are the allowed orientations and the EXIF codes and descriptions how to re-orient the image:
+
+  To print a complete list of orientations, use the `-list orientation` option.
+ordered-dither: |-
+  Dither the image using a pre-defined ordered dither `threshold map` specified, and a uniform color map with the given number of `levels` per color channel.
+
+  You can choose from these standard threshold maps:
+
+  The `threshold` generated a simple 50% threshold of the image. This could be used with `level` to do the equivalent of `-posterize` to reduce an image to basic primary colors.
+
+  The `checks` pattern produces a 3 level checkerboard dither pattern. That is a grayscale will become a pattern of solid black, solid white, and mid-tone colors into a checkerboard pattern of black and white.
+
+  You can define your own `threshold map` for ordered dithering and halftoning your images, in either personal or system `thresholds.xml` XML file. See [Resources](../www/resources.html) for more details of configuration files.
+
+  To print a complete list of the thresholds that have been defined, use the `-list threshold` option.
+
+  Note that at this time the same threshold dithering map is used for all color channels, no attempt is made to offset or rotate the map for different channels is made, to create an offset printing effect.
+page: |-
+  Set the size and location of an image on the larger virtual canvas.
+
+  See Image Geometry for complete details about the *geometry* argument.
+
+  For convenience you can specify the page size using `media` (see below). Offsets can then be added as with other `geometry` arguments (e.g. `-page` `Letter+43+43`).
+
+  Use `media` as shorthand to specify the dimensions (`width`x`height`) of the `PostScript` page in dots per inch or a TEXT page in pixels. The choices for paper sizes are: `4x6`, `5x7`, `7x9`, `8x10`, `9x11`, `9x12`, `10x13`, `10x14`, `11x17`, `4A0`, `2A0`, `a0`, `a1`, `a2`, `a3`, `a4`, `a4small`, `a5`, `a6`, `a7`, `a8`, `a9`, `a10`, `archa`, `archb`, `archC`, `archd`, `arche`, `b0`, `b1`, `b10`, `b2`, `b3`, `b4`, `b5`, `b6`, `b7`, `b8`, `b9`, `c0`, `c1`, `c2`, `c3`, `c4`, `c5`, `c6`, `c7`, `csheet`, `dsheet`, `esheet`, `executive`, `flsa`, `flse`, `folio`, `halfletter`, `isob0`, `isob1`, `isob10`, `isob2`, `isob3`, `isob4`, `isob5`, `isob6`, `isob7`, `isob8`, `isob9`, `jisb0`, `jisb1`, `jisb2`, `jisb3`, `jisb4`, `jisb5`, `jisb6`, `ledger`, `legal`, `letter`, `lettersmall`, `monarch`, `quarto`, `statement`, `tabloid`. To determine the corresponding size in pixels at 72DPI, use this command for example:
+
+  This option is also used to place subimages when writing to a multi-image format that supports offsets, such as GIF89 and MNG.
+path: Write images to this path on disk.
+ping: 'Efficiently determine these image characteristics: image number, the file name,
+  the width and height of the image, whether the image is colormapped or not, the
+  number of colors in the image, the number of bytes in the image, the format of the
+  image (JPEG, PNM, etc.). Use `+ping` to ensure accurate image properties.'
+pointsize: Pointsize of the PostScript, OPTION1, or TrueType font.
+polaroid: |-
+  Simulate a Polaroid picture.
+
+  Use `+polaroid` to rotate the image at a random angle between -15 and +15 degrees.
+posterize: |-
+  Reduce the image to a limited number of color levels per channel.
+
+  Very low values of `levels`, e.g., 2, 3, 4, have the most visible effect.
+precision: Set the maximum number of significant digits to be printed.
+preview: |-
+  Image preview type.
+
+  Use this option to affect the preview operation of an image (e.g. `magick file.png -preview Gamma Preview:gamma.png`). Choose from these previews:
+
+  To print a complete list of previews, use the `-list preview` option.
+
+  The default preview is `JPEG`.
+process: |-
+  Process the image with a custom image filter.
+
+  The command arguments has the form `"module arg1 arg2 arg3 ... argN"` where `module` is the name of the module to invoke (e.g. "Analyze") and arg1 arg2 arg3 ... argN are an arbitrary number of arguments to pass to the process module.
+profile: |-
+  Manage ICM, IPTC, or generic profiles in an image.
+
+  Using `-profile` `filename` adds an ICM (ICC color management), IPTC (newswire information), or a generic profile to the image.
+
+  Use `+profile `profile_name`` to remove the indicated profile. ImageMagick uses standard filename globbing, so wildcard expressions may be used to remove more than one profile. Here we remove all profiles from the image except for the XMP profile: `+profile "!xmp,*"`.
+
+  Use `magick identify -verbose` to find out which profiles are in the image file. Use `-strip` to remove all profiles (and comments).
+
+  To extract a profile, the `-profile` option is not used. Instead, simply write the file to an image format such as `APP1, 8BIM, ICM,` or `IPTC`.
+
+  For example, to extract the Exif data (which is stored in JPEG files in the `APP1` profile), use.
+
+  Set `-define precision:highres-transform=true` to increase the transform precision. Note, there is a slight performance penalty as the high-precision transform is floating point rather than unsigned.
+
+  It is important to note that results may depend on whether or not the original image already has an included profile. Also, keep in mind that `-profile` is an "operator" (as opposed to a "setting") and therefore a conversion is made
+quality: |-
+  control the compression quality of JPEG, PNG, HEIC, and WebP image files when you are creating or saving them. This option is important for managing the trade-off between image quality and file size.
+
+  For the JPEG and MPEG image formats, quality is 1 (lowest image quality and highest compression) to 100 (best quality but least effective compression). The default is to use the estimated quality of your input image if it can be determined, otherwise 92. When the quality is 90 or greater, then the chroma channels are not downsampled. Use the `-sampling-factor` option to specify the factors for chroma downsampling.
+
+  For the JPEG-2000 image format, quality is mapped using a non-linear equation to the compression ratio required by the Jasper library. This non-linear equation is intended to loosely approximate the quality provided by the JPEG v1 format. The default quality value 100, a request for non-lossy compression. A quality of 75 results in a request for 16:1 compression.
+
+  For the MNG and PNG image formats, the quality value sets the zlib compression level (quality / 10) and filter-type (quality % 10). The default PNG "quality" is 75, which means compression level 7 with adaptive PNG filtering, unless the image
+quiet: |-
+  Suppress all warning messages. Error messages are still reported.
+
+  The `-virtual-pixel` setting will determine how pixels which are outside the image proper are blurred into the final result.
+random-threshold: Apply a random threshold to the image.
+read: |-
+  Explicit read of an image rather than an implicit read.
+
+  This option allows you to read from filenames that start with an 'option' character, and which otherwise could be mistaken as an option (unknown or otherwise).
+red-primary: Set the red chromaticity primary point.
+region: |-
+  Set a region in which subsequent operations apply.
+
+  The `x` and `y` offsets are treated in the same manner as in `-crop`.
+
+  See Image Geometry for complete details about the *geometry* argument.
+
+  Use `+region` to remove any previously set regions.
+remap: |-
+  Reduce the number of colors in an image to the colors used by this image.
+
+  If the `-dither` setting is enabled (the default) then the given colors are dithered over the image as necessary, otherwise the closest color (in RGB colorspace) is selected to replace that pixel in the image.
+
+  As a side effect of applying a `-remap` of colors across all images in the current image sequence, all the images will have the same color table. That means that when saved to a file format such as GIF, it will use that color table as a single common or global color table, for all the images, without requiring extra local color tables.
+
+  Use `+remap` to reduce all images in the current image sequence to use a common color map over all the images. This equivalent to appending all the images together (without extra background colors) and color reducing those images using `-colors` with a 256 color limit, then `-remap` those colors over the original list of images. This ensures all the images follow a single color map.
+render: |-
+  Render vector operations.
+
+  Use `+render` to turn off rendering vector operations. This useful when saving the result to vector formats such as MVG or SVG.
+repage: |-
+  Adjust the canvas and offset information of the image.
+
+  This option is like `-page` but acts as an image operator rather than a setting. You can separately set the canvas size or the offset of the image on that canvas by only providing those components.
+
+  See Image Geometry for complete details about the *geometry* argument.
+
+  If a `!` flag is given the offset given is added to the existing offset to move the image relative to its previous position. This useful for animation sequences.
+
+  A given a canvas size of zero such as '`0x0`' forces it to recalculate the canvas size so the image (at its current offset) will appear completely on that canvas (unless it has a negative offset).
+
+  Use `+repage` to completely remove/reset the virtual canvas meta-data from the images.
+
+  The `-set` '`page`' option can be used to directly assign virtual canvas meta-data.
+resample: |-
+  Resample image to specified horizontal and vertical resolution.
+
+  Resize the image so that its rendered size remains the same as the original at the specified target resolution. For example, if a 300 DPI image renders at 3 inches by 2 inches on a 300 DPI device, when the image has been resampled to 72 DPI, it will render at 3 inches by 2 inches on a 72 DPI device. Note that only a small number of image formats (e.g. JPEG, PNG, and TIFF) are capable of storing the image resolution. For formats which do not support an image resolution, the original resolution of the image must be specified via `-density` on the command line prior to specifying the resample resolution.
+
+  Note that Photoshop stores and obtains image resolution from a proprietary embedded profile. If this profile exists in the image, then Photoshop will continue to treat the image using its former resolution, ignoring the image resolution specified in the standard file header.
+resize: |-
+  Resize an image.
+
+  See Image Geometry for complete details about the *geometry* argument. Offsets, if present in the geometry string, are ignored, and the `-gravity` option has no effect.
+
+  If the `-filter` option or `-define filter:option=value` precedes the `-resize` option, the image is resized with the specified orthogonal filter.
+
+  Many image processing algorithms assume your image is in a linear-light coding. If your image is gamma-corrected, you can remove the nonlinear gamma correction, apply the transform, then restore it like this:
+
+  Note, some resampling functions are damped oscillations in approximation of a Sinc function. As such, you may get negative lobes if your release of ImageMagick is HDRI-enabled. To eliminate them, add `-clamp` to your command-line.
+respect-parentheses: Settings remain in effect until parenthesis boundary.
+reverse: Reverse the order of images in the current image list.
+rotate: |-
+  Apply Paeth image rotation (using shear operations) to the image.
+
+  Use `>` to rotate the image only if its width exceeds the height. `<` rotates the image `only` if its width is less than the height. For example, if you specify `-rotate "-90>"` and the image size is 480x640, the image is not rotated. However, if the image is 640x480, it is rotated by -90 degrees. If you use `>` or `<`, enclose it in quotation marks to prevent it from being misinterpreted as a file redirection.
+
+  Empty triangles in the corners, left over from rotating the image, are filled with the `background` color.
+
+  See also the `-distort` operator and specifically the '`ScaleRotateTranslate`' distort method.
+
+  The page or virtual canvas information of the image is also rotated. Use a `+repage` to remove the virtual canvas page information if it is unwanted.
+sample: |-
+  Minify / magnify the image with pixel subsampling and pixel replication, respectively.
+
+  Change the image size simply by directly sampling the pixels original from the image. When magnifying, pixels are replicated in blocks. When minifying, pixels are sub-sampled (i.e., some rows and columns are skipped over).
+
+  The results are thus equivalent to using `-resize` with a `-filter` setting of `point` (nearest neighbor), though `-sample` is a lot faster, as it avoids all the filter processing of the image. As such it completely ignores the current `-filter` setting.
+
+  The key feature of the `-sample` is that no new colors will be added to the resulting image, though some colors may disappear.
+
+  See Image Geometry for complete details about the *geometry* argument. Offsets, if present in the geometry string, are ignored, unlike `-resize`.
+
+  The actual sampling point is the middle of the sub-region being sampled. As such a single pixel sampling of an image will take the middle pixel, (or top-left-middle if image has even dimensions). However the `-define` '`sample:offset`' can be set to modify this position some other location within each sub-region being sampled, as a percentage offset.
+
+  By default this value is '`50`' for the midpoint, but could be set
+sampling-factor: |-
+  Sampling factors used by JPEG or MPEG-2 encoder and YUV decoder/encoder.
+
+  This option specifies the sampling factors to be used by the JPEG encoder for chroma downsampling. If this option is omitted, the JPEG library will use its own default values. When reading or writing the YUV format and when writing the M2V (MPEG-2) format, use `-sampling-factor 2x1` or `-sampling-factor 4:2:2` to specify the 4:2:2 downsampling method.
+scale: |-
+  Minify / magnify the image with pixel block averaging and pixel replication, respectively.
+
+  Change the image size simply by replacing pixels by averaging pixels together when minifying, or replacing pixels when magnifying.
+
+  The results are thus equivalent to using `-resize` with a `-filter` setting of `box`. Though it is a lot faster, as it avoids all the filter processing of the image. As such it completely ignores the current `-filter` setting.
+
+  If when shrinking (minifying) images the original image is some integer multiple of the new image size, the number of pixels averaged together to produce the new pixel color is the same across the whole image. This is a special case known as 'binning' and is often used as a method of reducing noise in image such as those generated by digital cameras, especially in low light conditions.
+scene: |-
+  Set scene number.
+
+  This option sets the scene number of an image or the first image in an image sequence.
+screen: |-
+  Specify the screen to capture.
+
+  This option indicates that the GetImage request used to obtain the image should be done on the root window, rather than directly on the specified window. In this way, you can obtain pieces of other windows that overlap the specified window, and more importantly, you can capture menus or other popups that are independent windows but appear over the specified window.
+seed: Seed a new sequence of pseudo-random numbers
+selective-blur: |-
+  Selectively blur pixels within a contrast threshold.
+
+  Blurs those pixels that are less than or equal to the threshold in contrast. The threshold may be expressed as a fraction of `QuantumRange` or as a percentage.
+
+  The `sigma` value is the important argument, and determines the actual amount of blurring that will take place.
+
+  The `radius` is only used to determine the size of the array which holds the calculated Gaussian distribution. It should be an integer. If not given, or set to zero, IM will calculate the largest possible radius that will provide meaningful results for the Gaussian distribution.
+separate: Separate an image channel into a grayscale image. Specify the channel with
+  `-channel`.
+sepia-tone: |-
+  Simulate a sepia-toned photo.
+
+  Specify `threshold` as the percent threshold of the intensity (0 - 99.9%).
+
+  This option applies a special effect to the image, similar to the effect achieved in a photo darkroom by sepia toning. Threshold ranges from 0 to `QuantumRange` and is a measure of the extent of the sepia toning. A threshold of 80% is a good starting point for a reasonable tone.
+set: |-
+  Sets image attributes and properties for images in the current image sequence.
+
+  This will assign (or modify) specific settings attached to all the images in the current image sequence. Using the `+set` form of the option will either remove, or reset that setting to a default state, as appropriate.
+
+  For example, it will modify specific well known image meta-data 'attributes' such as those normally overridden by: the options `-delay`, `-dispose`, and `-page`, `-colorspace`; generally assigned before the image is read in, by using a `key` of the same name.
+
+  If the given `key` does not match a specific known 'attribute ', such as shown above, the setting is stored as a free form 'property' string. Such settings are listed in `-verbose` information ("`info:`" output format) as "Properties".
+
+  This includes string 'properties' that are set by and assigned to images using the options `-comment`, `-label`, `-caption`. These options actually assign a global 'artifact' which are automatically assigned (and any [Format Percent Escapes](../www/escape.html) expanded) to images as they are read in. For example:
+
+  The set value can also make use of [Format and Print Image Properties](../www/escape.html) in the defined value. For example:
+
+  Other well known 'properties' that are available
+shade: |-
+  Shade the image using a distant light source.
+
+  Specify `azimuth` and `elevation` as the position of the light source. Use `+shade` to return the shading results as a grayscale image.
+shadow: |-
+  Simulate an image shadow.
+
+  ## []-shared-memory
+
+  Use shared memory.
+
+  This option specifies whether the utility should attempt to use shared memory for pixmaps. ImageMagick must be compiled with shared memory support, and the display must support the `MIT-SHM` extension. Otherwise, this option is ignored. The default is `True`.
+sharpen: |-
+  Sharpen the image.
+
+  Use a Gaussian operator of the given radius and standard deviation (sigma).
+
+  The `sigma` value is the important argument, and determines the actual amount of sharpening that will take place.
+
+  The `radius` is only used to determine the size of the array which holds the calculated Gaussian distribution. It should be an integer. If not given, or set to zero, IM will calculate the largest possible radius that will provide meaningful results for the Gaussian distribution.
+shave: |-
+  Shave pixels from the image edges.
+
+  The `size` portion of the `geometry` argument specifies the width of the region to be removed from both sides of the image and the height of the regions to be removed from top and bottom. Offsets are ignored.
+
+  See Image Geometry for complete details about the *geometry* argument.
+shear: |-
+  Shear the image along the x-axis and/or y-axis.
+
+  The shear angles may be positive, negative, or zero. When `Ydegrees` is omitted it defaults to `Xdegrees`. When both angles are given, the horizontal component of the shear is performed before the vertical component.
+
+  Shearing slides one edge of an image along the x-axis or y-axis (i.e., horizontally or vertically, respectively),creating a parallelogram. The amount of each is controlled by the respective shear angle. For horizontal shears, `Xdegrees` is measured clockwise relative to "up" (the negative y-axis), sliding the top edge to the right when 0°<`Xdegrees`<90° and to the left when 90°<`Xdegrees`<180°. For vertical shears `Ydegrees` is measured clockwise relative to "right" (the positive x-axis), sliding the right edge down when 0°<`Ydegrees`<90° and up when 90°<`Ydegrees`<180°.
+
+  Empty triangles left over from shearing the image are filled with the color defined by the `-background` option. The color is specified using the format described under the `-fill` option.
+
+  The horizontal shear is performed before the vertical part. This is important to note, since horizontal and vertical shears do not `commute`, i.e., the order matters in a sequence of shears. For example, the following two commands are not equivalent.
+
+  The first of the two commands
+sigmoidal-contrast: |-
+  Increase the contrast without saturating highlights or shadows.
+
+  Increase the contrast of the image using a sigmoidal transfer function without saturating highlights or shadows. `Contrast` indicates how much to increase the contrast. For example, 0 is none, 3 is typical and 20 is a lot.
+
+  The `mid-point` indicates where the maximum change 'slope' in contrast should fall in the resultant image (0 is white; 50% is middle-gray; 100% is black).
+
+  By default the image contrast is increased, use `+sigmoidal-contrast` to decrease the contrast.
+
+  To achieve the equivalent of a sigmoidal brightness change (similar to a gamma adjustment), you would use `-sigmoidal-contrast {brightness}x0%` to increase brightness and `+sigmoidal-contrast {brightness}x0%` to decrease brightness. Note the use of '0' fo rthe mid-point of the sigmoidal curve.
+
+  Using a very high `contrast` will produce a sort of 'smoothed thresholding' of the image. Not as sharp (with high aliasing effects) of a true threshold, but with tapered gray-levels around the threshold `mid-point`.
+similarity-threshold: |-
+  Minimum RMSE for subimage match.
+
+  If this setting is used, then the search will stop as soon as it finds a match whose metric is less than or equal to the value. A partially filled second output image will result. Using a value of zero, will cause the search to stop at the first perfect match it finds. If this setting is left off, then the search will proceed to completion or as limited by `-dissimilarity-threshold`.
+size: |-
+  Set the width and height of the image.
+
+  Use this option to specify the width and height of raw images whose dimensions are unknown such as `GRAY`, `RGB`, or `CMYK`. In addition to width and height, use `-size` with an offset to skip any header information in the image or tell the number of colors in a `MAP` image file, (e.g. -size 640x512+256).
+
+  For Photo CD images, choose from these sizes:
+sketch: |-
+  Simulate a pencil sketch.
+
+  Sketch with the given radius, standard deviation (sigma), and angle. The angle given is the angle toward which the image is sketched. That is the direction people would consider the object is coming from.
+solarize: |-
+  Negate all pixels above the threshold level.
+
+  Specify `factor` as the percent threshold of the intensity (0 - 99.9%).
+
+  This option produces a `solarization` effect seen when exposing a photographic film to light during the development process.
+sparse-color: |-
+  color the given image using the specified points of color, and filling the other intervening colors using the given methods.
+
+  The points are placed according to the images location on the virtual canvas (`-page` or `-repage` offset), and do not actually have to exist on the given image, but may be some point beyond the edge of the image. All points are floating point values.
+
+  Only the color channels defined by the `-channel` are modified, which means that by default matte/alpha transparency channel is not affected. Typically transparency channel is turned off either before or after the operation.
+
+  Of course if some color points are transparent to generate a transparent gradient, then the image also requires transparency enabled to store the values.
+
+  All the above methods when given a single point of color will replace all the colors in the image with the color given, regardless of the point. This is logical, and provides an alternative technique to recolor an image to some default value.
+spread: |-
+  Displace image pixels by a random amount.
+
+  The argument `amount` defines the size of the neighborhood around each pixel from which to choose a candidate pixel to blend.
+
+  The lookup is controlled by the `-interpolate` setting.
+statistic: |-
+  Replace each pixel with corresponding statistic from the neighborhood.
+
+  Choose from these statistic types:
+stegano: |-
+  Hide watermark within an image.
+
+  Use an offset to start the image hiding some number of pixels from the beginning of the image. Note this offset and the image size. You will need this information to recover the steganographic image (e.g. display -size 320x256+35 stegano:image.png).
+stereo: |-
+  Composite two images to create a red / cyan stereo anaglyph.
+
+  The left side of the stereo pair (second image) is saved as the red channel of the output image. The right side (first image) is saved as the green and blue channels. Red-green stereo glasses are required to properly view the stereo image.
+strip: 'Strip the image of any profiles, comments or these PNG chunks: bKGD,cHRM,EXIF,gAMA,iCCP,iTXt,sRGB,tEXt,zCCP,zTXt,date.
+  To remove the orientation chunk, `orNT`, set the orientation to undefined, e.g.,
+  `-orient Undefined`.'
+stroke: |-
+  Color to use when stroking a graphic primitive.
+
+  The color is specified using the format described under the `-fill` option.
+
+  See `-draw` for further details.
+strokewidth: |-
+  Set the stroke width.
+
+  See `-draw` for further details.
+style: |-
+  Set a font style for text.
+
+  This setting suggests a font style that ImageMagick should try to apply to the currently selected font family. Select `fontStyle` from the following.
+
+  For other settings that affect fonts, see the options `-font`, `-family`, `-stretch`, and `-weight`.
+swap: |-
+  Swap the positions of two images in the image sequence.
+
+  For example, `-swap 0,2` swaps the first and the third images in the current image sequence. Use `+swap` to switch the last two images in the sequence.
+swirl: |-
+  Swirl image pixels about the center.
+
+  `Degrees` defines the tightness of the swirl.
+synchronize: |-
+  Synchronize image to storage device.
+
+  Set to "true" to ensure all image data is fully flushed and synchronized to disk. There is a performance penalty, but the benefits include ensuring a valid image file in the event of a system crash and early reporting if there is not enough disk space for the image pixel cache.
+taint: Mark the image as modified.
+texture: Name of texture to tile onto the image background.
+threshold: |-
+  Apply simultaneous black/white threshold to the image.
+
+  Any pixel values (more specifically, those channels set using -channel) that exceed the specified threshold are reassigned the maximum channel value, while all other values are assigned the minimum.
+
+  The threshold value can be given as a percentage or as an absolute integer value corresponding to the desired channel value. When given as an integer, the minimum attainable value is 0 (corresponding to black when all channels are affected), but the maximum value (corresponding to white) is that of the `quantum depth` of the particular build of ImageMagick, and is therefore dependent on the installation. For that reason, a reasonable recommendation for most applications is to specify the threshold values as a percentage.
+
+  The following would force pixels with red values above 50% to have 100% red values, while those at or below 50% red would be set to 0 in the red channel. The green, blue, and alpha channels (if present) would be unchanged.
+
+  As (possibly) impractical but instructive examples, the following would generate an all-black and an all-white image with the same dimensions as the input image.
+
+  See also -black-threshold and -white-threshold.
+thumbnail: |-
+  Create a thumbnail of the image.
+
+  This is similar to `-resize`, except it is optimized for performance. In addition, comments and color profiles are removed, and `Thumb` properties are set. This option respects `-filter`, e.g., for additional performance but with a slight degradation in quality, use `-filter box`.
+
+  See Image Geometry for complete details about the *geometry* argument.
+tile: |-
+  Set the tile image used for filling a subsequent graphic primitive.
+
+  Specify the layout of images.
+
+  See Image Geometry for complete details about the *geometry* argument.
+
+  Specifies that a subsequent composite operation is repeated across and down image.
+tile-offset: |-
+  Specify the offset for tile images, relative to the background image it is tiled on.
+
+  This should be set before the tiling image is set by `-tile` or `-texture`, or directly applied for creating a tiled canvas using `TILE:` or `PATTERN:` input formats.
+
+  Internally ImageMagick does a `-roll` of the tile image by the arguments given when the tile image is set.
+tint: |-
+  Tint the image with the fill color.
+
+  Tint the image with the fill color.
+
+  Specify the amount of tinting as a percentage. Pure colors like black, white red, yellow, will not be affected by -tint. Only mid-range colors such as the various shades of grey.
+transform: |-
+  Transform the image.
+
+  This option applies the transformation matrix from a previous `-affine` option.
+
+  This operator has been now been superseded by the `-distort` '`AffineProjection`' method.
+transparent: |-
+  Make this color transparent within the image.
+
+  The `color` argument is defined using the format described under the `-fill` option. The `-fuzz` setting can be used to match and replace colors similar to the one given.
+
+  Use `+transparent` to invert the pixels matched. that is make all non-matching colors transparent.
+
+  The `-opaque` operator is exactly the same as `-transparent` but replaces the matching color with the current `-fill` color setting, rather than transparent. However the `-transparent` operator also ensures that the image has an alpha channel enabled, as per "``-alpha``` set`", and does not require you to modify the `-channel` to enable alpha channel handling.
+
+  Note that this does not define the color as being the 'transparency color' used for color-mapped image formats, such as GIF. For that use `-transparent-color`
+transpose: |-
+  Mirror the image along the top-left to bottom-right diagonal.
+
+  This option mathematically transposes the pixel array. It is equivalent to the sequence `-flip -rotate 90`.
+transverse: Mirror the image along the images bottom-left top-right diagonal. Equivalent
+  to the operations `-flop -rotate 90`.
+treedepth: |-
+  Tree depth for the color reduction algorithm.
+
+  Normally, this integer value is zero or one. A value of zero or one causes the use of an optimal tree depth for the color reduction algorithm.
+
+  An optimal depth generally allows the best representation of the source image with the fastest computational speed and the least amount of memory. However, the default depth is inappropriate for some images. To assure the best representation, try values between 2 and 8 for this parameter. Refer to the [color reduction algorithm](../www/quantize.html) for more details.
+
+  The `-colors` or `-monochrome` option, or writing to an image format which requires color reduction, is required for this option to take effect.
+trim: |-
+  Trim an image.
+
+  This option removes any edges that are exactly the same color as the corner pixels. Use `-fuzz` to make `-trim` remove edges that are nearly the same color as the corner pixels.
+
+  The page or virtual canvas information of the image is preserved allowing you to extract the result of the `-trim` operation from the image. Use a `+repage` to remove the virtual canvas page information if it is unwanted.
+
+  If the trimmed image 'disappears' a warning is produced, and a special single pixel transparent 'missed' image is returned, in the same way as when a `-crop` operation 'misses' the image proper.
+
+  Use ``-define``` trim:percent-background=0%` to remove all the background from the image. The amount of background that is tolerated in an edge specified as a percent. 0% means no background is tolerated. 50% means an edge can contain up to 50% pixels that are background per the fuzz-factor.
+
+  Use ``-define``` trim:edges={north,east,south,west}` separated by commas to only trim the specified edges of the image, e.g. `-define trim:edges=north,south -fuzz 5% -trim`.
+
+  Use ``-define``` trim:minSize=``geometry` limit the trim to the specified size.
+
+  Use ``-background``` `*`background-color`* to identify background color surrounding the region of interest.
+type: |-
+  The image type.
+
+  Normally, when a format supports different subformats such as grayscale and truecolor, the encoder will try to choose an efficient subformat. The `-type` option can be used to override this behavior. For example, to prevent a JPEG from being written in grayscale format even though only gray pixels are present, use.
+
+  Similarly, use `-type TrueColorAlpha` to force the encoder to write an alpha channel even though the image is opaque, if the output format supports transparency.
+
+  Use `-type optimize` to ensure the image is written in the smallest possible file size.
+unique-colors: Discard all but one of any pixel color.
+units: The units of image resolution.
+unsharp: |-
+  Sharpen the image with an unsharp mask operator.
+
+  The `-unsharp` option sharpens an image. The image is convolved with a Gaussian operator of the given radius and standard deviation (sigma). For reasonable results, radius should be larger than sigma. Use a radius of 0 to have the method select a suitable radius.
+
+  The `sigma` value is the important argument, and determines the actual amount of sharpening that will take place.
+
+  The `radius` is only used to determine the size of the array which holds the calculated Gaussian distribution. It should be an integer. If not given, or set to zero, IM will calculate the largest possible radius that will provide meaningful results for the Gaussian distribution.
+
+  The parameters are:
+update: |-
+  Detect when image file is modified and redisplay.
+
+  Suppose that while you are displaying an image the file that is currently displayed is over-written. `display` will automagically detect that the input file has been changed and update the displayed image accordingly.
+verbose: Print detailed information about the image when this option precedes the
+  `-identify` option or `info:`.
+version: Print ImageMagick version string and exit.
+virtual-pixel: |-
+  Specify contents of `virtual pixels`.
+
+  This option defines what color source should be used if and when a color lookup completely 'misses' the source image. The color(s) that appear to surround the source image. Generally this color is derived from the source image, but could also be set to a specify background color.
+
+  Choose from these methods:
+
+  The default value is "edge".
+
+  This most important for distortion operators such as `-distort`, `-implode`, and `-fx`. However it also affects operations that may access pixels just outside the image proper, such as `-convolve`, `-blur`, and `-sharpen`.
+
+  To print a complete list of virtual pixel types, use the `-list virtual-pixel` option.
+vignette: |-
+  Soften the edges of the image in vignette style.
+
+  The vignette effect rolloff is controlled by radiusxsigma. For nominal rolloff, this would be set to 0xsigma. A value of 0x0 will produce a circle/ellipse with no rolloff. The arguments x and y control the size of the circle. Larger values decrease the radii and smaller values increase the radii. Values of +0+0 will generate a circle/ellipse the same size as the image. The default values for x and y are 10% of the corresponding image dimension. Thus, the radii will be decreased by 10%, i.e., the diameters of the circle/ellipse will be 80% of the corresponding image dimension. Note, the percent symbol in a geometry affects `x` and `y`, whereas `radius` and `sigma` are absolute (e.g.,
+
+  -vignette "0x2+10%+10%").
+watermark: |-
+  Watermark an image using the given percentages of brightness and saturation.
+
+  Take a grayscale image (with alpha mask) and modify the destination image's brightness according to watermark image's grayscale value and the `brightness` percentage. The destinations color saturation attribute is just direct modified by the `saturation` percentage, which defaults to 100 percent (no color change).
+wave: Shear the columns of an image into a sine wave.
+wavelet-denoise: Removes noise from the image using a wavelet transform. The threshold
+  is the value below which everything is considered noise and ranges from 0.0 (none)
+  to QuantumRange or use percent (e.g. 5%). Softness attenuates the threshold and
+  typically ranges from 0.0 (none, default) to 1.0. The higher the value, the more
+  noise that remains in the image.
+weight: |-
+  Set a font weight for text.
+
+  This setting suggests a font weight that ImageMagick should try to apply to the currently selected font family. Use a positive integer for `fontWeight` or select from the following.
+
+  To print a complete list of weight types, use `-list weight`.
+
+  For other settings that affect fonts, see the options `-font`, `-family`, `-stretch`, and `-style`.
+white-balance: |-
+  Applies white balancing to an image according to a grayworld assumption in the LAB colorspace.
+
+  Use
+
+  -define white-balance:vibrance=*value{%}* to change the color vibrance of the a & b channels.
+white-point: Chromaticity white point.
+white-threshold: |-
+  Force to white all pixels above the threshold while leaving all pixels at or below the threshold unchanged.
+
+  The threshold value can be given as a percentage or as an absolute integer value within [0, `QuantumRange`] corresponding to the desired -channel value. See -thresholdfor more details on thresholds and resulting values.
+word-break: Sets whether line breaks appear wherever the text would otherwise overflow
+  its content box. Choose from `normal`, the default, or `break-word`.
+write: |-
+  Write an image sequence.
+
+  The image sequence preceding the `-write` `filename` option is written out, and processing continues with the same image in its current state if there are additional options. To restore the image to its original state after writing it, use the `+write` `filename` option.
+
+  Use `-compress` to specify the type of image compression.

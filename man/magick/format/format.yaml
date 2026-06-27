@@ -1,0 +1,9 @@
+PNG: |
+  An image format supported by ImageMagick for reading or writing.
+  Use `magick -list format` to see all available formats.
+
+  Format codes are used with `-format` to specify output type,
+  with `-define` to set format-specific options (e.g. `png:compression-level`),
+  or as filename extensions to auto-select the format.
+
+  The `*` in the Mode column indicates read (`r`) and write (`w`) support.

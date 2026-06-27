@@ -1,22 +1,24 @@
 Abs:
-  Absolute value. Takes the absolute value of each pixel channel.
-  Converts negative values to positive.
+  Add value to pixels and return absolute value. Converts negative values to positive.
 Add:
-  Addition. Adds a constant value to each pixel channel.
-  Increases brightness uniformly.
-AddPredictor:
-  Add predictor. Used for PNG prediction.
+  Add a constant value to each pixel channel. Increases brightness uniformly.
+AddModulus:
+  Add value to pixels modulo QuantumRange. Equivalent to Add unless the result
+  exceeds the maximum value, in which case it wraps around.
 And:
-  Bitwise AND. Performs bitwise AND between pixel and value.
-  Used for masking specific bit patterns.
+  Bitwise AND of pixels with value. Used for masking specific bit patterns.
 Cosine:
-  Cosine. Applies cosine function to each pixel channel value.
+  Apply cosine to pixels with frequency value, with 50% bias added.
+  Produces a wave pattern over the color range.
+Cos:
+  Alias for Cosine.
 Divide:
-  Division. Divides each pixel channel by a constant.
-  Used for scaling pixel values down.
+  Divide pixels by value. Used for scaling pixel values down.
+Exp:
+  Base-e exponential function. Works on normalized pixel values.
+  Value should be negative to produce a decaying exponential.
 Exponential:
-  Exponential. Applies exponential function to pixel values.
-  Enhances bright areas dramatically.
+  Alias for Exp. Base-e exponential function.
 GaussianNoise:
   Gaussian noise. Adds Gaussian-distributed random noise.
   Simulates natural sensor noise.
@@ -27,8 +29,12 @@ LaplacianNoise:
   Laplacian noise. Adds Laplacian-distributed random noise.
   Heavier tails than Gaussian.
 Log:
-  Logarithm. Applies natural logarithm to pixel values.
-  Compresses dynamic range; useful for HDR.
+  |
+  Apply scaled logarithm to normalized pixel values. Compresses dynamic range.
+  Formula: log(value * u + 1) / log(value + 1).
+InverseLog:
+  Apply inverse scaled logarithm to normalized pixel values.
+  Reverses the Log operation.
 Max:
   Maximum. Sets each pixel channel to the max of current value and constant.
   Brightens dark pixels up to the threshold.
@@ -54,20 +60,24 @@ PoissonNoise:
   Poisson noise. Adds Poisson-distributed random noise.
   Models photon counting noise in imaging sensors.
 Pow:
-  Power. Raises each pixel channel to the given power.
-  Gamma-like adjustment; values > 1 darken, < 1 brighten.
+  |
+  Raise normalized pixels to the power value. Related to `-gamma`:
+  `-gamma 2` is equivalent to `-evaluate pow 0.5` (square root).
 RootMeanSquare:
-  Root mean square. Computes RMS of pixel neighborhood.
-  Similar to mean but weights higher values more.
+  Square the pixel and add the value.
+RMS:
+  Alias for RootMeanSquare.
 Set:
-  Set. Sets each pixel channel to a constant value.
-  Replaces all pixel values uniformly.
-Shift:
-  Bitwise shift. Left or right shifts pixel channel bits.
-  Used for bit-level manipulation.
+  Set pixel equal to value. Replaces all pixel values uniformly.
+LeftShift:
+  Shift pixel values left by value bits (multiply pixels by 2^value).
+RightShift:
+  Shift pixel values right by value bits (divide pixels by 2^value).
 Sine:
-  Sine. Applies sine function to each pixel channel value.
+  Apply sine to pixels with frequency value, with 50% bias added.
   Creates periodic modulation patterns.
+Sin:
+  Alias for Sine.
 Subtract:
   Subtraction. Subtracts a constant from each pixel channel.
   Decreases brightness uniformly.

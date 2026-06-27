@@ -1,0 +1,6 @@
+DejaVu-Sans: |
+  A font available on this system for text rendering.
+  Use `magick -list font` to see all available fonts.
+
+  Font names are used with `-font` to select the typeface for
+  text annotation (`-annotate`, `-label`, `-caption`, `-draw text`).
