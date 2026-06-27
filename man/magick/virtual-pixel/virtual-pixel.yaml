@@ -1,50 +1,33 @@
-Undefined:
-  Undefined virtual pixel method. Default; typically uses Edge behavior.
-Background:
-  Background color. Pixels outside the image bounds are filled
-  with the current background color.
-Black:
-  Black. Out-of-bounds areas are filled with black.
-Constant:
-  Constant color. Pixels outside bounds use a fixed color.
-  Similar to Background but explicitly set.
-Dither:
-  Dithered edge. Uses a dithered pattern at image boundaries.
-  Reduces visible seams in tiled operations.
-Edge:
-  Edge extend. Repeats the nearest edge pixel outward.
-  Extends the border infinitely; common default method.
-Gray:
-  Gray. Out-of-bounds areas are filled with gray.
-Mirror:
-  Mirror reflection. Reflects the image at its boundaries.
-  Creates seamless tiling by mirroring adjacent pixels.
-Random:
-  Random pixels. Fills out-of-bounds areas with random pixel values.
-  Useful for disguising boundary artifacts.
-Tile:
-  Tile repeat. Repeats the image infinitely in all directions.
-  Creates a seamless tiled pattern.
-Transparent:
-  Transparent. Out-of-bounds areas are fully transparent.
-  Used for compositing where edges should blend away.
-Mask:
-  Mask. Uses a mask image to determine out-of-bounds pixel values.
-  Provides custom boundary handling per-pixel.
-HorizontalTile:
-  Horizontal tile. Tiles horizontally; extends edge pixels vertically.
+Undefined: Undefined virtual pixel method. Default; typically uses Edge behavior.
+Background: Background color. Pixels outside the image bounds are filled with the
+  current background color.
+Black: Black. Out-of-bounds areas are filled with black.
+Constant: Constant color. Pixels outside bounds use a fixed color. Similar to Background
+  but explicitly set.
+Dither: Dithered edge. Uses a dithered pattern at image boundaries. Reduces visible
+  seams in tiled operations.
+Edge: Edge extend. Repeats the nearest edge pixel outward. Extends the border infinitely;
+  common default method.
+Gray: Gray. Out-of-bounds areas are filled with gray.
+Mirror: Mirror reflection. Reflects the image at its boundaries. Creates seamless
+  tiling by mirroring adjacent pixels.
+Random: Random pixels. Fills out-of-bounds areas with random pixel values. Useful
+  for disguising boundary artifacts.
+Tile: Tile repeat. Repeats the image infinitely in all directions. Creates a seamless
+  tiled pattern.
+Transparent: Transparent. Out-of-bounds areas are fully transparent. Used for compositing
+  where edges should blend away.
+Mask: Mask. Uses a mask image to determine out-of-bounds pixel values. Provides custom
+  boundary handling per-pixel.
+HorizontalTile: Horizontal tile. Tiles horizontally; extends edge pixels vertically.
   Useful for panoramic image operations.
-VerticalTile:
-  Vertical tile. Tiles vertically; extends edge pixels horizontally.
-  Complement of HorizontalTile.
-HorizontalTileEdge:
-  Horizontal tile with edge extension. Tiles horizontally;
-  extends edge pixels vertically (no mirroring).
-VerticalTileEdge:
-  Vertical tile with edge extension. Tiles vertically;
-  extends edge pixels horizontally (no mirroring).
-CheckerTile:
-  Checker tile. Alternates between the image and background
-  in a checkerboard pattern for out-of-bounds areas.
-White:
-  White. Out-of-bounds areas are filled with white.
+VerticalTile: Vertical tile. Tiles vertically; extends edge pixels horizontally. Complement
+  of HorizontalTile.
+HorizontalTileEdge: Horizontal tile with edge extension. Tiles horizontally; extends
+  edge pixels vertically (no mirroring).
+VerticalTileEdge: Vertical tile with edge extension. Tiles vertically; extends edge
+  pixels horizontally (no mirroring).
+CheckerTile: Checker tile. Alternates between the image and background in a checkerboard
+  pattern for out-of-bounds areas.
+White: White. Out-of-bounds areas are filled with white.
+None: No virtual pixel method specified. Typically uses Edge behavior.

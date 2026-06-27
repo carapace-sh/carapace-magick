@@ -1,74 +1,47 @@
-Undefined:
-  Undefined kernel. No specific kernel shape.
-Unity:
-  Unity kernel. The identity kernel — a single 1.0 value.
-  No change when applied as a convolution.
-Gaussian:
-  Gaussian kernel. Bell-curve shaped kernel for smoothing.
-  The most common kernel for blur operations.
-DoG:
-  Difference of Gaussians kernel. DoG — subtracts two Gaussian kernels.
-  Used for edge detection and blob detection.
-Log:
-  Laplacian of Gaussian (LoG) kernel. Mexican hat shaped.
-  Used for blob detection and edge enhancement.
-BoG:
-  Box of Gaussians kernel. Approximation of LoG using box filters.
-  Faster to compute than true LoG.
-Laplacian:
-  Laplacian kernel. Second-derivative edge detection kernel.
-  Highlights rapid intensity changes in the image.
-Sobel:
-  Sobel kernel. 3x3 gradient edge detection kernel.
-  Computes horizontal or vertical gradient approximation.
-FreiChen:
-  Frei-Chen kernel. Edge detection kernel set with 9 basis kernels.
-  Provides edge, line, and feature detection.
-Roberts:
-  Roberts cross kernel. 2x2 diagonal edge detection.
-  Simple and fast; produces thin edges.
-Prewitt:
-  Prewitt kernel. 3x3 gradient edge detection.
-  Similar to Sobel but with uniform weighting.
-Compass:
-  Compass kernel. Directional edge detection in 8 orientations.
-  Detects edges in a specific direction.
-Kirsch:
-  Kirsch kernel. Directional edge detection with 3x3 masks.
-  Detects edges in all 8 compass directions.
-Diamond:
-  Diamond kernel. Diamond-shaped (rhombus) structuring element.
-  Used for morphological operations.
-Square:
-  Square kernel. Square-shaped structuring element.
-  The standard kernel for most morphological operations.
-Rectangle:
-  Rectangle kernel. Rectangular structuring element.
-  Non-square variant for directional morphology.
-Octagon:
-  Octagon kernel. Octagonal structuring element.
-  Closer to a circle than a square; used for isotropic morphology.
-Disk:
-  Disk kernel. Circular structuring element.
-  The most isotropic (direction-independent) shape.
-Plus:
-  Plus (cross) kernel. Cross-shaped structuring element.
-  Used for thin cross-shaped morphological operations.
-Cross:
-  Cross kernel. Same as Plus kernel.
-  Cross-shaped element for morphology.
-Ring:
-  Ring kernel. Annular (ring-shaped) structuring element.
-  Used for detecting circular features.
-Lines:
-  Lines kernel. Detects thin lines in the image.
-  Specialized for line feature extraction.
-Corners:
-  Corners kernel. Detects corner features.
-  Used for feature point detection.
-Diagonals:
-  Diagonals kernel. Detects diagonal features.
-  Used for diagonal edge and line detection.
-ThinSE:
-  ThinSE (structuring element) kernels. Set of thin structuring elements.
-  Used for morphological thinning operations.
+Undefined: Undefined kernel. No specific kernel shape.
+Unity: Unity kernel. The identity kernel — a single 1.0 value. No change when applied
+  as a convolution.
+Gaussian: Gaussian kernel. Bell-curve shaped kernel for smoothing. The most common
+  kernel for blur operations.
+DoG: Difference of Gaussians kernel. DoG — subtracts two Gaussian kernels. Used for
+  edge detection and blob detection.
+Log: Laplacian of Gaussian (LoG) kernel. Mexican hat shaped. Used for blob detection
+  and edge enhancement.
+BoG: Box of Gaussians kernel. Approximation of LoG using box filters. Faster to compute
+  than true LoG.
+Laplacian: Laplacian kernel. Second-order derivative for edge detection.
+Sobel: Sobel kernel. Gradient-based edge detection operator.
+FreiChen: Frei-Chen kernel. Edge and line detection operator set.
+Roberts: Roberts kernel. Simple diagonal edge detection operator.
+Prewitt: Prewitt kernel. Gradient-based edge detection operator.
+Compass: Compass kernel. Directional edge detection in 8 orientations. Detects edges
+  in a specific direction.
+Kirsch: Kirsch kernel. Directional edge detection with 3x3 masks. Detects edges in
+  all 8 compass directions.
+Diamond: Diamond-shaped structuring element.
+Square: Square-shaped structuring element.
+Rectangle: Rectangle-shaped structuring element.
+Octagon: Octagon-shaped structuring element.
+Disk: Disk-shaped structuring element.
+Plus: Plus (cross) kernel. Cross-shaped structuring element. Used for thin cross-shaped
+  morphological operations.
+Cross: Cross kernel. Same as Plus kernel. Cross-shaped element for morphology.
+Ring: Ring kernel. Annular (ring-shaped) structuring element. Used for detecting circular
+  features.
+Lines: Lines kernel. Detects thin lines in the image. Specialized for line feature
+  extraction.
+Corners: Corners kernel. Detects corner features. Used for feature point detection.
+Diagonals: Diagonals kernel. Detects diagonal features. Used for diagonal edge and
+  line detection.
+ThinSE: ThinSE (structuring element) kernels. Set of thin structuring elements. Used
+  for morphological thinning operations.
+Binomial: Binomial kernel. Coefficients from binomial expansion.
+Blur: Blur kernel. Used for Gaussian-like blur convolutions.
+Chebyshev: Chebyshev kernel. Distance metric based on Chebyshev distance.
+Comet: Comet kernel. Motion blur effect kernel.
+ConvexHull: Convex hull kernel. Used for shape analysis.
+Edges: Edges kernel. Detects edges in binary images.
+Euclidean: Euclidean kernel. Distance metric based on Euclidean distance.
+LineEnds: Line ends kernel. Detects endpoints of lines.
+LineJunctions: Line junctions kernel. Detects junctions where lines meet.
+LoG: Laplacian of Gaussian kernel. Edge detection that reduces noise sensitivity.

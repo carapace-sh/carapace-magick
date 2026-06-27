@@ -1,46 +1,33 @@
-AE:
-  Absolute error. Total number of pixels that differ between images.
-  Count of pixels where the difference exceeds the fuzz threshold.
-MAE:
-  Mean absolute error. Average absolute difference per pixel.
-  Normalized to the range [0, 1] relative to quantum range.
-MEPP:
-  Mean error per pixel. Reports both normalized and raw mean error.
-  Most detailed metric — shows both percentage and absolute values.
-MSE:
-  Mean squared error. Average of squared differences per pixel.
-  Penalizes large differences more than small ones.
-NCC:
-  Normalized cross-correlation. Measures similarity between images.
-  Range [0, 1] where 1 indicates identical images.
-PAE:
-  Peak absolute error. Largest single-pixel difference between images.
-  Reports the worst-case pixel error.
-PHASE:
-  Phase correlation. Frequency-domain method for image alignment.
-  Robust to noise and illumination changes.
-PHASH:
-  Perceptual hash. Measures perceptual similarity between images.
-  Lower values indicate more similar visual appearance.
-PSNR:
-  Peak signal-to-noise ratio. Logarithmic measure of image quality.
-  Higher values (in dB) indicate better quality. Typically 30-50 dB.
-RMSE:
-  Root mean squared error. Square root of MSE.
-  In the same units as pixel values, easier to interpret than MSE.
-SE:
-  Sum error. Total absolute difference across all pixels.
-  Not normalized — absolute count of difference.
-SSIM:
-  Structural similarity index. Perceptual quality metric.
-  Range [-1, 1] where 1 indicates identical images. Better models
-  human visual perception than MSE-based metrics.
-DPC:
-  Discrete phase correlation. Measures phase correlation between images.
-  Useful for image registration and alignment.
-DSSIM:
-  Dissimilarity based on SSIM. 1 - SSIM normalized.
-  Range [0, ∞) where 0 indicates identical images.
-FUZZ:
-  Fuzz-based comparison. Counts pixels within the fuzz threshold.
-  Uses the -fuzz setting to determine acceptable color distance.
+AE: Absolute error. Total number of pixels that differ between images. Count of pixels
+  where the difference exceeds the fuzz threshold.
+MAE: Mean absolute error. Average absolute difference per pixel. Normalized to the
+  range [0, 1] relative to quantum range.
+MEPP: Mean error per pixel. Reports both normalized and raw mean error. Most detailed
+  metric — shows both percentage and absolute values.
+MSE: Mean squared error. Average of squared differences per pixel. Penalizes large
+  differences more than small ones.
+NCC: Normalized cross-correlation. Measures similarity between images. Range [0, 1]
+  where 1 indicates identical images.
+PAE: Peak absolute error. Largest single-pixel difference between images. Reports
+  the worst-case pixel error.
+PHASE: Phase correlation. Frequency-domain method for image alignment. Robust to noise
+  and illumination changes.
+PHASH: Perceptual hash. Measures perceptual similarity between images. Lower values
+  indicate more similar visual appearance.
+PSNR: Peak signal-to-noise ratio. Logarithmic measure of image quality. Higher values
+  (in dB) indicate better quality. Typically 30-50 dB.
+RMSE: Root mean squared error. Square root of MSE. In the same units as pixel values,
+  easier to interpret than MSE.
+SE: Sum error. Total absolute difference across all pixels. Not normalized — absolute
+  count of difference.
+SSIM: Structural similarity index. Perceptual quality metric. Range [-1, 1] where
+  1 indicates identical images. Better models human visual perception than MSE-based
+  metrics.
+DPC: Discrete phase correlation. Measures phase correlation between images. Useful
+  for image registration and alignment.
+DSSIM: Dissimilarity based on SSIM. 1 - SSIM normalized. Range [0, ∞) where 0 indicates
+  identical images.
+FUZZ: Fuzz-based comparison. Counts pixels within the fuzz threshold. Uses the -fuzz
+  setting to determine acceptable color distance.
+Fuzz: Fuzz-based color distance metric. Uses the `-fuzz` setting for comparison tolerance.
+PDC: Phase difference correlation.

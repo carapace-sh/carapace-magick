@@ -32,8 +32,6 @@ alpha: |-
   Gives control of the alpha/matte channel of an image.
 
   Used to set a flag on an image indicating whether or not to use existing alpha channel data, to create an alpha channel, or to perform other operations on the alpha channel. Choose the argument `type` from the list below.
-
-  Note that while the obsolete `+matte` operation was the same as "``-alpha``` Off`", the ` >-matte` operation was the same as "``-alpha``` Set`" and not "``-alpha``` On`".
 annotate: |-
   Annotate an image with text
 
@@ -204,7 +202,7 @@ canny: |-
 caption: |-
   Assign a caption to an image.
 
-  This option sets the caption meta-data of an image read in after this option has been given. To modify a caption of images already in memory use "``-set``` caption`".
+  This option sets the caption meta-data of an image read in after this option has been given. To modify a caption of images already in memory use `-set caption`.
 
   The caption can contain special format characters listed in the [Format and Print Image Properties](../www/escape.html). These attributes are expanded when the caption is finally assigned to the individual images.
 
@@ -365,7 +363,7 @@ combine: |-
 comment: |-
   Embed a comment in an image.
 
-  This option sets the comment meta-data of an image read in after this option has been given. To modify a comment of images already in memory use "``-set``` comment`".
+  This option sets the comment meta-data of an image read in after this option has been given. To modify a comment of images already in memory use `-set comment`.
 
   The comment can contain special format characters listed in the [Format and Print Image Properties](../www/escape.html). These attributes are expanded when the comment is finally assigned to the individual images.
 
@@ -387,7 +385,7 @@ complex: |-
 
   Choose from these operators:
 
-  Optionally specify the `divide` operator SNR with ``-define``` complex:snr=float`.
+  Optionally specify the `divide` operator SNR with `-define complex:snr=float`.
 compose: |-
   Set the type of image composition.
 
@@ -415,7 +413,7 @@ compress: |-
 connected-components: |-
   [connected-components](../www/connected-components.html) labeling detects connected regions in an image, choose from 4 or 8 way connectivity.
 
-  Use ``-define``` connected-components:verbose=true` to output statistics associated with each unique label.
+  Use `-define connected-components:verbose=true` to output statistics associated with each unique label.
 contrast: |-
   Enhance or reduce the image contrast.
 
@@ -932,7 +930,7 @@ ift: |-
 
   Use `+ift` (with HDRI enabled) to transform a pair of real and imaginary images from the frequency domain to a single image in the normal (spatial) domain.
 
-  By default the IFT is not normalized (and the FFT is). Use "``-define``` fourier:normalize=inverse` to explicitly normalize the IFT and unnormalize the FFT.
+  By default the IFT is not normalized (and the FFT is). Use `-define fourier:normalize=inverse` to explicitly normalize the IFT and unnormalize the FFT.
 illuminant: reference illuminant. Choose from `A`, `B`, `C`, `D50`, `D55`, `D65`,
   `E`, `F2`, `F7`, or `F11`.
 immutable: Make image immutable.
@@ -1166,8 +1164,6 @@ modulate: |-
   The `hue` argument causes a "rotation" of the colors within the image by the amount specified. For example, 50 results in a counter-clockwise rotation of 90, mapping red shades to purple, and so on. A value of either 0 or 200 results in a complete 180 degree rotation of the image. Using a value of 300 is a 360 degree rotation resulting in no change to the original image.
 
   For example, to increase the color brightness by 20% and decrease the color saturation by 10% and leave the hue unchanged, use `-modulate 120,90`.
-
-  Use `-set` attribute of '`option:modulate:
 moments: Report image moments and perceptual hash.
 monitor: Monitor progress.
 monochrome: Transform the image to black and white.
@@ -1198,7 +1194,7 @@ noise: |-
 
   The principal function of noise peak elimination filter is to smooth the objects within an image without losing edge information and without creating undesired structures. The central idea of the algorithm is to replace a pixel with its next neighbor in value within a pixel window, if this pixel has been found to be noise. A pixel is defined as noise if and only if this pixel is a maximum or minimum within the pixel window.
 
-  Use ``-noise``` ``radius` to specify the width of the neighborhood when reducing noise. This is equivalent to using a ``-statistic``` NonPeak` operation, which should be used in preference.
+  Use `-noise radius` to specify the width of the neighborhood when reducing noise. This is equivalent to using a `-statistic NonPeak` operation, which should be used in preference.
 
   Use `+noise` followed by a noise `type` to add noise to an image. Choose from these noise types:
 
@@ -1216,7 +1212,7 @@ opaque: |-
 
   Use `+opaque` to paint any pixel that does not match the target color.
 
-  The `-transparent` operator is exactly the same as `-opaque` but replaces the matching color with transparency rather than the current `-fill` color setting. To ensure that it can do this it also ensures that the image has an alpha channel enabled, as per "``-alpha``` set`", for the new transparent colors, and does not require you to modify the `-channel` to enable alpha channel handling.
+  The `-transparent` operator is exactly the same as `-opaque` but replaces the matching color with transparency rather than the current `-fill` color setting. To ensure that it can do this it also ensures that the image has an alpha channel enabled, as per `-alpha set`, for the new transparent colors, and does not require you to modify the `-channel` to enable alpha channel handling.
 orient: |-
   Specify orientation of a digital camera image.
 
@@ -1619,7 +1615,7 @@ transparent: |-
 
   Use `+transparent` to invert the pixels matched. that is make all non-matching colors transparent.
 
-  The `-opaque` operator is exactly the same as `-transparent` but replaces the matching color with the current `-fill` color setting, rather than transparent. However the `-transparent` operator also ensures that the image has an alpha channel enabled, as per "``-alpha``` set`", and does not require you to modify the `-channel` to enable alpha channel handling.
+  The `-opaque` operator is exactly the same as `-transparent` but replaces the matching color with the current `-fill` color setting, rather than transparent. However the `-transparent` operator also ensures that the image has an alpha channel enabled, as per `-alpha set`, and does not require you to modify the `-channel` to enable alpha channel handling.
 
   Note that this does not define the color as being the 'transparency color' used for color-mapped image formats, such as GIF. For that use `-transparent-color`
 transpose: |-
@@ -1645,13 +1641,13 @@ trim: |-
 
   If the trimmed image 'disappears' a warning is produced, and a special single pixel transparent 'missed' image is returned, in the same way as when a `-crop` operation 'misses' the image proper.
 
-  Use ``-define``` trim:percent-background=0%` to remove all the background from the image. The amount of background that is tolerated in an edge specified as a percent. 0% means no background is tolerated. 50% means an edge can contain up to 50% pixels that are background per the fuzz-factor.
+  Use `-define trim:percent-background=0%` to remove all the background from the image. The amount of background that is tolerated in an edge specified as a percent. 0% means no background is tolerated. 50% means an edge can contain up to 50% pixels that are background per the fuzz-factor.
 
-  Use ``-define``` trim:edges={north,east,south,west}` separated by commas to only trim the specified edges of the image, e.g. `-define trim:edges=north,south -fuzz 5% -trim`.
+  Use `-define trim:edges={north,east,south,west}` separated by commas to only trim the specified edges of the image, e.g. `-define trim:edges=north,south -fuzz 5% -trim`.
 
-  Use ``-define``` trim:minSize=``geometry` limit the trim to the specified size.
+  Use `-define trim:minSize=geometry` limit the trim to the specified size.
 
-  Use ``-background``` `*`background-color`* to identify background color surrounding the region of interest.
+  Use `-background background-color` to identify background color surrounding the region of interest.
 type: |-
   The image type.
 
@@ -1670,8 +1666,6 @@ unsharp: |-
   The `sigma` value is the important argument, and determines the actual amount of sharpening that will take place.
 
   The `radius` is only used to determine the size of the array which holds the calculated Gaussian distribution. It should be an integer. If not given, or set to zero, IM will calculate the largest possible radius that will provide meaningful results for the Gaussian distribution.
-
-  The parameters are:
 update: |-
   Detect when image file is modified and redisplay.
 

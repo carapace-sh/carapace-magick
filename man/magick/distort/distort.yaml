@@ -1,54 +1,39 @@
-Affine:
-  Affine distortion. Linear transformation using 6 parameters.
-  Scales, rotates, and shears; preserves parallel lines.
-AffineProjection:
-  Affine projection distortion. Applies a 3x3 affine matrix.
-  Full control over the linear transformation coefficients.
-ScaleRotateTranslate:
-  Scale-Rotate-Translate (SRT) distortion. Applies scale, rotation,
+Affine: Affine distortion. Linear transformation using 6 parameters. Scales, rotates,
+  and shears; preserves parallel lines.
+AffineProjection: Affine projection distortion. Applies a 3x3 affine matrix. Full
+  control over the linear transformation coefficients.
+ScaleRotateTranslate: Scale-Rotate-Translate (SRT) distortion. Applies scale, rotation,
   and translation in sequence. Easy to specify intuitively.
-Perspective:
-  Perspective distortion. 4-point projective transform.
-  Maps any quadrilateral to any other quadrilateral.
-PerspectiveProjection:
-  Perspective projection distortion. Applies a 3x3 projective matrix.
-  Full control over the perspective transformation coefficients.
-BilinearForward:
-  Forward bilinear distortion. Maps a quadrilateral using bilinear interpolation.
-  Handles non-affine distortions with moderate quality.
-BilinearReverse:
-  Reverse bilinear distortion. Inverse of BilinearForward.
-  Used when you need to compute the inverse mapping.
-Polynomial:
-  Polynomial distortion. Fits a polynomial to control point pairs.
-  Higher-order polynomials handle complex warps but may oscillate.
-Arc:
-  Arc distortion. Bends the image into a circular arc.
-  Useful for creating panoramic or cylindrical projections.
-Polar:
-  Polar distortion. Converts Cartesian coordinates to polar.
-  Creates a circular/round representation of the image.
-DePolar:
-  Depolar distortion. Converts polar coordinates to Cartesian.
-  The inverse of Polar distortion.
-Barrel:
-  Barrel distortion. Corrects or introduces barrel/pincushion lens effects.
+Perspective: Perspective distortion. 4-point projective transform. Maps any quadrilateral
+  to any other quadrilateral.
+PerspectiveProjection: Perspective projection distortion. Applies a 3x3 projective
+  matrix. Full control over the perspective transformation coefficients.
+BilinearForward: Forward bilinear distortion. Maps a quadrilateral using bilinear
+  interpolation. Handles non-affine distortions with moderate quality.
+BilinearReverse: Reverse bilinear distortion. Inverse of BilinearForward. Used when
+  you need to compute the inverse mapping.
+Polynomial: Polynomial distortion. Fits a polynomial to control point pairs. Higher-order
+  polynomials handle complex warps but may oscillate.
+Arc: Arc distortion. Bends the image into a circular arc. Useful for creating panoramic
+  or cylindrical projections.
+Polar: Polar distortion. Converts Cartesian coordinates to polar. Creates a circular/round
+  representation of the image.
+DePolar: Depolar distortion. Converts polar coordinates to Cartesian. The inverse
+  of Polar distortion.
+Barrel: Barrel distortion. Corrects or introduces barrel/pincushion lens effects.
   Uses 4 coefficients (A, B, C, D) for radial distortion.
-BarrelInverse:
-  Inverse barrel distortion. Applies the inverse of barrel distortion.
+BarrelInverse: Inverse barrel distortion. Applies the inverse of barrel distortion.
   Used to correct images that already have barrel distortion.
-Shepards:
-  Shepards distortion. Interpolates using inverse distance weighting.
-  Moves individual control points smoothly; can be slow with many points.
-Resize:
-  Resize distortion. Uses the distortion framework for resizing.
-  Not commonly used directly — prefer -resize instead.
-ForceResize:
-  Force resize distortion. Resizes even if the dimensions match.
-  Override for the resize distortion.
-Cylinder2Plane:
-  Cylinder to plane distortion. Projects a cylindrical image onto a plane.
-  Useful for unwrapping panoramic images.
-Plane2Cylinder:
-  Plane to cylinder distortion. Wraps a flat image onto a cylinder.
+Shepards: Shepards distortion. Interpolates using inverse distance weighting. Moves
+  individual control points smoothly; can be slow with many points.
+Resize: Resize distortion. Uses the distortion framework for resizing. Not commonly
+  used directly — prefer -resize instead.
+ForceResize: Force resize distortion. Resizes even if the dimensions match. Override
+  for the resize distortion.
+Cylinder2Plane: Cylinder to plane distortion. Projects a cylindrical image onto a
+  plane. Useful for unwrapping panoramic images.
+Plane2Cylinder: Plane to cylinder distortion. Wraps a flat image onto a cylinder.
   Useful for creating wrap-around textures.
+RigidAffine: Rigid affine distortion. Preserves distances and angles.
+SRT: Scale-Rotate-Translate distortion. Apply scaling, rotation, and translation in
+  one operation.

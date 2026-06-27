@@ -1,28 +1,23 @@
-Bilevel:
-  Bilevel (1-bit) image type. Two colors only — black and white.
-  Used for monochrome images and fax documents.
-Grayscale:
-  Grayscale image type. Single-channel luminance with no color.
-  Each pixel is a shade of gray.
-GrayscaleAlpha:
-  Grayscale with alpha. Single-channel luminance plus transparency.
-Palette:
-  Palette (indexed) image type. Uses a fixed color table (colormap).
-  Each pixel references an entry in the palette.
-PaletteAlpha:
-  Palette with alpha. Indexed colors with transparency support.
-PaletteBilevelAlpha:
-  Palette bilevel with alpha. Indexed with bilevel transparency.
-TrueColor:
-  True color (RGB) image type. Full 24-bit or higher color per pixel.
-  The most common image type for photographs.
-TrueColorAlpha:
-  True color with alpha. RGB plus transparency channel.
-  Commonly known as RGBA.
-ColorSeparation:
-  Color separation (CMYK) image type. Four channels for print.
-ColorSeparationAlpha:
-  Color separation with alpha. CMYK plus transparency.
-Optimize:
-  Optimize image type. Let ImageMagick choose the most efficient type.
-  May convert to palette or grayscale if the image has few colors.
+Bilevel: Bilevel (1-bit) image type. Two colors only — black and white. Used for monochrome
+  images and fax documents.
+Grayscale: Grayscale image type. Single-channel luminance with no color. Each pixel
+  is a shade of gray.
+GrayscaleAlpha: Grayscale with alpha. Single-channel luminance plus transparency.
+Palette: Palette (indexed) image type. Uses a fixed color table (colormap). Each pixel
+  references an entry in the palette.
+PaletteAlpha: Palette with alpha. Indexed colors with transparency support.
+PaletteBilevelAlpha: Palette bilevel with alpha. Indexed with bilevel transparency.
+TrueColor: True color (RGB) image type. Full 24-bit or higher color per pixel. The
+  most common image type for photographs.
+TrueColorAlpha: True color with alpha. RGB plus transparency channel. Commonly known
+  as RGBA.
+ColorSeparation: Color separation (CMYK) image type. Four channels for print.
+ColorSeparationAlpha: Color separation with alpha. CMYK plus transparency.
+Optimize: Optimize image type. Let ImageMagick choose the most efficient type. May
+  convert to palette or grayscale if the image has few colors.
+ColorSeparationMatte: Color separation with alpha. CMYK image with transparency channel.
+GrayscaleMatte: Grayscale with alpha. Grayscale image with transparency channel.
+PaletteBilevelMatte: Palette bilevel with alpha. Colormapped black-and-white with
+  transparency.
+PaletteMatte: Palette with alpha. Colormapped image with transparency channel.
+TrueColorMatte: True color with alpha. RGB image with transparency channel.

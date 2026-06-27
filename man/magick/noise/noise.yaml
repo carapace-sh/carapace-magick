@@ -1,18 +1,13 @@
-Gaussian:
-  Gaussian noise. Noise following a Gaussian (normal) distribution.
-  The most common noise model; appears as smooth random variation.
-Impulse:
-  Impulse noise. Salt-and-pepper noise — random pixels set to
-  maximum or minimum values. Simulates sensor defects.
-Laplacian:
-  Laplacian noise. Noise following a Laplacian distribution.
-  Has heavier tails than Gaussian; more extreme outliers.
-Multiplicative:
-  Multiplicative noise. Noise proportional to the signal level.
-  Brighter areas have more noise; models sensor gain variations.
-Poisson:
-  Poisson noise. Noise following a Poisson distribution.
-  Models photon counting statistics in imaging sensors.
-Uniform:
-  Uniform noise. Noise with equal probability across a range.
-  Every value in the noise range is equally likely.
+Gaussian: Gaussian noise. Noise following a Gaussian (normal) distribution. The most
+  common noise model; appears as smooth random variation.
+Impulse: Impulse noise. Salt-and-pepper noise — random pixels set to maximum or minimum
+  values. Simulates sensor defects.
+Laplacian: Laplacian noise. Noise following a Laplacian distribution. Has heavier
+  tails than Gaussian; more extreme outliers.
+Multiplicative: Multiplicative noise. Noise proportional to the signal level. Brighter
+  areas have more noise; models sensor gain variations.
+Poisson: Poisson noise. Noise following a Poisson distribution. Models photon counting
+  statistics in imaging sensors.
+Uniform: Uniform noise. Noise with equal probability across a range. Every value in
+  the noise range is equally likely.
+Random: Random noise. Alias for Uniform noise.
