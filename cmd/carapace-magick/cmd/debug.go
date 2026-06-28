@@ -3,7 +3,6 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 
 	"github.com/carapace-sh/carapace"
 	"github.com/carapace-sh/carapace-magick/pkg/argstream"
@@ -12,21 +11,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
-	Use:   "carapace-magick-debug",
+var debugCmd = &cobra.Command{
+	Use:   "debug",
 	Short: "Parse ImageMagick magick argument streams",
 }
 
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
-}
-
 func init() {
-	carapace.Gen(rootCmd)
-	spec.Register(rootCmd)
+	carapace.Gen(debugCmd)
+	spec.Register(debugCmd)
+
+	debugCmd.AddCommand(argstreamCmd, argstreamCompleteCmd, definevalueCmd, definevalueCompleteCmd)
 }
 
 var argstreamCmd = &cobra.Command{
@@ -78,21 +72,6 @@ var argstreamCompleteCmd = &cobra.Command{
 	},
 }
 
-func init() {
-	rootCmd.AddCommand(argstreamCmd)
-	rootCmd.AddCommand(argstreamCompleteCmd)
-	rootCmd.AddCommand(definevalueCmd)
-	rootCmd.AddCommand(definevalueCompleteCmd)
-
-	argstreamCompleteCmd.Flags().Bool("trailing-space", false, "cursor is at a new position after the last arg")
-	argstreamCompleteCmd.Flags().String("profile", "magick", "tool profile to use (magick, identify, mogrify, compare, composite, montage)")
-
-	carapace.Gen(argstreamCmd)
-	carapace.Gen(argstreamCompleteCmd)
-	carapace.Gen(definevalueCmd)
-	carapace.Gen(definevalueCompleteCmd)
-}
-
 var definevalueCmd = &cobra.Command{
 	Use:   "definevalue <value>",
 	Short: "Parse a -define format:key=value string",
@@ -124,4 +103,14 @@ var definevalueCompleteCmd = &cobra.Command{
 		fmt.Println(string(m))
 		return nil
 	},
+}
+
+func init() {
+	argstreamCompleteCmd.Flags().Bool("trailing-space", false, "cursor is at a new position after the last arg")
+	argstreamCompleteCmd.Flags().String("profile", "magick", "tool profile to use (magick, identify, mogrify, compare, composite, montage)")
+
+	carapace.Gen(argstreamCmd)
+	carapace.Gen(argstreamCompleteCmd)
+	carapace.Gen(definevalueCmd)
+	carapace.Gen(definevalueCompleteCmd)
 }

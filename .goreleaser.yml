@@ -4,34 +4,11 @@ builds:
   - id: carapace-magick
     main: ./cmd/carapace-magick
     binary: carapace-magick
-  - id: carapace-magick-debug
-    main: ./cmd/carapace-magick-debug
-    binary: carapace-magick-debug
-  - id: carapace-magick-identify
-    main: ./cmd/carapace-magick-identify
-    binary: carapace-magick-identify
-  - id: carapace-magick-mogrify
-    main: ./cmd/carapace-magick-mogrify
-    binary: carapace-magick-mogrify
-  - id: carapace-magick-compare
-    main: ./cmd/carapace-magick-compare
-    binary: carapace-magick-compare
-  - id: carapace-magick-composite
-    main: ./cmd/carapace-magick-composite
-    binary: carapace-magick-composite
-  - id: carapace-magick-montage
-    main: ./cmd/carapace-magick-montage
-    binary: carapace-magick-montage
 
 archives:
   - id: carapace-magick
     builds:
       - carapace-magick
-      - carapace-magick-identify
-      - carapace-magick-mogrify
-      - carapace-magick-compare
-      - carapace-magick-composite
-      - carapace-magick-montage
     format_overrides:
       - goos: windows
         format: zip

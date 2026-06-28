@@ -6,19 +6,27 @@ import (
 	"slices"
 
 	"github.com/carapace-sh/carapace"
+	"github.com/carapace-sh/carapace-magick/cmd/carapace-magick/cmd/snippet"
 	"github.com/carapace-sh/carapace-magick/pkg/argstream"
 	"github.com/carapace-sh/carapace-magick/pkg/completer"
 	"github.com/spf13/cobra"
 )
 
 var rootCmd = &cobra.Command{
-	Use:                "magick",
-	Short:              "ImageMagick image pipeline processor",
-	Run:                func(cmd *cobra.Command, args []string) {},
-	DisableFlagParsing: true,
+	Use:               "carapace-magick",
+	Short:             "ImageMagick completion provider",
+	CompletionOptions: cobra.CompletionOptions{DisableDefaultCmd: true},
 }
 
 func Execute() {
+	if len(os.Args) > 1 && os.Args[1] == "_carapace" && len(os.Args) < 4 {
+		shell := ""
+		if len(os.Args) > 2 {
+			shell = os.Args[2]
+		}
+		fmt.Println(snippet.Snippet(shell))
+		return
+	}
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -26,11 +34,30 @@ func Execute() {
 }
 
 func init() {
+	rootCmd.AddCommand(
+		magickCmd,
+		identifyCmd,
+		mogrifyCmd,
+		compareCmd,
+		compositeCmd,
+		montageCmd,
+		debugCmd,
+	)
+}
+
+var magickCmd = &cobra.Command{
+	Use:                "magick",
+	Short:              "ImageMagick image pipeline processor",
+	Run:                func(cmd *cobra.Command, args []string) {},
+	DisableFlagParsing: true,
+}
+
+func init() {
 	profile := argstream.DefaultMagickProfile
 
-	carapace.Gen(rootCmd).Standalone()
+	carapace.Gen(magickCmd).Standalone()
 
-	carapace.Gen(rootCmd).PositionalAnyCompletion(
+	carapace.Gen(magickCmd).PositionalAnyCompletion(
 		carapace.ActionCallback(func(c carapace.Context) carapace.Action {
 			args, trailingSpace := completer.ContextToArgs(c)
 			ctx := argstream.ParseForCompletionWithProfile(args, trailingSpace, profile)

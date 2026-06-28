@@ -26,69 +26,62 @@ staticcheck ./...                                        # lint
 
 Both `gofmt` and `staticcheck` are enforced in CI. Do not skip them.
 
-### Debug CLI (`cmd/carapace-magick-debug/`)
+### Debug CLI (`debug` subcommand)
 
 ```sh
-go run ./cmd/carapace-magick-debug argstream -- -resize 200x200 input.png output.png  # parse arg stream as JSON
-go run ./cmd/carapace-magick-debug argstream-complete -- -resize                        # argstream completion context as JSON
-go run ./cmd/carapace-magick-debug argstream-complete --profile identify -- -verbose    # identify profile completion context
-go run ./cmd/carapace-magick-debug definevalue 'jpeg:quality=85'                      # parse -define value as JSON
-go run ./cmd/carapace-magick-debug definevalue-complete 'jpeg:'                         # -define completion context
+go run ./cmd/carapace-magick debug argstream -- -resize 200x200 input.png output.png  # parse arg stream as JSON
+go run ./cmd/carapace-magick debug argstream-complete -- -resize                        # argstream completion context as JSON
+go run ./cmd/carapace-magick debug argstream-complete --profile identify -- -verbose    # identify profile completion context
+go run ./cmd/carapace-magick debug definevalue 'jpeg:quality=85'                      # parse -define value as JSON
+go run ./cmd/carapace-magick debug definevalue-complete 'jpeg:'                         # -define completion context
 ```
 
-### Completer CLIs
+### Completer CLI
 
 ```sh
-# magick (default/convert)
-go run ./cmd/carapace-magick _carapace spec                    # generate carapace spec YAML
-go run ./cmd/carapace-magick _carapace export '' ''             # complete at empty position (JSON)
+# Generate multi-completer shell snippet (registers magick, identify, mogrify, compare, composite, montage)
+go run ./cmd/carapace-magick _carapace bash
 
-# identify
-go run ./cmd/carapace-magick-identify _carapace spec
-
-# mogrify
-go run ./cmd/carapace-magick-mogrify _carapace spec
-
-# compare
-go run ./cmd/carapace-magick-compare _carapace spec
-
-# composite
-go run ./cmd/carapace-magick-composite _carapace spec
-
-# montage
-go run ./cmd/carapace-magick-montage _carapace spec
+# Completion dispatch for a specific sub-tool
+go run ./cmd/carapace-magick identify _carapace export '' '' identify ''
+go run ./cmd/carapace-magick magick _carapace export '' '' magick ''
 ```
-
-The `_carapace spec` command generates YAML that references the `man/` directory for extended descriptions.
 
 ## Architecture
 
-Seven CLIs, a shared completer package, and one parser package with carapace completion actions.
+Single binary with subcommands for each ImageMagick completer, a shared completer package, and parser packages with carapace completion actions.
 
 ```
-cmd/carapace-magick/            Completer CLI for magick (default/convert)
-cmd/carapace-magick-identify/   Completer CLI for magick identify
-cmd/carapace-magick-mogrify/    Completer CLI for magick mogrify
-cmd/carapace-magick-compare/    Completer CLI for magick compare
-cmd/carapace-magick-composite/  Completer CLI for magick composite
-cmd/carapace-magick-montage/    Completer CLI for magick montage
-cmd/carapace-magick-debug/      Debug/diagnostic CLI (JSON output)
-pkg/argstream/                  Argument stream parser (options, images, stack ops, parentheses)
-pkg/completer/                  Shared completion dispatch logic
-pkg/actions/tools/magick/       Carapace action functions for magick value types
-pkg/definevalue/                -define format:key=value parser
-pkg/probe/                      magick identify wrapper for image-aware completion
-man/magick/                     YAML descriptions for completion value types
-skills/magick/                  AI agent reference documentation (not compiled Go)
-testdata/                       Test images for integration tests (go generate)
+cmd/carapace-magick/                  Single binary with multi-completer subcommands
+  cmd/root.go                        Root command, _carapace snippet interception
+  cmd/magick.go                      magick (default/convert) completer subcommand
+  cmd/identify.go                    identify completer subcommand
+  cmd/mogrify.go                     mogrify completer subcommand
+  cmd/compare.go                     compare completer subcommand
+  cmd/composite.go                   composite completer subcommand
+  cmd/montage.go                     montage completer subcommand
+  cmd/debug.go                       debug subcommand (argstream, definevalue parsers)
+  cmd/snippet/                       Multi-completer shell snippet generators
+    snippet.go                       Snippet() dispatcher
+    bash.go, zsh.go, fish.go, etc.   Per-shell snippet templates
+pkg/argstream/                        Argument stream parser (options, images, stack ops, parentheses)
+pkg/completer/                        Shared completion dispatch logic
+pkg/actions/tools/magick/             Carapace action functions for magick value types
+pkg/definevalue/                      -define format:key=value parser
+pkg/probe/                            magick identify wrapper for image-aware completion
+man/magick/                           YAML descriptions for completion value types
+skills/magick/                        AI agent reference documentation (not compiled Go)
+testdata/                             Test images for integration tests (go generate)
 ```
 
-### Completer CLIs
+### Multi-Completer Architecture
 
-Standalone carapace completers for `magick` and its sub-tools. Each uses `DisableFlagParsing` + `PositionalAnyCompletion` with `argstream.ParseForCompletionWithProfile()` and a tool-specific `ToolProfile` to dispatch context-aware completions.
+`carapace-magick` is a single binary that acts as a multi-completer. When `_carapace` is called on the root command (0-1 args), it generates a custom multi-completer shell snippet that registers all 6 ImageMagick commands (`magick`, `identify`, `mogrify`, `compare`, `composite`, `montage`) at once. The snippet's callback dispatches to `carapace-magick <command> _carapace <shell>`, where each subcommand has its own `carapace.Gen(subcmd).Standalone()` and `PositionalAnyCompletion` callback.
 
-- **`root.go`** — Root cobra command with `carapace.Gen(rootCmd).Standalone()`. `PositionalAnyCompletion` callback parses args with `argstream.ParseForCompletionWithProfile()` and dispatches to shared actions from `pkg/completer/`.
-- **`main.go`** — Entry point calling `cmd.Execute()`.
+- **`root.go`** — Root cobra command. `Execute()` intercepts `_carapace` with < 4 args to produce a custom multi-completer snippet via `snippet.Snippet(shell)`. Otherwise dispatches to cobra.
+- **`magick.go` / `identify.go` / etc.** — Completer subcommands. Each uses `DisableFlagParsing` + `PositionalAnyCompletion` with `argstream.ParseForCompletionWithProfile()` and a tool-specific `ToolProfile` to dispatch context-aware completions.
+- **`debug.go`** — Debug subcommand with `argstream`, `argstream-complete`, `definevalue`, `definevalue-complete` sub-subcommands. Uses `carapace-spec` for spec generation.
+- **`snippet/`** — Per-shell snippet templates that generate multi-completer shell scripts. Each template creates a shared completer function that calls `carapace-magick <command> _carapace <shell>` and registers all 6 command names.
 
 ### Argument Stream (`pkg/argstream/`)
 
@@ -174,7 +167,7 @@ Each sub-tool profile has its **own** `OptionIndex` — options not listed in a 
 
 ### Completer uses `DisableFlagParsing` + `PositionalAnyCompletion`
 
-The completer CLI does NOT use cobra's flag parsing. It sets `DisableFlagParsing: true` so cobra hands all arguments through as positional args.
+Each completer subcommand does NOT use cobra's flag parsing. It sets `DisableFlagParsing: true` so cobra hands all arguments through as positional args.
 
 ### UIDs use `magick://` scheme
 
@@ -189,4 +182,4 @@ All completion actions use `magick://` UIDs for carapace's action deduplication.
 
 ## Release
 
-GoReleaser builds 7 binaries: `carapace-magick`, `carapace-magick-debug`, `carapace-magick-identify`, `carapace-magick-mogrify`, `carapace-magick-compare`, `carapace-magick-composite`, `carapace-magick-montage`. Distribution channels: Homebrew tap, Scoop bucket, AUR, nfpm (apk/deb/rpm/termux.deb), Gemfury. Releases are triggered by tag pushes in CI.
+GoReleaser builds a single `carapace-magick` binary. Distribution channels: Homebrew tap, Scoop bucket, AUR, nfpm (apk/deb/rpm/termux.deb), Gemfury. Releases are triggered by tag pushes in CI.

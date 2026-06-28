@@ -1,35 +1,25 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/carapace-sh/carapace"
 	"github.com/carapace-sh/carapace-magick/pkg/argstream"
 	"github.com/carapace-sh/carapace-magick/pkg/completer"
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
-	Use:                "mogrify",
-	Short:              "ImageMagick in-place image transformer",
+var identifyCmd = &cobra.Command{
+	Use:                "identify",
+	Short:              "ImageMagick image inspector",
 	Run:                func(cmd *cobra.Command, args []string) {},
 	DisableFlagParsing: true,
 }
 
-func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
-	}
-}
-
 func init() {
-	profile := argstream.DefaultMogrifyProfile
+	profile := argstream.DefaultIdentifyProfile
 
-	carapace.Gen(rootCmd).Standalone()
+	carapace.Gen(identifyCmd).Standalone()
 
-	carapace.Gen(rootCmd).PositionalAnyCompletion(
+	carapace.Gen(identifyCmd).PositionalAnyCompletion(
 		carapace.ActionCallback(func(c carapace.Context) carapace.Action {
 			args, trailingSpace := completer.ContextToArgs(c)
 			ctx := argstream.ParseForCompletionWithProfile(args, trailingSpace, profile)
