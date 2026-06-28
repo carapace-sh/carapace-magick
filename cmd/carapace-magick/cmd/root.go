@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"slices"
@@ -16,13 +17,6 @@ var rootCmd = &cobra.Command{
 	Use:               "carapace-magick",
 	Short:             "ImageMagick completion provider",
 	CompletionOptions: cobra.CompletionOptions{DisableDefaultCmd: true},
-}
-
-var carapaceMagickCmd = &cobra.Command{
-	Use:                "carapace-magick",
-	Short:              "ImageMagick completion provider",
-	Run:                func(cmd *cobra.Command, args []string) {},
-	DisableFlagParsing: true,
 }
 
 func Execute() {
@@ -54,6 +48,53 @@ func Execute() {
 			)
 		}
 	}
+	// Pseudo-subcommand "carapace-magick" — handle without a cobra command.
+	// Provides root-level completion (subcommand names) and single-command snippet.
+	if len(os.Args) > 2 && os.Args[1] == "carapace-magick" && os.Args[2] == "_carapace" {
+		if len(os.Args) < 4 {
+			return
+		}
+		if os.Args[3] == "export" {
+			// Export format: carapace-magick carapace-magick _carapace export <shell> "" <args...>
+			// os.Args: [0]=binary, [1]="carapace-magick", [2]="_carapace",
+			//   [3]="export", [4]=<shell>, [5]="", [6:]=user-args
+			if len(os.Args) < 7 {
+				// No user args — return root-level subcommand names
+				printSubcommandExport()
+				return
+			}
+			if isRootSubcommand(os.Args[6]) {
+				// Route to the actual subcommand
+				os.Args = append(
+					[]string{os.Args[0], os.Args[6], "_carapace", os.Args[3], os.Args[4], os.Args[5]},
+					os.Args[7:]...,
+				)
+			} else {
+				printSubcommandExport()
+				return
+			}
+		} else {
+			// Shell format: carapace-magick carapace-magick _carapace <shell> [args...]
+			// os.Args: [0]=binary, [1]="carapace-magick", [2]="_carapace",
+			//   [3]=<shell>, [4:]=user-args
+			if len(os.Args) < 5 {
+				// Snippet request only
+				fmt.Println(snippet.SingleSnippet(os.Args[3], "carapace-magick"))
+				return
+			}
+			if isRootSubcommand(os.Args[4]) {
+				// Route to the actual subcommand
+				os.Args = append(
+					[]string{os.Args[0], os.Args[4], "_carapace", os.Args[3]},
+					os.Args[5:]...,
+				)
+			} else {
+				// Root-level completion via shell format
+				printSubcommandExport()
+				return
+			}
+		}
+	}
 	if len(os.Args) > 2 && isCompleterSubcommand(os.Args[1]) && os.Args[2] == "_carapace" {
 		// Subcommand-level snippet request: carapace-magick <subcommand> _carapace [shell]
 		if len(os.Args) < 5 {
@@ -71,13 +112,49 @@ func Execute() {
 	}
 }
 
+func printSubcommandExport() {
+	names := []string{"magick", "identify", "mogrify", "compare", "composite", "montage", "debug"}
+	type exportValue struct {
+		Value       string `json:"value"`
+		Display     string `json:"display"`
+		Description string `json:"description,omitempty"`
+		Style       string `json:"style,omitempty"`
+		Tag         string `json:"tag,omitempty"`
+	}
+	type exportFormat struct {
+		Version  string        `json:"version"`
+		Messages []string      `json:"messages"`
+		Noprefix string        `json:"noprefix"`
+		Nospace  string        `json:"nospace"`
+		Usage    string        `json:"usage"`
+		Values   []exportValue `json:"values"`
+	}
+	values := make([]exportValue, len(names))
+	for i, name := range names {
+		values[i] = exportValue{Value: name, Display: name}
+	}
+	out, _ := json.Marshal(exportFormat{
+		Version: "v1.12.1",
+		Values:  values,
+	})
+	fmt.Println(string(out))
+}
+
 func isCompleterSubcommand(name string) bool {
 	return slices.Contains([]string{"carapace-magick", "magick", "identify", "mogrify", "compare", "composite", "montage"}, name)
 }
 
+func isRootSubcommand(name string) bool {
+	for _, cmd := range rootCmd.Commands() {
+		if cmd.Name() == name {
+			return true
+		}
+	}
+	return false
+}
+
 func init() {
 	rootCmd.AddCommand(
-		carapaceMagickCmd,
 		magickCmd,
 		identifyCmd,
 		mogrifyCmd,
@@ -85,14 +162,6 @@ func init() {
 		compositeCmd,
 		montageCmd,
 		debugCmd,
-	)
-
-	carapace.Gen(carapaceMagickCmd).Standalone()
-
-	carapace.Gen(carapaceMagickCmd).PositionalAnyCompletion(
-		carapace.ActionCallback(func(c carapace.Context) carapace.Action {
-			return carapace.ActionValues("magick", "identify", "mogrify", "compare", "composite", "montage", "debug")
-		}),
 	)
 }
 
