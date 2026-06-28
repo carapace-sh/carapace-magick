@@ -18,6 +18,13 @@ var rootCmd = &cobra.Command{
 	CompletionOptions: cobra.CompletionOptions{DisableDefaultCmd: true},
 }
 
+var carapaceMagickCmd = &cobra.Command{
+	Use:                "carapace-magick",
+	Short:              "ImageMagick completion provider",
+	Run:                func(cmd *cobra.Command, args []string) {},
+	DisableFlagParsing: true,
+}
+
 func Execute() {
 	if len(os.Args) > 1 && os.Args[1] == "_carapace" {
 		if len(os.Args) < 4 {
@@ -65,11 +72,12 @@ func Execute() {
 }
 
 func isCompleterSubcommand(name string) bool {
-	return slices.Contains([]string{"magick", "identify", "mogrify", "compare", "composite", "montage"}, name)
+	return slices.Contains([]string{"carapace-magick", "magick", "identify", "mogrify", "compare", "composite", "montage"}, name)
 }
 
 func init() {
 	rootCmd.AddCommand(
+		carapaceMagickCmd,
 		magickCmd,
 		identifyCmd,
 		mogrifyCmd,
@@ -77,6 +85,14 @@ func init() {
 		compositeCmd,
 		montageCmd,
 		debugCmd,
+	)
+
+	carapace.Gen(carapaceMagickCmd).Standalone()
+
+	carapace.Gen(carapaceMagickCmd).PositionalAnyCompletion(
+		carapace.ActionCallback(func(c carapace.Context) carapace.Action {
+			return carapace.ActionValues("magick", "identify", "mogrify", "compare", "composite", "montage", "debug")
+		}),
 	)
 }
 

@@ -10,7 +10,7 @@ import (
 	"github.com/carapace-sh/carapace/pkg/ps"
 )
 
-var completerNames = []string{"magick", "identify", "mogrify", "compare", "composite", "montage"}
+var completerNames = []string{"carapace-magick", "magick", "identify", "mogrify", "compare", "composite", "montage"}
 
 func executable() string {
 	e, err := os.Executable()

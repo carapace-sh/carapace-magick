@@ -133,11 +133,57 @@ func Execute() {
 }
 
 func isCompleterSubcommand(name string) bool {
-    return slices.Contains([]string{"magick", "identify", "mogrify", "compare", "composite", "montage"}, name)
+    return slices.Contains([]string{"carapace-magick", "magick", "identify", "mogrify", "compare", "composite", "montage"}, name)
 }
 ```
 
-## Completed: carapace-bin Bridge Stubs
+## Completed: Self-Completion via Pseudo-Subcommand
+
+Done in commit `ae98f29`. The `carapace-magick` command itself can now be completed (e.g. `carapace-magick <TAB>` completes subcommand names) by adding it as a pseudo-subcommand of itself.
+
+### The Problem
+
+The multi-completer architecture routes `carapace-magick _carapace export "" <arg>` to a completer subcommand. When `<arg>` is empty (completing at the root of `carapace-magick` itself), the rewriting defaults to `magick`, producing magick option completions instead of subcommand names like `debug`, `magick`, `identify`, etc.
+
+### The Pseudo-Subcommand Pattern
+
+Add `carapace-magick` as a completer subcommand of itself, following the same pattern as the other completer subcommands:
+
+```go
+var carapaceMagickCmd = &cobra.Command{
+    Use:                "carapace-magick",
+    Short:              "ImageMagick completion provider",
+    Run:                func(cmd *cobra.Command, args []string) {},
+    DisableFlagParsing: true,
+}
+
+carapace.Gen(carapaceMagickCmd).Standalone()
+
+carapace.Gen(carapaceMagickCmd).PositionalAnyCompletion(
+    carapace.ActionCallback(func(c carapace.Context) carapace.Action {
+        return carapace.ActionValues("magick", "identify", "mogrify", "compare", "composite", "montage", "debug")
+    }),
+)
+```
+
+Then add `"carapace-magick"` to `isCompleterSubcommand` and `completerNames`.
+
+This makes `bridge.ActionCarapace("carapace-magick", "carapace-magick")` work — the rewriting detects `"carapace-magick"` at `os.Args[4]` and routes to the pseudo-subcommand, which returns root-level subcommand names.
+
+The multi-completer snippet also registers `carapace-magick` as a completable command, and `carapace-magick carapace-magick _carapace bash` produces a single-command snippet for it.
+
+### Why Not Fall-Through?
+
+An alternative approach is to let root-level completion fall through to cobra when `os.Args[4]` is empty. This requires a fragile condition: distinguishing `carapace-magick _carapace export "" ""` (root-level, should fall through) from `carapace-magick _carapace export "" -resize ...` (should route to magick). The pseudo-subcommand approach avoids this by treating the binary name as just another completer subcommand — uniform handling, no special cases.
+
+### Generic Implications
+
+For `GenMulti` in the carapace library, this means the binary name should always be included as a pseudo-subcommand. `GenMulti` would automatically create a `<binaryName>` cobra command with `PositionalAnyCompletion` that returns the list of completer subcommand names. This enables:
+
+1. Completion for the binary itself (subcommand discovery)
+2. `bridge.ActionCarapace("binary", "binary")` for carapace-bin integration
+3. Single-command snippet via `<binary> <binary> _carapace <shell>`
+4. No special fall-through logic needed — everything follows the same routing pattern
 
 Done in commit `914f1769d` on branch `magick-bridge-stubs`.
 
@@ -220,9 +266,11 @@ func GenMulti(rootCmd *cobra.Command, subcommands []*cobra.Command, opts ...Mult
 
 4. **Subcommand-level interception must come before cobra** — Without it, `carapace-magick identify _carapace bash` would reach cobra's internal `_carapace` handler, which produces a snippet using the binary name (`carapace-magick`) instead of the command name (`identify`). The interception checks `os.Args[1]` against the known subcommand list and `os.Args[2] == "_carapace"`.
 
-5. **Fallback default** — When `os.Args[4]` is not a known subcommand, route to a default subcommand (typically the primary one, like `magick`).
+5. **Pseudo-subcommand for self-completion** — The binary name is added as a completer subcommand of itself (e.g. `carapace-magick carapace-magick`). This avoids fragile fall-through logic for root-level completion. `GenMulti` should automatically create this pseudo-subcommand with `PositionalAnyCompletion` returning the list of completer subcommand names. The binary name is included in `isCompleterSubcommand` and `completerNames`.
 
-6. **PowerShell backtick gofmt issue** — PowerShell templates contain backtick characters that `gofmt -s` normalizes differently. Must use a `const` raw string literal (backtick-delimited) to avoid gofmt mangling the template. This is the same pattern used in the carapace library's own PowerShell snippet.
+6. **Fallback default** — When `os.Args[4]` is not a known subcommand, route to a default subcommand (typically the primary one, like `magick`).
+
+7. **PowerShell backtick gofmt issue** — PowerShell templates contain backtick characters that `gofmt -s` normalizes differently. Must use a `const` raw string literal (backtick-delimited) to avoid gofmt mangling the template. This is the same pattern used in the carapace library's own PowerShell snippet.
 
 ### The Generic Routing Logic
 
@@ -265,4 +313,6 @@ func Execute() {
 }
 ```
 
-This is identical to the current carapace-magick implementation — the only parameterization needed is the list of subcommand names and the default subcommand.
+The `isMultiSubcommand` list includes the binary name itself (e.g. `"carapace-magick"`), which corresponds to a pseudo-subcommand that provides root-level completion. `GenMulti` would automatically create this pseudo-subcommand and include it in the list.
+
+The only parameterization needed is the list of subcommand names (including the binary name) and the default subcommand.
