@@ -1,26 +1,28 @@
 package cmd
 
 import (
+	"slices"
+
 	"github.com/carapace-sh/carapace"
 	"github.com/carapace-sh/carapace-magick/pkg/argstream"
 	"github.com/carapace-sh/carapace-magick/pkg/completer"
 	"github.com/spf13/cobra"
 )
 
-var montageCmd = &cobra.Command{
-	Use:                "montage",
-	Short:              "ImageMagick image montage",
+var magickCmd = &cobra.Command{
+	Use:                "magick",
+	Short:              "ImageMagick image pipeline processor",
 	Run:                func(cmd *cobra.Command, args []string) {},
 	DisableFlagParsing: true,
 }
 
 func init() {
-	profile := argstream.DefaultMontageProfile
+	profile := argstream.DefaultMagickProfile
 
-	carapace.Gen(montageCmd).Standalone()
-	rootCmd.AddCommand(montageCmd)
+	carapace.Gen(magickCmd).Standalone()
+	rootCmd.AddCommand(magickCmd)
 
-	carapace.Gen(montageCmd).PositionalAnyCompletion(
+	carapace.Gen(magickCmd).PositionalAnyCompletion(
 		carapace.ActionCallback(func(c carapace.Context) carapace.Action {
 			args, trailingSpace := completer.ContextToArgs(c)
 			ctx := argstream.ParseForCompletionWithProfile(args, trailingSpace, profile)
@@ -28,12 +30,15 @@ func init() {
 			if ctx.PartialOption != "" && !trailingSpace {
 				return carapace.Batch(
 					completer.ActionOptions(ctx, profile),
+					actionOptionValueIfExpected(ctx),
 				).ToA()
 			}
 
 			var actions []carapace.Action
 			for _, token := range ctx.ExpectedTokens {
 				switch token {
+				case argstream.ExpectedToolName:
+					actions = append(actions, completer.ActionToolNames())
 				case argstream.ExpectedOptionName:
 					actions = append(actions, completer.ActionOptions(ctx, profile))
 				case argstream.ExpectedOptionValue, argstream.ExpectedDefineValue:
@@ -42,6 +47,10 @@ func init() {
 					actions = append(actions, completer.ActionImageInput())
 				case argstream.ExpectedOutput:
 					actions = append(actions, completer.ActionImageOutput())
+				case argstream.ExpectedLParen:
+					actions = append(actions, carapace.ActionValues("("))
+				case argstream.ExpectedRParen:
+					actions = append(actions, carapace.ActionValues(")"))
 				}
 			}
 
@@ -51,4 +60,11 @@ func init() {
 			return carapace.Batch(actions...).ToA()
 		}),
 	)
+}
+
+func actionOptionValueIfExpected(ctx *argstream.CompletionContext) carapace.Action {
+	if ctx.CurrentOption != nil && slices.Contains(ctx.ExpectedTokens, argstream.ExpectedOptionValue) {
+		return completer.ActionOptionValue(ctx)
+	}
+	return carapace.ActionValues()
 }

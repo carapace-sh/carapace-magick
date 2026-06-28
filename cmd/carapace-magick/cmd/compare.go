@@ -18,6 +18,7 @@ func init() {
 	profile := argstream.DefaultCompareProfile
 
 	carapace.Gen(compareCmd).Standalone()
+	rootCmd.AddCommand(compareCmd)
 
 	carapace.Gen(compareCmd).PositionalAnyCompletion(
 		carapace.ActionCallback(func(c carapace.Context) carapace.Action {
