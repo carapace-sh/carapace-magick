@@ -39,21 +39,28 @@ go run ./cmd/carapace-magick debug definevalue-complete 'jpeg:'                 
 ### Completer CLI
 
 ```sh
-# Generate multi-completer shell snippet (registers magick, identify, mogrify, compare, composite, montage)
+# Multi-completer snippet (registers all 6 ImageMagick commands + carapace-magick itself)
 go run ./cmd/carapace-magick _carapace bash
 
-# Completion dispatch for a specific sub-tool
-go run ./cmd/carapace-magick identify _carapace export '' '' identify ''
-go run ./cmd/carapace-magick magick _carapace export '' '' magick ''
+# Single-command snippet (registers only one command)
+go run ./cmd/carapace-magick carapace-magick _carapace bash   # carapace-magick itself
+go run ./cmd/carapace-magick identify _carapace bash          # identify only
+
+# Bridge completion (used by carapace-bin via bridge.ActionCarapace)
+go run ./cmd/carapace-magick _carapace export '' identify -verbose image.png
+
+# Pseudo-subcommand completion (carapace-magick as self-completer)
+go run ./cmd/carapace-magick carapace-magick _carapace export bash '' '' ''           # root subcommands
+go run ./cmd/carapace-magick carapace-magick _carapace export bash '' debug argstream-complete '-'  # debug flags
 ```
 
 ## Architecture
 
-Single binary with subcommands for each ImageMagick completer, a shared completer package, and parser packages with carapace completion actions.
+Single binary with subcommands for each ImageMagick completer, a pseudo-subcommand for self-completion, a shared completer package, and parser packages with carapace completion actions.
 
 ```
 cmd/carapace-magick/                  Single binary with multi-completer subcommands
-  cmd/root.go                        Root command, _carapace snippet interception
+  cmd/root.go                        Root command, Execute() interception for bridge routing, pseudo-subcommand, and snippet dispatch
   cmd/magick.go                      magick (default/convert) completer subcommand
   cmd/identify.go                    identify completer subcommand
   cmd/mogrify.go                     mogrify completer subcommand
@@ -61,9 +68,9 @@ cmd/carapace-magick/                  Single binary with multi-completer subcomm
   cmd/composite.go                   composite completer subcommand
   cmd/montage.go                     montage completer subcommand
   cmd/debug.go                       debug subcommand (argstream, definevalue parsers)
-  cmd/snippet/                       Multi-completer shell snippet generators
-    snippet.go                       Snippet() dispatcher
-    bash.go, zsh.go, fish.go, etc.   Per-shell snippet templates
+  cmd/snippet/                       Shell snippet generators
+    snippet.go                       Snippet() and SingleSnippet() dispatcher
+    bash.go, zsh.go, fish.go, etc.   Per-shell snippet templates (multi-completer and single-command)
 pkg/argstream/                        Argument stream parser (options, images, stack ops, parentheses)
 pkg/completer/                        Shared completion dispatch logic
 pkg/actions/tools/magick/             Carapace action functions for magick value types
@@ -76,12 +83,22 @@ testdata/                             Test images for integration tests (go gene
 
 ### Multi-Completer Architecture
 
-`carapace-magick` is a single binary that acts as a multi-completer. When `_carapace` is called on the root command (0-1 args), it generates a custom multi-completer shell snippet that registers all 6 ImageMagick commands (`magick`, `identify`, `mogrify`, `compare`, `composite`, `montage`) at once. The snippet's callback dispatches to `carapace-magick <command> _carapace <shell>`, where each subcommand has its own `carapace.Gen(subcmd).Standalone()` and `PositionalAnyCompletion` callback.
+`carapace-magick` is a single binary that acts as a multi-completer with three distinct `_carapace` dispatch paths handled in `Execute()` before cobra sees the args:
 
-- **`root.go`** — Root cobra command. `Execute()` intercepts `_carapace` with < 4 args to produce a custom multi-completer snippet via `snippet.Snippet(shell)`. Otherwise dispatches to cobra.
-- **`magick.go` / `identify.go` / etc.** — Completer subcommands. Each uses `DisableFlagParsing` + `PositionalAnyCompletion` with `argstream.ParseForCompletionWithProfile()` and a tool-specific `ToolProfile` to dispatch context-aware completions.
+1. **Bridge routing** (`carapace-magick _carapace export "" <subcommand> ...`) — Used by `carapace-bin` via `bridge.ActionCarapace("carapace-magick", "identify")`. Rewrites `os.Args` to route to the correct completer subcommand (defaults to `magick` if no subcommand specified).
+
+2. **Pseudo-subcommand** (`carapace-magick carapace-magick _carapace ...`) — Handles self-completion without a cobra command. For root-level completion, strips the pseudo-subcommand and falls through to `rootCmd.Execute()`, where `carapace.Gen(rootCmd).Standalone()` + `PositionalAnyCompletion` returns subcommand names. For deeper navigation (e.g. `debug argstream-complete`), rewrites `os.Args` to route to the actual subcommand's cobra command. Must handle two call formats:
+   - **Shell format**: `_carapace <shell> <args...>` — user args start at `os.Args[4]`
+   - **Export format**: `_carapace export <shell> "" <args...>` — user args start at `os.Args[6]`
+
+3. **Subcommand-level snippet** (`carapace-magick <subcommand> _carapace <shell>`) — Returns a single-command snippet via `snippet.SingleSnippet()`.
+
+The pseudo-subcommand is NOT a cobra command because adding one with `carapace.Gen().Standalone()` causes a `_carapace` re-invocation loop: carapace's `PositionalAnyCompletion` re-invokes the binary via `ActionExecCommand(os.Executable(), args...)`, and for a pseudo-subcommand cobra command this chain defaults to `magick` instead of staying within the pseudo-subcommand.
+
+- **`root.go`** — Root cobra command with `carapace.Gen(rootCmd).Standalone()` and `PositionalAnyCompletion` returning subcommand names. `Execute()` intercepts `_carapace` calls with arg rewriting before dispatching to cobra.
+- **`magick.go` / `identify.go` / etc.** — Completer subcommands. Each uses `DisableFlagParsing` + `PositionalAnyCompletion` with `argstream.ParseForCompletionWithProfile()` and a tool-specific `ToolProfile`.
 - **`debug.go`** — Debug subcommand with `argstream`, `argstream-complete`, `definevalue`, `definevalue-complete` sub-subcommands. Uses `carapace-spec` for spec generation.
-- **`snippet/`** — Per-shell snippet templates that generate multi-completer shell scripts. Each template creates a shared completer function that calls `carapace-magick <command> _carapace <shell>` and registers all 6 command names.
+- **`snippet/`** — Per-shell snippet templates with both multi-completer (`Snippet()`) and single-command (`SingleSnippet()`) generators. The multi-completer snippet dispatches via `${command}` (the invoked binary name), while single-command snippets use the completer name directly.
 
 ### Argument Stream (`pkg/argstream/`)
 
@@ -168,6 +185,18 @@ Each sub-tool profile has its **own** `OptionIndex` — options not listed in a 
 ### Completer uses `DisableFlagParsing` + `PositionalAnyCompletion`
 
 Each completer subcommand does NOT use cobra's flag parsing. It sets `DisableFlagParsing: true` so cobra hands all arguments through as positional args.
+
+### Pseudo-subcommand is NOT a cobra command
+
+The `"carapace-magick"` pseudo-subcommand is handled purely in `Execute()` by checking `os.Args[1]`. Adding it as a cobra command with `carapace.Gen().Standalone()` causes a `_carapace` re-invocation loop because `PositionalAnyCompletion` re-invokes the binary, and the chain defaults to `magick` instead of staying within the pseudo-subcommand. Root-level completion falls through to `rootCmd.Execute()` where `carapace.Gen(rootCmd).Standalone()` handles shell formatting.
+
+### `_carapace` call formats differ by context
+
+The pseudo-subcommand handler must distinguish between two arg layouts:
+- **Shell format** (from shell snippet functions): `_carapace <shell> <args...>` — user args at `os.Args[4:]`
+- **Export format** (from carapace's internal re-invocation): `_carapace export <shell> "" <args...>` — user args at `os.Args[6:]`
+
+Using the wrong index causes off-by-one bugs where root subcommand names are returned instead of the target subcommand's completions.
 
 ### UIDs use `magick://` scheme
 
