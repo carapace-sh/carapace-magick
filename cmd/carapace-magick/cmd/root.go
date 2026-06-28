@@ -19,18 +19,42 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() {
-	if len(os.Args) > 1 && os.Args[1] == "_carapace" && len(os.Args) < 4 {
-		shell := ""
-		if len(os.Args) > 2 {
-			shell = os.Args[2]
+	if len(os.Args) > 1 && os.Args[1] == "_carapace" {
+		if len(os.Args) < 4 {
+			shell := ""
+			if len(os.Args) > 2 {
+				shell = os.Args[2]
+			}
+			fmt.Println(snippet.Snippet(shell))
+			return
 		}
-		fmt.Println(snippet.Snippet(shell))
-		return
+		// Route completion/export requests to the correct subcommand.
+		// bridge.ActionCarapace("carapace-magick", "identify") calls:
+		//   carapace-magick _carapace export "" identify -verbose image.png
+		// Rewrite to:
+		//   carapace-magick identify _carapace export "" -verbose image.png
+		subcommand := "magick"
+		if len(os.Args) > 4 && isCompleterSubcommand(os.Args[4]) {
+			subcommand = os.Args[4]
+			os.Args = append(
+				[]string{os.Args[0], subcommand, "_carapace", os.Args[2], os.Args[3]},
+				os.Args[5:]...,
+			)
+		} else {
+			os.Args = append(
+				[]string{os.Args[0], subcommand, "_carapace"},
+				os.Args[2:]...,
+			)
+		}
 	}
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
+}
+
+func isCompleterSubcommand(name string) bool {
+	return slices.Contains([]string{"magick", "identify", "mogrify", "compare", "composite", "montage"}, name)
 }
 
 func init() {
