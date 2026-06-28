@@ -2,177 +2,237 @@
 
 ## Goal
 
-Consolidate the 6 separate completer binaries (`carapace-magick`, `carapace-magick-identify`, `carapace-magick-mogrify`, `carapace-magick-compare`, `carapace-magick-composite`, `carapace-magick-montage`) into a single `carapace-magick` binary with subcommands for each completer, plus the debug subcommand.
+Consolidate the 6 separate completer binaries into a single `carapace-magick` binary with subcommands, custom multi-completer snippet generation, and proper bridge integration with carapace-bin.
 
-The resulting binary would be invoked as:
-- `carapace-magick magick _carapace bash ...` — completions for `magick`
-- `carapace-magick identify _carapace bash ...` — completions for `identify`
-- `carapace-magick mogrify _carapace bash ...` — completions for `mogrify`
-- etc.
+## Completed: Multi-Completer Restructure
 
-A single shell snippet from `carapace-magick _carapace bash` would register ALL commands at once.
+Done in commit `fb525ec`. Single binary with subcommands `magick`, `identify`, `mogrify`, `compare`, `composite`, `montage`, `debug`. Custom per-shell snippet templates in `cmd/carapace-magick/cmd/snippet/`. Shell auto-detection via `ps.DetermineShell()`.
 
-## The Core Problem
+## Completed: Bridge Routing via Arg Rewriting
 
-When carapace's standard `_carapace` command generates a snippet, it produces a **single-command** snippet. For bash, that's:
+Done in commit `c8005a6`. Bridge routing in `Execute()` that rewrites `os.Args` to route `bridge.ActionCarapace` invocations to the correct cobra subcommand.
 
-```bash
-_carapace-magick_completion() { ... carapace-magick _carapace bash ... }
-complete -o noquote -F _carapace-magick_completion carapace-magick
-```
+### How bridge.ActionCarapace Constructs Its Invocation
 
-But we need it to register `magick`, `identify`, `mogrify`, `compare`, `composite`, `montage` — not `carapace-magick`. The snippet callback must dispatch to the right subcommand:
-
-```bash
-_carapace_magick_completer() { ... carapace-magick "${command}" _carapace bash ... }
-complete -o noquote -F _carapace_magick_completer magick identify mogrify compare composite montage
-```
-
-## Approaches
-
-### Approach A: Patch the snippet (carapace-bin style)
-
-Override the `_carapace` snippet generation in `carapace-magick`'s root command to produce a custom multi-completer snippet. Write per-shell snippet templates directly in `carapace-magick` (like carapace-bin's `snippet/bash.go`, `snippet/zsh.go`, etc.).
-
-**How carapace-bin does it**: The `carapace` binary's `Execute()` intercepts `_carapace` with < 4 args, calls `snippet.Snippet(shell)` which generates a shared completer function calling `carapace "${command}" <shell>` and registers all completer names against it. For single-completer invocation (`carapace git bash`), it runs the completer's `Execute()` with `_carapace` trick, captures the default snippet, and patches `_carapace` → `git` via `strings.ReplaceAll`.
-
-**How carapace-magick would do it**: Simpler — we intercept `_carapace` at the root level. When called with 0-1 args (snippet request), we generate a custom multi-completer snippet. When called with 2+ args, the subcommand's own `_carapace` handles completion normally.
-
-**Pros**: Works today with no carapace library changes; proven pattern
-**Cons**: Duplicates ~8 shell snippet templates; must maintain them alongside carapace's; no `pathSnippet`/`envSnippet` needed but still boilerplate
-
-### Approach B: Add multi-completer support to the carapace library
-
-Add a new API like `carapace.Gen(rootCmd).MultiCompleter(commandNames ...string)` or expose a `SnippetMulti(shell, names)` function that generates a multi-completer snippet.
-
-The library already has `internal/shell/*/snippet.go` — the per-shell snippet generators are in `internal/` (not importable). We'd need to:
-1. Either expose the snippet generators publicly (e.g., move to `pkg/shell/`)
-2. Or add a `SnippetMulti` method that the internal generators handle
-
-**Pros**: Reusable by any project; no duplicate templates; single source of truth for shell snippets
-**Cons**: Requires carapace library changes; the snippet generators are fairly coupled to the single-command model; `pathSnippet`/`envSnippet` would also need to be exposed or skipped
-
-### Approach C: Hybrid — generate individual snippets and merge
-
-Call `Gen(subcmd).Snippet(shell)` for each subcommand to get individual snippets, then merge them. Doesn't work well because each snippet is self-contained with its own function name and registration line. Merging bash/zsh/fish snippets is fragile string manipulation.
-
-**Verdict**: Not viable.
-
-### Approach D: Use `strings.ReplaceAll` patching on the root snippet
-
-Generate the root command's snippet (which references `carapace-magick` as the command name), then patch it:
-1. Replace `_carapace` in the callback with `<subcommand> _carapace` 
-2. Replace the single command registration with multiple registrations
-
-This is what carapace-bin does for single-completer dispatch but adapted. The challenge is that the snippet templates embed `_carapace` in specific positions and the patching would need to be precise per shell.
-
-**Pros**: Reuses carapace's snippet templates; less code to write
-**Cons**: Fragile string replacement; different patching rules per shell; easy to break when carapace updates its snippet format
-
-## Recommendation: Approach A (custom snippets, minimal duplication)
-
-carapace-magick's snippet templates are **much simpler** than carapace-bin's because:
-- No `pathSnippet()` (no `~/.config/carapace/bin/` PATH manipulation)
-- No `envSnippet()` (no `get-env`/`set-env` helpers)
-- No `CARAPACE_SHELL_*` env vars (no bridge support needed)
-- Fixed set of 6 command names (no dynamic discovery)
-
-The templates are just: one shared completer function + registration lines. ~20-30 lines per shell.
-
-**Future improvement**: Once this is proven, we can extract the pattern into the carapace library as Approach B — a `SnippetMulti` API that other projects can use.
-
-## Implementation Plan
-
-### Step 1: Restructure `cmd/carapace-magick/` to have subcommands
-
-Create a root command `carapace-magick` with subcommands:
-
-```
-carapace-magick (root)
-  ├── magick      (DisableFlagParsing, PositionalAnyCompletion with DefaultMagickProfile)
-  ├── identify    (DisableFlagParsing, PositionalAnyCompletion with DefaultIdentifyProfile)
-  ├── mogrify     (DisableFlagParsing, PositionalAnyCompletion with DefaultMogrifyProfile)
-  ├── compare     (DisableFlagParsing, PositionalAnyCompletion with DefaultCompareProfile)
-  ├── composite   (DisableFlagParsing, PositionalAnyCompletion with DefaultCompositeProfile)
-  ├── montage     (DisableFlagParsing, PositionalAnyCompletion with DefaultMontageProfile)
-  └── debug       (existing debug CLI with argstream/argstream-complete/definevalue subcommands)
-```
-
-Each subcommand's init function contains the same `PositionalAnyCompletion` callback that currently lives in the separate binaries. The `debug` subcommand keeps its existing structure with `spec.Register`.
-
-Key detail: The root command itself has **no** `carapace.Gen()` — we handle snippet generation ourselves. Each subcommand has `carapace.Gen(subcmd).Standalone()` so `_carapace` works normally for actual completion dispatch.
-
-### Step 2: Custom multi-completer snippet generation
-
-In `cmd/carapace-magick/snippet/`:
-
-- `snippet.go` — `Snippet(shell string) string` dispatcher
-- `bash.go` — bash multi-completer snippet template
-- `zsh.go` — zsh multi-completer snippet template
-- `fish.go` — fish multi-completer snippet template
-- `elvish.go` — elvish multi-completer snippet template
-- `nushell.go` — nushell multi-completer snippet template
-- `powershell.go` — powershell multi-completer snippet template
-- `xonsh.go` — xonsh multi-completer snippet template
-
-The command names are hardcoded: `["magick", "identify", "mogrify", "compare", "composite", "montage"]`.
-
-### Step 3: Intercept `_carapace` on the root command
-
-Override the root command's `Run` to handle snippet generation:
+`bridge.ActionCarapace("carapace-magick", "identify")` in `carapace-bridge/pkg/actions/bridge/carapace.go`:
 
 ```go
-func Execute() error {
-    if len(os.Args) > 1 && os.Args[1] == "_carapace" && len(os.Args) < 4 {
-        // snippet request: carapace-magick _carapace [shell]
-        shell := "bash"
-        if len(os.Args) > 2 {
-            shell = os.Args[2]
+args := []string{"_carapace", "export", ""}
+args = append(args, command[1:]...)  // "identify" (the subcommand hint)
+args = append(args, c.Args...)       // user's already-typed args
+args = append(args, c.Value)         // current word being completed
+// executes: carapace-magick _carapace export "" identify -verbose image.png
+```
+
+The `command[1]` value (e.g. "identify") is always spliced in at position 4 (`os.Args[4]`), before the user's args. This is the key to routing — the subcommand name is always at a known position.
+
+### The Arg Rewriting Logic
+
+When `Execute()` intercepts `_carapace` with 4+ args (completion/export request), it checks `os.Args[4]` against a list of known completer subcommand names. If matched, it rewrites `os.Args` to route through cobra:
+
+```
+bridge.ActionCarapace("carapace-magick", "identify") calls:
+  carapace-magick _carapace export "" identify -verbose image.png
+
+Rewriting detects "identify" at os.Args[4], produces:
+  carapace-magick identify _carapace export "" -verbose image.png
+```
+
+```
+bridge.ActionCarapace("carapace-magick", "magick") calls:
+  carapace-magick _carapace export "" magick -resize 200
+
+Rewriting detects "magick" at os.Args[4], produces:
+  carapace-magick magick _carapace export "" -resize 200
+```
+
+When `os.Args[4]` is NOT a known subcommand (e.g. `ActionCarapace("carapace-magick")` without a subcommand hint, where `os.Args[4]` = "-resize"), it defaults to the `magick` subcommand:
+
+```
+bridge.ActionCarapace("carapace-magick") calls:
+  carapace-magick _carapace export "" -resize 200
+
+No match at os.Args[4], defaults to magick:
+  carapace-magick magick _carapace export "" -resize 200
+```
+
+### The os.Args[4] Ambiguity Is Not a Problem
+
+`os.Args[4]` can be both a known subcommand name AND a valid user arg. For example, when a user types `magick identify -verbose`, the bridge produces:
+
+```
+carapace-magick _carapace export "" magick identify -verbose
+```
+
+Here `os.Args[4]` = "magick" (the `command[1]` value, NOT the user's arg). The rewriting correctly picks subcommand = "magick" and removes it:
+
+```
+carapace-magick magick _carapace export "" identify -verbose
+```
+
+The user's "identify" is preserved at `os.Args[5]` and reaches the argstream as a tool name — which is correct behavior for the `magick` profile where `identify` can be a sub-tool name.
+
+This works because `bridge.ActionCarapace` always inserts `command[1]` at position 4. The user's args start at position 5. So `os.Args[4]` is always the bridge subcommand hint, never a user arg.
+
+### The Subcommand Path After Rewriting
+
+After rewriting, the subcommand's `_carapace` handler calls `complete(parentCmd, args)`. The `args` layout:
+
+```
+magick subcommand:  args = [export, "", -resize, 200]
+                     args[2:] = [-resize, 200]  (argstream: option + partial value)
+
+identify subcommand: args = [export, "", -verbose, image.png]
+                      args[2:] = [-verbose, image.png]  (argstream: option + image)
+```
+
+The empty string at `args[1]` is the cobra subcommand path (empty = root of that subcommand). `args[2:]` are the actual positional args for the argstream parser.
+
+### Implementation in root.go
+
+```go
+func Execute() {
+    if len(os.Args) > 1 && os.Args[1] == "_carapace" {
+        if len(os.Args) < 4 {
+            // snippet request: carapace-magick _carapace [shell]
+            ...
+            return
         }
-        fmt.Println(snippet.Snippet(shell))
-        return nil
+        // completion/export request — route to correct subcommand
+        subcommand := "magick" // default
+        if len(os.Args) > 4 && isCompleterSubcommand(os.Args[4]) {
+            subcommand = os.Args[4]
+            os.Args = append(
+                []string{os.Args[0], subcommand, "_carapace", os.Args[2], os.Args[3]},
+                os.Args[5:]...,
+            )
+        } else {
+            os.Args = append(
+                []string{os.Args[0], subcommand, "_carapace"},
+                os.Args[2:]...,
+            )
+        }
     }
-    return rootCmd.Execute()
+    // rootCmd.Execute() routes to the subcommand's cobra command,
+    // which has its own _carapace handler via carapace.Gen(subcmd).Standalone()
+    rootCmd.Execute()
+}
+
+func isCompleterSubcommand(name string) bool {
+    return slices.Contains([]string{"magick", "identify", "mogrify", "compare", "composite", "montage"}, name)
 }
 ```
 
-This intercepts `_carapace` at the root level before cobra dispatches. For actual completion, `carapace-magick identify _carapace bash ...` flows through cobra to the `identify` subcommand's `_carapace` handler normally.
+## Completed: carapace-bin Bridge Stubs
 
-### Step 4: Remove separate cmd directories
+Done in commit `914f1769d` on branch `magick-bridge-stubs`.
 
-Delete:
-- `cmd/carapace-magick-identify/`
-- `cmd/carapace-magick-mogrify/`
-- `cmd/carapace-magick-compare/`
-- `cmd/carapace-magick-composite/`
-- `cmd/carapace-magick-montage/`
-- `cmd/carapace-magick-debug/`
+### magick_completer (replaced)
 
-All their logic moves into subcommands of `cmd/carapace-magick/`.
+The native magick completer (~300 lines of cobra flags + action map) was replaced with a bridge stub:
 
-### Step 5: Update GoReleaser
-
-Single binary build:
-
-```yaml
-builds:
-  - id: carapace-magick
-    main: ./cmd/carapace-magick
-    binary: carapace-magick
+```go
+carapace.Gen(rootCmd).PositionalAnyCompletion(
+    carapace.ActionCallback(func(c carapace.Context) carapace.Action {
+        if _, err := exec.LookPath("carapace-magick"); err == nil {
+            return bridge.ActionCarapace("carapace-magick", "magick")
+        }
+        return bridge.ActionBridge("magick")
+    }),
+)
 ```
 
-### Step 6: Update distribution (AUR, Homebrew, Scoop, nfpm)
+### 5 New Stubs
 
-Single package instead of 6. The `carapace-magick` binary is the only artifact.
+- `identify_completer` → `bridge.ActionCarapace("carapace-magick", "identify")`
+- `mogrify_completer` → `bridge.ActionCarapace("carapace-magick", "mogrify")`
+- `compare_completer` → `bridge.ActionCarapace("carapace-magick", "compare")`
+- `composite_completer` → `bridge.ActionCarapace("carapace-magick", "composite")`
+- `montage_completer` → `bridge.ActionCarapace("carapace-magick", "montage")`
 
-## Open Questions
+Each falls back to `bridge.ActionBridge("<name>")` when `carapace-magick` is not in PATH.
 
-1. **Should we add a library feature to carapace?** A `SnippetMulti(names ...string)` API would avoid duplicating snippet templates across projects. This is worth doing as a follow-up after proving the approach works in carapace-magick. The library's `internal/shell/` snippet generators would need to accept a list of names and generate a shared completer function.
+### Completion Path in carapace-bin
 
-2. **Should the `magick` subcommand be the default?** When users run `carapace-magick` without a subcommand, should it default to `magick`? Or print help? I'd suggest printing help (cobra's default behavior).
+Shell completion uses the `carapace <completer> <shell>` path, NOT `carapace <completer> _carapace export`. The flow:
 
-3. **Backward compatibility**: Users who have `carapace-magick-identify` etc. in their PATH would need to remove those and use the single binary. The old separate binaries would no longer be released.
+1. Shell calls `carapace identify bash -verbose ''` (via snippet callback)
+2. carapace-bin routes to `invokeCompleter("identify")`
+3. `invokeCompleter` calls `completer.Execute()` with `os.Args[1] = "_carapace"`
+4. The completer's cobra processes `_carapace export bash '' -verbose ''`
+5. carapace's `complete()` calls `traverse()` → `PositionalAnyCompletion` callback
+6. `bridge.ActionCarapace("carapace-magick", "identify")` executes as subprocess
+7. The subprocess `carapace-magick _carapace export "" identify -verbose ""` hits our arg rewriting
+8. Rewriting routes to `carapace-magick identify _carapace export "" -verbose ""`
+9. The identify subcommand's _carapace handler produces the completion output
 
-4. **`magick` vs `convert`**: The `magick` subcommand handles both `magick` and `magick convert`. Should we also register `convert` as a completion target? In practice, `magick convert` is just `magick` with the tool name as the first positional arg (already handled by `ExpectedToolName`).
+The `_carapace export` path is only used internally by carapace's `_carapace` subcommand for re-invocation. It does NOT work for bridge completers in carapace-bin (the re-invoked binary loses the completer name context). This is fine because shell completion uses the direct `carapace <completer> <shell>` path.
 
-5. **Shell-specific edge cases**: bash-ble, oil, tcsh, cmd-clink — should we support all shells that carapace supports, or just the main ones (bash, zsh, fish, elvish, nushell, powershell, xonsh)? Supporting all means more template code. Could start with the main ones and add others later.
+## Future: SnippetMulti in carapace Library
+
+Once this pattern is proven, extract the multi-completer snippet generation and bridge routing into a public API in the carapace library. This would enable any carapace-based completer to become a multi-completer without duplicating shell templates or arg rewriting logic.
+
+### Proposed API
+
+```go
+// carapace package
+func GenMulti(rootCmd *cobra.Command, subcommands []*cobra.Command, opts ...MultiOption) {
+    // 1. Registers all subcommands on rootCmd
+    // 2. Adds _carapace interception in Execute() for snippet + routing
+    // 3. Generates multi-completer snippets for all shells
+    // 4. Handles arg rewriting for bridge.ActionCarapace routing
+}
+```
+
+### What Needs to Be Extracted
+
+1. **Arg rewriting logic** — The `os.Args` rewriting in `Execute()` that detects the subcommand name at `os.Args[4]` and routes to the correct cobra subcommand. This is the critical piece for bridge routing. It must know the list of completer subcommand names to detect at `os.Args[4]`.
+
+2. **Snippet generation** — The per-shell templates in `cmd/carapace-magick/cmd/snippet/`. These are simpler than carapace-bin's templates (no `pathSnippet`/`envSnippet`/`CARAPACE_SHELL_*` env vars). A shared completer function that calls `<binary> <command> _carapace <shell>` and registers all command names.
+
+3. **Shell auto-detection** — `ps.DetermineShell()` for when `_carapace` is called without a shell arg.
+
+### Key Design Constraints for the Generic Solution
+
+1. **`os.Args[4]` is always the subcommand hint** — `bridge.ActionCarapace("binary", "subcommand")` always places the subcommand name at `os.Args[4]`, before any user args. The rewriting logic can safely check this position against a known list.
+
+2. **The root command has no `carapace.Gen()`** — We intercept `_carapace` ourselves before cobra processes it. The root is just a dispatcher. Each completer subcommand has its own `carapace.Gen(subcmd).Standalone()`.
+
+3. **Snippet template structure** — Each shell template creates a shared completer function that calls `<binary> <command> _carapace <shell>` and registers all command names. Much simpler than carapace-bin's templates.
+
+4. **Fallback default** — When `os.Args[4]` is not a known subcommand, route to a default subcommand (typically the primary one, like `magick`).
+
+5. **PowerShell backtick gofmt issue** — PowerShell templates contain backtick characters that `gofmt -s` normalizes differently. Must use a `const` raw string literal (backtick-delimited) to avoid gofmt mangling the template. This is the same pattern used in the carapace library's own PowerShell snippet.
+
+### The Generic Routing Logic
+
+For a generic `GenMulti`, the arg rewriting would look like:
+
+```go
+func Execute() {
+    if len(os.Args) > 1 && os.Args[1] == "_carapace" {
+        if len(os.Args) < 4 {
+            // snippet request
+            fmt.Println(multiSnippet(shell, subcommandNames))
+            return
+        }
+        // completion/export request — route to correct subcommand
+        subcommand := defaultSubcommand
+        if len(os.Args) > 4 && isMultiSubcommand(os.Args[4]) {
+            subcommand = os.Args[4]
+            os.Args = append(
+                []string{os.Args[0], subcommand, "_carapace", os.Args[2], os.Args[3]},
+                os.Args[5:]...,
+            )
+        } else {
+            os.Args = append(
+                []string{os.Args[0], subcommand, "_carapace"},
+                os.Args[2:]...,
+            )
+        }
+    }
+    rootCmd.Execute()
+}
+```
+
+This is identical to the current carapace-magick implementation — the only parameterization needed is the list of subcommand names and the default subcommand.
