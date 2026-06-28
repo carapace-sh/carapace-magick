@@ -28,3 +28,9 @@ end
 %v
 `, executable(), strings.Join(complete, "\n"))
 }
+
+func fishSingle(command string) string {
+	return fmt.Sprintf(`complete -e %[2]q
+complete -c %[2]q -f -a '(echo (commandline -cp)\'\' | sed "s/ \$/ \'\'/" | xargs %[1]v %[2]v _carapace fish 2>/dev/null)' -r
+`, executable(), command)
+}

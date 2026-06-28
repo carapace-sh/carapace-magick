@@ -12,3 +12,7 @@ func tcsh() string {
 	}
 	return strings.Join(lines, "\n")
 }
+
+func tcshSingle(command string) string {
+	return fmt.Sprintf("complete \"%[2]v\" 'p@*@`echo \"$COMMAND_LINE'\"''\"'\" | xargs %[1]v \"%[2]v\" _carapace tcsh `@@' ;", executable(), command)
+}

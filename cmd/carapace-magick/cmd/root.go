@@ -47,6 +47,17 @@ func Execute() {
 			)
 		}
 	}
+	if len(os.Args) > 2 && isCompleterSubcommand(os.Args[1]) && os.Args[2] == "_carapace" {
+		// Subcommand-level snippet request: carapace-magick <subcommand> _carapace [shell]
+		if len(os.Args) < 5 {
+			shell := ""
+			if len(os.Args) > 3 {
+				shell = os.Args[3]
+			}
+			fmt.Println(snippet.SingleSnippet(shell, os.Args[1]))
+			return
+		}
+	}
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
