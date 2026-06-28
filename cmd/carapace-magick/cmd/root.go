@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"slices"
@@ -58,20 +57,15 @@ func Execute() {
 			// Export format: carapace-magick carapace-magick _carapace export <shell> "" <args...>
 			// os.Args: [0]=binary, [1]="carapace-magick", [2]="_carapace",
 			//   [3]="export", [4]=<shell>, [5]="", [6:]=user-args
-			if len(os.Args) < 7 {
-				// No user args — return root-level subcommand names
-				printSubcommandExport()
-				return
-			}
-			if isRootSubcommand(os.Args[6]) {
+			if len(os.Args) > 6 && isRootSubcommand(os.Args[6]) {
 				// Route to the actual subcommand
 				os.Args = append(
 					[]string{os.Args[0], os.Args[6], "_carapace", os.Args[3], os.Args[4], os.Args[5]},
 					os.Args[7:]...,
 				)
 			} else {
-				printSubcommandExport()
-				return
+				// Root-level completion — strip pseudo-subcommand and let rootCmd handle it
+				os.Args = append([]string{os.Args[0]}, os.Args[2:]...)
 			}
 		} else {
 			// Shell format: carapace-magick carapace-magick _carapace <shell> [args...]
@@ -89,9 +83,8 @@ func Execute() {
 					os.Args[5:]...,
 				)
 			} else {
-				// Root-level completion via shell format
-				printSubcommandExport()
-				return
+				// Root-level completion — strip pseudo-subcommand and let rootCmd handle it
+				os.Args = append([]string{os.Args[0]}, os.Args[2:]...)
 			}
 		}
 	}
@@ -110,34 +103,6 @@ func Execute() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-}
-
-func printSubcommandExport() {
-	names := []string{"magick", "identify", "mogrify", "compare", "composite", "montage", "debug"}
-	type exportValue struct {
-		Value       string `json:"value"`
-		Display     string `json:"display"`
-		Description string `json:"description,omitempty"`
-		Style       string `json:"style,omitempty"`
-		Tag         string `json:"tag,omitempty"`
-	}
-	type exportFormat struct {
-		Version  string        `json:"version"`
-		Messages []string      `json:"messages"`
-		Noprefix string        `json:"noprefix"`
-		Nospace  string        `json:"nospace"`
-		Usage    string        `json:"usage"`
-		Values   []exportValue `json:"values"`
-	}
-	values := make([]exportValue, len(names))
-	for i, name := range names {
-		values[i] = exportValue{Value: name, Display: name}
-	}
-	out, _ := json.Marshal(exportFormat{
-		Version: "v1.12.1",
-		Values:  values,
-	})
-	fmt.Println(string(out))
 }
 
 func isCompleterSubcommand(name string) bool {
@@ -162,6 +127,14 @@ func init() {
 		compositeCmd,
 		montageCmd,
 		debugCmd,
+	)
+
+	carapace.Gen(rootCmd).Standalone()
+
+	carapace.Gen(rootCmd).PositionalAnyCompletion(
+		carapace.ActionCallback(func(c carapace.Context) carapace.Action {
+			return carapace.ActionValues("magick", "identify", "mogrify", "compare", "composite", "montage", "debug")
+		}),
 	)
 }
 
