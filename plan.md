@@ -92,9 +92,10 @@ The empty string at `args[1]` is the cobra subcommand path (empty = root of that
 
 ```go
 func Execute() {
+    // Root-level _carapace: multi-completer snippet + bridge routing
     if len(os.Args) > 1 && os.Args[1] == "_carapace" {
         if len(os.Args) < 4 {
-            // snippet request: carapace-magick _carapace [shell]
+            // multi-completer snippet: carapace-magick _carapace [shell]
             ...
             return
         }
@@ -112,6 +113,19 @@ func Execute() {
                 os.Args[2:]...,
             )
         }
+    }
+    // Subcommand-level _carapace: single-command snippet
+    if len(os.Args) > 2 && isCompleterSubcommand(os.Args[1]) && os.Args[2] == "_carapace" {
+        if len(os.Args) < 5 {
+            // single-command snippet: carapace-magick <subcommand> _carapace [shell]
+            shell := ""
+            if len(os.Args) > 3 {
+                shell = os.Args[3]
+            }
+            fmt.Println(snippet.SingleSnippet(shell, os.Args[1]))
+            return
+        }
+        // completion/export request falls through to cobra
     }
     // rootCmd.Execute() routes to the subcommand's cobra command,
     // which has its own _carapace handler via carapace.Gen(subcmd).Standalone()
@@ -188,9 +202,13 @@ func GenMulti(rootCmd *cobra.Command, subcommands []*cobra.Command, opts ...Mult
 
 1. **Arg rewriting logic** — The `os.Args` rewriting in `Execute()` that detects the subcommand name at `os.Args[4]` and routes to the correct cobra subcommand. This is the critical piece for bridge routing. It must know the list of completer subcommand names to detect at `os.Args[4]`.
 
-2. **Snippet generation** — The per-shell templates in `cmd/carapace-magick/cmd/snippet/`. These are simpler than carapace-bin's templates (no `pathSnippet`/`envSnippet`/`CARAPACE_SHELL_*` env vars). A shared completer function that calls `<binary> <command> _carapace <shell>` and registers all command names.
+2. **Snippet generation** — The per-shell templates in `cmd/carapace-magick/cmd/snippet/`. These are simpler than carapace-bin's templates (no `pathSnippet`/`envSnippet`/`CARAPACE_SHELL_*` env vars). Two variants:
+   - **Multi-completer snippet** (`carapace-magick _carapace bash`) — shared completer function that calls `<binary> <command> _carapace <shell>` and registers all command names.
+   - **Single-command snippet** (`carapace-magick identify _carapace bash`) — completer function for one command that calls `<binary> <command> _carapace <shell>` and registers only that command. This is what carapace-bin invokes per completer.
 
-3. **Shell auto-detection** — `ps.DetermineShell()` for when `_carapace` is called without a shell arg.
+3. **Subcommand-level _carapace interception** — When `os.Args` matches `<binary> <subcommand> _carapace [shell]` (fewer than 5 args), intercept before cobra and generate a single-command snippet. This prevents cobra's `_carapace` subcommand from producing a snippet with the binary name instead of the command name.
+
+4. **Shell auto-detection** — `ps.DetermineShell()` for when `_carapace` is called without a shell arg.
 
 ### Key Design Constraints for the Generic Solution
 
@@ -198,21 +216,24 @@ func GenMulti(rootCmd *cobra.Command, subcommands []*cobra.Command, opts ...Mult
 
 2. **The root command has no `carapace.Gen()`** — We intercept `_carapace` ourselves before cobra processes it. The root is just a dispatcher. Each completer subcommand has its own `carapace.Gen(subcmd).Standalone()`.
 
-3. **Snippet template structure** — Each shell template creates a shared completer function that calls `<binary> <command> _carapace <shell>` and registers all command names. Much simpler than carapace-bin's templates.
+3. **Two snippet modes** — Multi-completer snippets register all commands at once (for users who source one snippet). Single-command snippets register one command (for bridge integrators like carapace-bin). Both call `<binary> <command> _carapace <shell>` in the callback — the only difference is whether one shared function handles all commands or each command gets its own function.
 
-4. **Fallback default** — When `os.Args[4]` is not a known subcommand, route to a default subcommand (typically the primary one, like `magick`).
+4. **Subcommand-level interception must come before cobra** — Without it, `carapace-magick identify _carapace bash` would reach cobra's internal `_carapace` handler, which produces a snippet using the binary name (`carapace-magick`) instead of the command name (`identify`). The interception checks `os.Args[1]` against the known subcommand list and `os.Args[2] == "_carapace"`.
 
-5. **PowerShell backtick gofmt issue** — PowerShell templates contain backtick characters that `gofmt -s` normalizes differently. Must use a `const` raw string literal (backtick-delimited) to avoid gofmt mangling the template. This is the same pattern used in the carapace library's own PowerShell snippet.
+5. **Fallback default** — When `os.Args[4]` is not a known subcommand, route to a default subcommand (typically the primary one, like `magick`).
+
+6. **PowerShell backtick gofmt issue** — PowerShell templates contain backtick characters that `gofmt -s` normalizes differently. Must use a `const` raw string literal (backtick-delimited) to avoid gofmt mangling the template. This is the same pattern used in the carapace library's own PowerShell snippet.
 
 ### The Generic Routing Logic
 
-For a generic `GenMulti`, the arg rewriting would look like:
+For a generic `GenMulti`, the `Execute()` interception would look like:
 
 ```go
 func Execute() {
+    // Root-level _carapace: multi-completer snippet + bridge routing
     if len(os.Args) > 1 && os.Args[1] == "_carapace" {
         if len(os.Args) < 4 {
-            // snippet request
+            // multi-completer snippet
             fmt.Println(multiSnippet(shell, subcommandNames))
             return
         }
@@ -230,6 +251,15 @@ func Execute() {
                 os.Args[2:]...,
             )
         }
+    }
+    // Subcommand-level _carapace: single-command snippet
+    if len(os.Args) > 2 && isMultiSubcommand(os.Args[1]) && os.Args[2] == "_carapace" {
+        if len(os.Args) < 5 {
+            // single-command snippet: <binary> <subcommand> _carapace [shell]
+            fmt.Println(singleSnippet(shell, os.Args[1]))
+            return
+        }
+        // completion/export request falls through to cobra
     }
     rootCmd.Execute()
 }
