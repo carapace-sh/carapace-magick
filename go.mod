@@ -3,8 +3,8 @@ module github.com/carapace-sh/carapace-magick
 go 1.26.3
 
 require (
-	github.com/carapace-sh/carapace v1.12.1
-	github.com/carapace-sh/carapace-spec v1.7.0
+	github.com/carapace-sh/carapace v1.13.0
+	github.com/carapace-sh/carapace-spec v1.7.1
 	github.com/spf13/cobra v1.10.2
 )
 

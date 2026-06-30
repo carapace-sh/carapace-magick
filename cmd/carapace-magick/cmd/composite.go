@@ -18,6 +18,7 @@ func init() {
 	profile := argstream.DefaultCompositeProfile
 
 	carapace.Gen(compositeCmd).Standalone()
+	rootCmd.AddCommand(compositeCmd)
 
 	carapace.Gen(compositeCmd).PositionalAnyCompletion(
 		carapace.ActionCallback(func(c carapace.Context) carapace.Action {

@@ -18,6 +18,7 @@ func init() {
 	profile := argstream.DefaultMogrifyProfile
 
 	carapace.Gen(mogrifyCmd).Standalone()
+	rootCmd.AddCommand(mogrifyCmd)
 
 	carapace.Gen(mogrifyCmd).PositionalAnyCompletion(
 		carapace.ActionCallback(func(c carapace.Context) carapace.Action {
